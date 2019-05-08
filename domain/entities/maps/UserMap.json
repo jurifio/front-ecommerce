@@ -1,0 +1,105 @@
+{
+    "entity": {
+        "name": "User",
+        "keys": ["id"],
+        "children": [
+            {
+                "name": "token",
+                "entity": "Token",
+                "parentKeys": ["id"],
+                "childKeys": ["userId"],
+                "type": "OneToMany"
+            },{
+                "name": "userEmail",
+                "entity": "UserEmail",
+                "parentKeys": ["id"],
+                "childKeys": ["userId"],
+                "type": "OneToMany"
+            },{
+                "name" : "userAddress",
+                "entity" : "UserAddress",
+                "parentKeys": ["id"],
+                "childKeys" : ["userId"],
+                "type" : "OneToMany"
+            },{
+                "name" : "userOAuth",
+                "entity" : "UserOAuth",
+                "parentKeys": ["id"],
+                "childKeys" : ["userId"],
+                "type" : "OneToMany"
+            },{
+                "name" : "userDetails",
+                "entity" : "UserDetails",
+                "parentKeys": ["id"],
+                "childKeys" : ["userId"],
+                "type" : "OneToOne"
+            },{
+                "name" : "userSession",
+                "entity" : "UserSession",
+                "parentKeys": ["id"],
+                "childKeys" : ["userId"],
+                "type" : "OneToMany"
+            },{
+                "name" : "rbacRole",
+                "entity" : "RbacRole",
+                "parentKeys": ["id"],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "UserHasRbacRole",
+                    "parentKeys" : ["userId"],
+                    "childKeys": ["rbacRoleId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name" : "userHasRbacRole",
+                "entity" : "UserHasRbacRole",
+                "parentKeys": ["id"],
+                "childKeys" : ["userId"],
+                "type" : "OneToOne"
+            },{
+                "name" : "shop",
+                "entity" : "Shop",
+                "parentKeys": ["id"],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "UserHasShop",
+                    "parentKeys" : ["userId"],
+                    "childKeys": ["shopId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name": "newsletterUser",
+                "entity": "NewsletterUser",
+                "parentKeys": ["id"],
+                "childKeys": ["userId"],
+                "type": "OneToOne"
+            },{
+                "name": "eloyUser",
+                "entity": "eloyUser",
+                "parentKeys": ["id"],
+                "childKeys": ["userId"],
+                "type": "OneToOne"
+            },{
+                "name": "lang",
+                "entity": "Lang",
+                "parentKeys": ["langId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "emailAddress",
+                "entity": "EmailAddress",
+                "parentKeys": ["id"],
+                "childKeys": ["userId"],
+                "type": "OneToMany"
+            },{
+                "name": "foison",
+                "entity": "Foison",
+                "parentKeys": ["id"],
+                "childKeys": ["userId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

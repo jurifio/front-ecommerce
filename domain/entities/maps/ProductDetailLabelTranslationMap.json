@@ -1,0 +1,21 @@
+{
+    "entity": {
+        "name": "ProductDetailLabelTranslation",
+        "keys": ["productDetailLabelId","langId"],
+        "children": [
+            {
+                "name": "productDetailLabel",
+                "entity": "ProductDetailLabel",
+                "parentKeys": ["productDetailLabelId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "lang",
+                "entity": "Lang",
+                "parentKeys": ["langId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

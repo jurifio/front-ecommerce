@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "FixedPagePopup",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "fixedPage",
+                "entity": "FixedPage",
+                "parentKeys": ["fixedPageId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "couponEvent",
+                "entity": "CouponEvent",
+                "parentKeys": ["couponEventId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

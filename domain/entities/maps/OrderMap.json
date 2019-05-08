@@ -1,0 +1,106 @@
+{
+    "entity": {
+        "name": "Order",
+        "keys": ["id"],
+        "cacheable" : "false",
+        "children": [
+            {
+              "name": "invoice",
+              "entity": "Invoice",
+              "parentKeys": ["id"],
+              "childKeys": ["orderId"],
+              "type": "OneToMany"
+            },{
+                "name": "orderLine",
+                "entity": "OrderLine",
+                "parentKeys": ["id"],
+                "childKeys": ["orderId"],
+                "type": "OneToMany"
+            },{
+                "name": "shipmentAddress",
+                "entity": "UserAddress",
+                "parentKeys": ["shipmentAddressId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "billingAddress",
+                "entity": "UserAddress",
+                "parentKeys": ["billingAddressId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "orderStatus",
+                "entity": "OrderStatus",
+                "parentKeys": ["status"],
+                "childKeys": ["code"],
+                "type": "OneToOne"
+            },{
+                "name": "coupon",
+                "entity": "Coupon",
+                "parentKeys": ["couponId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "orderPaymentMethod",
+                "entity": "OrderPaymentMethod",
+                "parentKeys": ["orderPaymentMethodId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name" : "user",
+                "entity" : "User",
+                "parentKeys": ["userId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
+                "name" : "carrier",
+                "entity" : "Carrier",
+                "parentKeys": ["carrierId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
+                "name" : "productSku",
+                "entity" : "ProductSku",
+                "parentKeys": ["id"],
+                "childKeys" : ["productId","productVariantId","productSizeId","shopId"],
+                "joinOn" :
+                {
+                    "table": "OrderLine",
+                    "childKeys": ["productId","productVariantId","productSizeId","shopId"],
+                    "parentKeys" : ["orderId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name" : "orderHistory",
+                "entity" : "OrderHistory",
+                "parentKeys": ["id"],
+                "childKeys" : ["orderId"],
+                "type" : "OneToMany"
+            },{
+                "name" : "campaignVisitHasOrder",
+                "entity" : "CampaignVisitHasOrder",
+                "parentKeys": ["id"],
+                "childKeys" : ["orderId"],
+                "type" : "OneToMany"
+            },{
+                "name" : "cart",
+                "entity" : "Cart",
+                "parentKeys": ["cartId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
+                "name": "shipment",
+                "entity": "Shipment",
+                "parentKeys": ["id"],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "OrderLineHasShipment",
+                    "parentKeys" : ["orderId"],
+                    "childKeys": ["shipmentId"]
+                },
+                "type" : "ManyToMany"
+            }
+        ]
+    }
+}

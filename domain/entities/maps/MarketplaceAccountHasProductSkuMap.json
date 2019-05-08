@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "MarketplaceAccountHasProductSku",
+        "keys": ["productId","productVariantId","marketplaceId","marketplaceAccountId","productSizeId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": ["productId","productVariantId","productSizeId"],
+                "childKeys": ["productId","productVariantId","productSizeId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "marketplaceAccountHasProduct",
+                "entity": "MarketplaceAccountHasProduct",
+                "parentKeys": ["productId","productVariantId","marketplaceId","marketplaceAccountId"],
+                "childKeys": ["productId","productVariantId","marketplaceId","marketplaceAccountId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

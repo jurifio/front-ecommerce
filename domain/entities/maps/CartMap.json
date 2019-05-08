@@ -1,0 +1,72 @@
+{
+    "entity": {
+        "name": "Cart",
+        "keys": ["id"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "cartLine",
+                "entity": "CartLine",
+                "parentKeys": ["id"],
+                "childKeys": ["cartId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "coupon",
+                "entity": "Coupon",
+                "parentKeys": ["couponId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "orderPaymentMethod",
+                "entity": "OrderPaymentMethod",
+                "parentKeys": ["orderPaymentMethodId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name" : "user",
+                "entity" : "User",
+                "parentKeys": ["userId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },
+            {
+                "name": "cartType",
+                "entity": "CartType",
+                "parentKeys": ["cartTypeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billingAddress",
+                "entity": "UserAddress",
+                "parentKeys": ["billingAddressId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shipmentAddress",
+                "entity": "UserAddress",
+                "parentKeys": ["shipmentAddressId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "eloyVoucher",
+                "entity": "EloyVoucher",
+                "parentKeys": ["id"],
+                "type": "OneToOneCustom",
+                "query": "Select EloyVoucher as id from CartHasEloyVoucher chev where chev.cartId = ?"
+            },
+            {
+                "name": "userSessionHasCart",
+                "entity": "UserSessionHasCart",
+                "parentKeys": ["id"],
+                "childKeys": ["cartId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

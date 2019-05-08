@@ -1,0 +1,22 @@
+{
+    "entity": {
+        "name": "Sidebar",
+        "keys": ["sidebarGroupId","pageId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "sidebarGroup",
+                "entity": "SidebarGroup",
+                "parentKeys": ["sidebarGroupId"],
+                "childKeys": ["id"],
+                "type": "OneToMany"
+            },{
+                "name": "page",
+                "entity": "Page",
+                "parentKeys": ["pageId"],
+                "childKeys": ["id"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

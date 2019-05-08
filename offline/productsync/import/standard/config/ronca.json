@@ -1,0 +1,28 @@
+{
+    "filesConfig": {
+        "location": "url",
+        "istructions": {
+            "url": "http://ronca.store360.it/admin/configure/export_pickyshop.php?token=dfkjfsdfkls9490rjikljgf84ifsjkjxv834whdgn.klxcv834xvfmxc",
+            "root": "__default__",
+            "folder": "import",
+            "glob": "*.xml"
+        },
+        "extension": ".xml"
+    },
+    "keys": {
+        "product": [
+            "extId"
+        ],
+        "sku": [
+            "extSkuId"
+        ]
+    },
+    "destFTPClient": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "PBYI34nbf",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    }
+}

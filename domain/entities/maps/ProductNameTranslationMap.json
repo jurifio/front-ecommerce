@@ -1,0 +1,15 @@
+{
+    "entity": {
+        "name": "ProductNameTranslation",
+        "keys": ["id"],
+        "children": [
+            {
+                "name": "lang",
+                "entity": "Lang",
+                "parentKeys": ["langId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

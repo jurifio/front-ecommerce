@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "invoiceBin",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "document",
+                "entity": "Document",
+                "parentKeys": ["invoiceId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

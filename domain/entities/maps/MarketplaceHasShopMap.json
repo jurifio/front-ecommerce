@@ -1,0 +1,54 @@
+{
+    "entity": {
+        "name": "MarketplaceHasShop",
+        "keys": ["id"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "marketplaceAccount",
+                "entity": "MarketplaceAccount",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["marketplaceId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "marketplace",
+                "entity": "Marketplace",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "marketPlaceAccountHasProduct",
+                "entity": "MarketPlaceAcccountHasProduct",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["marketplaceId"],
+                "type": "OneToMany"
+            }
+        ,
+            {
+                "name": "marketPlaceAccountCategory",
+                "entity": "MarketPlaceAcccountCategory",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["marketplaceId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "marketplaceHasProductAssociate",
+                "entity": "MarketplaceHasProductAssociate",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["marketplaceId"],
+                "type": "OneToMany"
+            }
+
+
+        ]
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "entity": {
+        "name": "ProductSize",
+        "keys": ["id"],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": ["id"],
+                "childKeys": ["productSizeId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "productPublicSku",
+                "entity": "ProductPublicSku",
+                "parentKeys": ["id"],
+                "childKeys": ["productSizeId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "productSizeGroupHasProductSize",
+                "entity": "ProductSizeGroupHasProductSize",
+                "parentKeys": ["id"],
+                "childKeys": ["productSizeId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "productSizeHasPrestashopSizeOption",
+                "entity": "ProductSizeHasPrestashopSizeOption",
+                "parentKeys": ["id"],
+                "childKeys": ["productSizeId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

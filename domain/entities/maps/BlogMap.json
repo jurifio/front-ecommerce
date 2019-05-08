@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "Blog",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "post",
+                "entity": "Post",
+                "parentKeys": ["id"],
+                "childKeys": ["blogId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

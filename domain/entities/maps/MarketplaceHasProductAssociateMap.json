@@ -1,0 +1,67 @@
+{
+    "entity": {
+        "name": "MarketplaceHasProductAssociate",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "marketplaceAccount",
+                "entity": "MarketplaceAccount",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["marketplaceId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "marketplace",
+                "entity": "Marketplace",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["id"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "prestashopHasProduct",
+                "entity": "PrestashopHasProduct",
+                "parentKeys": ["prestaId"],
+                "childKeys": ["prestaId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "marketPlaceAccountHasProduct",
+                "entity": "MarketPlaceAcccountHasProduct",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["marketplaceId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "marketPlaceAccountCategory",
+                "entity": "MarketPlaceAcccountCategory",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["marketplaceId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["id","productVariantId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "marketPlaceHasShop",
+                "entity": "MarketplaceHasShop",
+                "parentKeys": ["marketPlaceHasShopId"],
+                "childKeys": ["id"],
+                "type": "OneToMany"
+            }
+
+
+        ]
+    }
+}

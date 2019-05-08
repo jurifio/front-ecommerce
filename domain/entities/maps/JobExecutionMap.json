@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "JobExecution",
+        "keys": ["id", "jobId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "job",
+                "entity": "Job",
+                "parentKeys": ["jobId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

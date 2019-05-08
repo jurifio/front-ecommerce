@@ -1,0 +1,40 @@
+{
+    "entity": {
+        "name": "ProductSheetActual",
+        "keys": ["productId", "productVariantId", "productDetailLabelId"],
+        "children": [
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["id", "productVariantId"],
+                "type": "OneToOne"
+            },{
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["id", "productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name": "productDetailLabel",
+                "entity": "ProductDetailLabel",
+                "parentKeys": ["productDetailLabelId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productDetail",
+                "entity": "ProductDetail",
+                "parentKeys": ["productDetailId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productDetailsHasPrestashopFeatures",
+                "entity": "ProductDetailsHasPrestashopFeatures",
+                "parentKeys": ["productDetailLabelId","productDetailId"],
+                "childKeys": ["productDetailLabelId","productDetailId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "entity": {
+        "name": "FixedPage",
+        "keys": ["id","langId","fixedPageTypeId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "lang",
+                "entity": "Lang",
+                "parentKeys": ["langId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "fixedPageType",
+                "entity": "FixedPageType",
+                "parentKeys": ["fixedPageTypeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "fixedPagePopup",
+                "entity": "FixedPagePopup",
+                "parentKeys": ["id"],
+                "childKeys": ["fixedPageId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "fixedPageTemplate",
+                "entity": "FixedPageTemplate",
+                "parentKeys": ["fixedPageTemplateId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

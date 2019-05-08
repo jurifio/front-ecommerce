@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "AddressBook",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["id"],
+                "childKeys": ["billingAddressBookId"],
+                "type": "OneToOne"
+            },{
+                "name": "country",
+                "entity": "Country",
+                "parentKeys": ["countryId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

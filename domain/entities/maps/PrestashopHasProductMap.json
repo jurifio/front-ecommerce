@@ -1,0 +1,39 @@
+{
+    "entity": {
+        "name": "PrestashopHasProduct",
+        "keys": ["prestaId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["id","productVariantId"],
+                "type": "OneToOne"
+            },
+            {
+                "name" : "marketplaceHasShop",
+                "entity" : "MarketplaceHasShop",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId"
+                ],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "PrestashopHasProductHasMarketplaceHasShop",
+                    "parentKeys" : ["productId","productVariantId"],
+                    "childKeys": ["marketplaceHasShopId"]
+                },
+                "type" : "ManyToMany"
+            },
+            {
+                "name": "prestashopHasProductHasMarketplaceHasShop",
+                "entity": "PrestashopHasProductHasMarketplaceHasShop",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

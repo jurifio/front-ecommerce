@@ -1,0 +1,62 @@
+{
+    "entity": {
+        "name": "Shipment",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name" : "carrier",
+                "entity" : "Carrier",
+                "parentKeys": ["carrierId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
+                "name" : "toAddress",
+                "entity": "AddressBook",
+                "parentKeys": ["toAddressBookId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
+                "name" : "fromAddress",
+                "entity": "AddressBook",
+                "parentKeys": ["fromAddressBookId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
+                "name" : "orderLine",
+                "entity" : "OrderLine",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys" : ["id","orderId"],
+                "joinOn" :
+                {
+                    "table": "OrderLineHasShipment",
+                    "parentKeys" : ["shipmentId"],
+                    "childKeys": ["orderLineId","orderId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name" : "order",
+                "entity" : "Order",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "OrderLineHasShipment",
+                    "parentKeys" : ["shipmentId"],
+                    "childKeys": ["orderId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name" : "shipmentFault",
+                "entity" : "ShipmentFault",
+                "parentKeys": ["shipmentFaultId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            }
+        ]
+    }
+}

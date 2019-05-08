@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "ProductSizeMacroGroup",
+        "keys": ["id"],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "productSizeGroup",
+                "entity": "ProductSizeGroup",
+                "parentKeys": ["id"],
+                "childKeys": ["productSizeMacroGroupId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

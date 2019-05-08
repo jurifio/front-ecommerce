@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "DictionaryTag",
+        "keys": ["shopId","term"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "ManyToMany"
+            },
+            {
+                "name": "productTag",
+                "entity": "ProductTag",
+                "parentKeys": ["productTagId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

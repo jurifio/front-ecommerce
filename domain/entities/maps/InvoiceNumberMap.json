@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "invoiceNumber",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "document",
+                "entity": "Document",
+                "parentKeys": ["invoiceId"],
+                "childKeys": ["id"],
+                "type": "OneToMany"
+            },{
+                "name": "invoiceSectional",
+                "entity": "InvoiceSectional",
+                "parentKeys": ["invoiceSectionalId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

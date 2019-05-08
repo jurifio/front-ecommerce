@@ -1,0 +1,9 @@
+{
+    "entity": {
+        "name": "Lang",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+        ]
+    }
+}

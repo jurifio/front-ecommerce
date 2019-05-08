@@ -1,0 +1,72 @@
+{
+    "ftp": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "shoot",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2",
+        "options": {}
+    },
+    "filesConfig": {
+        "location": "local"
+    },
+    "files": {
+        "main": {
+            "location": "local",
+            "columns":  28,
+            "extKeys": ["extId","var"]
+        },
+        "skus": {
+            "location": "local",
+            "columns":  12,
+            "extKeys": ["extId","var"]
+        }
+    },
+    "mapping": {
+        "product":  {
+            "itemno": 23,
+            "var": 5,
+            "brand": 3,
+            "extId": 4,
+            "price": 18,
+            "salePrice": 25,
+            "supplier": 1
+        },
+        "extend":  {
+            "season": 2,
+            "cat1" : 7,
+            "cat2" : 8,
+            "name" : 8,
+            "generalColor" : 13,
+            "colorDescription" : 12
+        },
+        "skus": {
+            "var" : 10,
+            "extId": 9,
+            "price": 5,
+            "salePrice": 6,
+            "value" : 7,
+            "shopId" : 8,
+            "size" : 2,
+            "qty" : 3
+        }
+    },
+    "miscellaneous": {
+        "separator": ";",
+        "thisShopExtIds": [1],
+        "suppliersBlacklist": [
+            "FRGIRA",
+            "FR-UIT",
+            "FRPICC"
+        ]
+    },
+    "destFTPClient": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "PBYI34nbf",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    }
+}

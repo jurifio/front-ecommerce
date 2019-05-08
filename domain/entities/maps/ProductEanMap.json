@@ -1,0 +1,31 @@
+{
+    "entity": {
+        "name": "ProductEan",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": ["ean"],
+                "childKeys": ["ean"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productBrand",
+                "entity": "ProductBrand",
+                "parentKeys": ["brandAssociate"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

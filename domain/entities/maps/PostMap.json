@@ -1,0 +1,59 @@
+{
+    "entity": {
+        "name": "Post",
+        "keys": ["id", "blogId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "postTranslation",
+                "entity": "PostTranslation",
+                "parentKeys": ["id","blogId"],
+                "childKeys": ["postId","blogId"],
+                "type": "OneToMany",
+                "lang": true
+            },{
+                "name": "postStatus",
+                "entity": "PostStatus",
+                "parentKeys": ["postStatusId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "blog",
+                "entity": "Blog",
+                "parentKeys": ["blogId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name" : "postTag",
+                "entity" : "PostTag",
+                "parentKeys": ["id","blogId"],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "PostHasPostTag",
+                    "parentKeys" : ["postId","postBlogId"],
+                    "childKeys": ["postTagId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name": "postCategory",
+                "entity": "PostCategory",
+                "parentKeys": ["id","blogId"],
+                "childKeys": ["id"],
+                "joinOn" :
+                {
+                    "table": "PostHasPostCategory",
+                    "parentKeys" : ["postId","postBlogId"],
+                    "childKeys": ["postCategoryId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name": "userDetails",
+                "entity": "UserDetails",
+                "parentKeys": ["userId"],
+                "childKeys": ["userId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "CartAbandonedEmailParam",
+        "keys": ["id"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name" : "couponType",
+                "entity" : "CouponType",
+                "parentKeys": ["couponTypeId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            }
+        ]
+    }
+}

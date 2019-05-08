@@ -1,0 +1,32 @@
+{
+    "entity": {
+        "name": "SidebarGroup",
+        "keys": ["id"],
+        "children": [
+            {
+                "name": "sidebarGroupTranslation",
+                "entity": "SidebarGroupTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["sidebarGroupId"],
+                "type": "OneToMany",
+                "lang": true
+            },
+            {
+                "name" : "page",
+                "entity" : "Page",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "Sidebar",
+                    "parentKeys" : ["sidebarGroupId"],
+                    "childKeys": ["pageId"],
+                    "orderBy": "pageOrder"
+                },
+                "type" : "ManyToMany"
+            }
+        ]
+    }
+}

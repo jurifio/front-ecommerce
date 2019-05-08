@@ -1,0 +1,26 @@
+{
+    "filesConfig": {
+        "location": "local",
+        "istructions": {
+            "root": "__default__",
+            "folder": "",
+            "glob": "*.xml"
+        }
+    },
+    "keys": {
+        "product": [
+            "extId"
+        ],
+        "sku": [
+            "extSkuId"
+        ]
+    },
+    "destFTPClient": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "PBYI34nbf",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    }
+}

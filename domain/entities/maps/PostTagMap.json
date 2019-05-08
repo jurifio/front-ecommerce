@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "PostTag",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "postTagTranslation",
+                "entity": "PostTagTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["postTagId"],
+                "type": "OneToMany",
+                "lang": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "OrderPaymentMethod",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+              "name": "orderPaymentMethodTranslation",
+              "entity": "OrderPaymentMethodTranslation",
+              "parentKeys": ["id"],
+              "childKeys": ["orderPaymentMethodId"],
+              "type": "OneToMany",
+              "lang": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "FixedPageTemplate",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "fixedPage",
+                "entity": "FixedPage",
+                "parentKeys": ["id"],
+                "childKeys": ["fixedPageTemplateId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

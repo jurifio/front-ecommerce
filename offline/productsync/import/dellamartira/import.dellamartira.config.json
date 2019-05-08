@@ -1,0 +1,79 @@
+{
+    "files": {
+        "main": {
+            "location": "dellamartiragep/import",
+            "columns": 17,
+            "extKeys": [
+                "brand",
+                "itemno",
+                "var"
+            ]
+        },
+        "skus": {
+            "location": "dellamartiragep/import",
+            "columns": 17,
+            "extKeys": [
+                "extSkuId",
+                "size"
+            ]
+        }
+    },
+    "mapping": {
+        "main": {
+            "brand": 1,
+            "itemno": 3,
+            "var": 5,
+            "price": 8,
+            "value": 9,
+            "salePrice": 10,
+            "details": 14,
+            "photos": 13
+        },
+        "skus": {
+            "brand": 1,
+            "size": 7,
+            "itemno": 3,
+            "var": 5,
+            "extSkuId": 2,
+            "price": 8,
+            "value": 9,
+            "salePrice": 10,
+            "qty": 11
+        },
+        "full": {
+            "season": 0,
+            "brand": 1,
+            "itemno": 3,
+            "name": 4,
+            "var": 5,
+            "color": 6,
+            "price": 8,
+            "value": 9,
+            "salePrice": 10,
+            "details": 14,
+            "photos": 13,
+            "audience": 15,
+            "sizeGroup":12,
+            "category":16
+        }
+    },
+    "miscellaneous": {
+        "separator": ";",
+        "photoFTPClient": {
+            "host": "partnerftp.dellamartira.com",
+            "user": "foto",
+            "pass": "$$dmt!2015",
+            "port": "21",
+            "timeout": "10",
+            "mode": "2"
+        },
+        "destFTPClient": {
+            "host": "fiber.office.iwes.it",
+            "user": "shooting",
+            "pass": "PBYI34nbf",
+            "port": "21",
+            "timeout": "10",
+            "mode": "2"
+        }
+    }
+}

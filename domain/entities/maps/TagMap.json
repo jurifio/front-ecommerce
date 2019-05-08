@@ -1,0 +1,25 @@
+{
+    "entity": {
+        "name": "Tag",
+        "keys": ["id"],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "sortingPriority",
+                "entity": "SortingPriority",
+                "parentKeys": ["sortingPriorityId"],
+                "childKeys": ["id"],
+                "type": "OneToOne",
+                "lang": false
+            },
+            {
+                "name": "tagTranslation",
+                "entity": "TagTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["tagId"],
+                "type": "OneToMany",
+                "lang": true
+            }
+        ]
+    }
+}

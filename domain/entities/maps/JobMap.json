@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "Job",
+        "keys": ["id"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["defaultArgs"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "jobExecution",
+                "entity": "JobExecution",
+                "parentKeys": ["id"],
+                "childKeys": ["jobId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

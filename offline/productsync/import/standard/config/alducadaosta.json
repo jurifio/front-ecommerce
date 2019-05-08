@@ -1,0 +1,28 @@
+{
+    "filesConfig": {
+        "location": "url",
+        "istructions": {
+            "url": "http://rest.alducadaosta.com/api/Catalog/Sku4Platform?Username=Pickyshop&Password=%2B%2BPic%3DShp%2B%2B",
+            "root": "__default__",
+            "folder": "import",
+            "glob": "*.json"
+        },
+        "extension": ".json"
+    },
+    "keys": {
+        "product": [
+            "extId"
+        ],
+        "sku": [
+            "extSkuId"
+        ]
+    },
+    "destFTPClient": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "PBYI34nbf",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    }
+}

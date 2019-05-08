@@ -1,0 +1,30 @@
+{
+    "entity": {
+        "name": "Coupon",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "couponType",
+                "entity": "CouponType",
+                "parentKeys": ["couponTypeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "user",
+                "entity": "User",
+                "parentKeys": ["userId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "order",
+                "entity": "Order",
+                "parentKeys": ["id"],
+                "childKeys": ["couponId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

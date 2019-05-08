@@ -1,0 +1,32 @@
+{
+    "entity": {
+        "name": "invoiceLine",
+        "keys": ["id", "invoiceId"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name" : "orderLine",
+                "entity" : "OrderLine",
+                "parentKeys": [
+                    "id",
+                    "invoiceId"
+                ],
+                "childKeys" : ["id", "orderId"],
+                "joinOn" :
+                {
+                    "table": "InvoiceLineHasOrderLine",
+                    "childKeys": ["orderLineId", "orderLineOrderId"],
+                    "parentKeys" : ["invoiceLineId","invoiceLineInvoiceId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name": "document",
+                "entity": "Document",
+                "parentKeys": ["invoiceId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

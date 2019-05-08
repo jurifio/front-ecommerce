@@ -1,0 +1,25 @@
+{
+    "entity": {
+        "name": "PrestashopHasProductAttribute",
+        "keys": ["id_product_attribute"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "prestashopHasProduct",
+                "entity": "PrestashopHasProduct",
+                "parentKeys": ["prestaId"],
+                "childKeys": ["prestaId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "prestashopHasProductImage",
+                "entity": "PrestaShopHasProductImage",
+                "parentKeys": ["prestaId"],
+                "childKeys": ["prestaId"],
+                "type": "OneToMany"
+            }
+
+        ]
+    }
+}

@@ -1,0 +1,121 @@
+{
+    "entity": {
+        "name": "ProductSku",
+        "keys": [
+            "id",
+            "productVariantId",
+            "productSizeId",
+            "shopId"
+        ],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "productSize",
+                "entity": "ProductSize",
+                "parentKeys": [
+                    "productSizeId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId"
+                ],
+                "childKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shopHasProduct",
+                "entity": "ShopHasProduct",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId",
+                    "shopId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId",
+                    "shopId"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": [
+                    "shopId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "dirtySku",
+                "entity": "DirtySku",
+                "type": "OneToManyCustom",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId",
+                    "productSizeId",
+                    "shopId"
+                ],
+                "query": "SELECT ds.id, ds.size from DirtyProduct dp, DirtySku ds where dp.id = ds.dirtyProductId and dp.shopId = ds.shopId and dp.productId = ? and dp.ProductVariantId = ? and ds.productSizeId = ? and dp.shopId = ? "
+            },
+            {
+                "name": "storehouseOperationLine",
+                "entity": "StorehouseOperationLine",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId",
+                    "productSizeId",
+                    "shopId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId",
+                    "productSizeId",
+                    "shopId"
+                ],
+                "type": "OneToMany"
+            },
+            {
+                "name": "cartLine",
+                "entity": "CartLine",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId",
+                    "productSizeId",
+                    "shopId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId",
+                    "productSizeId",
+                    "shopId"
+                ],
+                "type": "OneToMany"
+            },
+            {
+                "name": "productEan",
+                "entity": "ProductEan",
+                "parentKeys": [
+                    "ean"
+                ],
+                "childKeys": [
+                    "ean"
+                ],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

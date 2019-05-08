@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "UserSessionHasCartMap",
+        "keys": ["userSessionId","cartId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "userSession",
+                "entity": "UserSession",
+                "parentKeys": ["userSessionId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "cartId",
+                "entity": "Cart",
+                "parentKeys": ["cartId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

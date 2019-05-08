@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "CarrierHasCountry",
+        "keys": ["carrierId","countryId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "carrier",
+                "entity": "Carrier",
+                "parentKeys": ["carrierId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "country",
+                "entity": "Country",
+                "parentKeys": ["countryId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

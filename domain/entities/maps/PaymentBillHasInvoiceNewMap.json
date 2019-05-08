@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "paymentBillHasInvoiceNew",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "paymentBill",
+                "entity": "PaymentBill",
+                "parentKeys": ["paymentBillId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "document",
+                "entity": "Document",
+                "parentKeys": ["invoiceNewId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

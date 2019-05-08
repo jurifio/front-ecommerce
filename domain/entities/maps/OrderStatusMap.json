@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "OrderStatus",
+        "keys": ["orderId","langId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "orderStatusTranslation",
+                "entity": "OrderStatusTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["orderStatusId"],
+                "type": "OneToMany",
+                "lang": true
+            }
+        ]
+    }
+}

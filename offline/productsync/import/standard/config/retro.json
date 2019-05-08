@@ -1,0 +1,30 @@
+{
+    "filesConfig": {
+        "location": "local",
+        "istructions": {
+            "root": "__default__",
+            "folder": "import",
+            "glob": "*.XML"
+        }
+    },
+    "keys": {
+        "product": [
+            "itemno",
+            "var",
+            "brand",
+            "shopId"
+        ],
+        "sku": [
+            "extSkuId",
+            "shopId"
+        ]
+    },
+    "destFTPClient": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "PBYI34nbf",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    }
+}

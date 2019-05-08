@@ -1,0 +1,31 @@
+{
+    "entity": {
+        "name": "ProductColorGroup",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "productColorGroupTranslation",
+                "entity": "ProductColorGroupTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["productColorGroupId"],
+                "type": "OneToMany",
+                "lang": true
+            },
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": "id",
+                "childKeys": "productColorGroupId",
+                "type": "OneToMany"
+            },
+            {
+                "name": "productColorGroupHasPrestashopColorOption",
+                "entity": "ProductColorGroupHasPrestashopColorOption",
+                "parentKeys": ["id"],
+                "childKeys": ["productColorGroupId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

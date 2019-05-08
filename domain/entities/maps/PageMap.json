@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "Page",
+        "keys": ["id"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "pageTranslation",
+                "entity": "PageTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["pageId"],
+                "type": "OneToMany",
+                "lang": true
+            }
+        ]
+    }
+}

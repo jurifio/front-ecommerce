@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "PrestashopHasProductHasMarketplaceHasShop",
+        "keys": ["productId","productVariantId","marketplaceHasShopId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "marketplaceHasShop",
+                "entity": "MarketplaceHasShop",
+                "parentKeys": ["marketplaceHasShopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

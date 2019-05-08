@@ -1,0 +1,27 @@
+{
+    "entity": {
+        "name": "ProductSheetModelActual",
+        "keys": ["productSheetModelPrototypeId"],
+        "children": [
+            {
+                "name": "productSheetModelPrototype",
+                "entity": "productSheetModelPrototype",
+                "parentKeys": ["productSheetModelPrototypeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productDetailLabel",
+                "entity": "ProductDetailLabel",
+                "parentKeys": ["productDetailLabelId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productDetail",
+                "entity": "ProductDetail",
+                "parentKeys": ["productDetailId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

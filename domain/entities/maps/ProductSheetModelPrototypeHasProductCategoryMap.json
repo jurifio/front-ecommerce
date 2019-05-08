@@ -1,0 +1,21 @@
+{
+    "entity": {
+        "name": "ProductSheetModelPrototypeHasProductCategory",
+        "keys": ["productSheetModelPrototypeId"],
+        "children": [
+            {
+                "name": "productSheetModelPrototype",
+                "entity": "ProductSheetModelPrototype",
+                "parentKeys": ["productSheetModelPrototypeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productCategory",
+                "entity": "ProductCategory",
+                "parentKeys": ["productCategoryId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

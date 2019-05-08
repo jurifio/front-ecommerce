@@ -1,0 +1,46 @@
+{
+    "entity": {
+        "name": "CampaignVisit",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "campaign",
+                "entity": "Campaign",
+                "parentKeys": ["campaignId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "campaignVisitHasProduct",
+                "entity": "CampaignVisitHasProduct",
+                "parentKeys": ["id","campaignId"],
+                "childKeys": ["campaignVisitId","campaignId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "campaignVisitHasOrder",
+                "entity": "CampaignVisitHasOrder",
+                "parentKeys": ["id","campaignId"],
+                "childKeys": ["campaignVisitId","campaignId"],
+                "type": "OneToMany"
+            },
+            {
+                "name" : "product",
+                "entity" : "Product",
+                "parentKeys": [
+                    "id",
+                    "campaignId"
+                ],
+                "childKeys" : ["id","productVariantId"],
+                "joinOn" :
+                {
+                    "table": "CampaignVisitHasProduct",
+                    "parentKeys" : ["campaignVisitId","campaignId"],
+                    "childKeys": ["productId","productVariantId"]
+                },
+                "type" : "ManyToMany"
+            }
+        ]
+    }
+}

@@ -1,0 +1,63 @@
+{
+    "entity": {
+        "name": "ProductSheetModelPrototype",
+        "keys": ["id", "productSheetPrototypeId"],
+        "children": [
+            {
+                "name": "productSheetPrototype",
+                "entity": "ProductSheetPrototype",
+                "parentKeys": ["productSheetPrototypeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productSheetModelActual",
+                "entity": "ProductSheetModelActual",
+                "parentKeys": ["id"],
+                "childKeys": ["productSheetModelPrototypeId"],
+                "type": "OneToMany"
+            }, {
+                "name": "productSheetModelPrototypeHasProductCategory",
+                "entity": "ProductSheetModelPrototypeHasProductCategory",
+                "parentKeys": ["id"],
+                "childKeys": ["productSheetModelPrototypeId"],
+                "type": "OneToMany"
+            }, {
+                "name": "productCategory",
+                "entity": "ProductCategory",
+                "parentKeys": ["id"],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "ProductSheetModelPrototypeHasProductCategory",
+                    "parentKeys" : ["productSheetModelPrototypeId"],
+                    "childKeys": ["productCategoryId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name": "productSheetModelPrototypeCategoryGroup",
+                "entity": "ProductSheetModelPrototypeCategoryGroup",
+                "parentKeys": ["categoryGroupId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productSheetModelPrototypeGender",
+                "entity": "ProductSheetModelPrototypeGender",
+                "parentKeys": ["genderId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productSheetModelPrototypeMaterial",
+                "entity": "ProductSheetModelPrototypeMaterial",
+                "parentKeys": ["materialId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productSheetModelPrototypeSupport",
+                "entity": "ProductSheetModelPrototypeSupport",
+                "parentKeys": ["id"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

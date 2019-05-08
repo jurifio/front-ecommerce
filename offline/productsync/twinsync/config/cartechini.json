@@ -1,0 +1,144 @@
+{
+    "destination": {
+        "engine": "mysql",
+        "host": "5.189.152.89",
+        "port": "3306",
+        "name": "cartechinishp",
+        "user": "cartechinishp",
+        "pass": "lwjGxt1y",
+        "options": {}
+    },
+    "tables": [
+        {
+            "name": "Province",
+            "mode": "full"
+        },
+        {
+            "name": "City",
+            "mode": "full"
+        },
+        {
+            "name": "Currency",
+            "mode": "full"
+        },
+        {
+            "name": "ProductBrand",
+            "mode": "full"
+        },
+        {
+            "name": "Locale",
+            "mode": "full"
+        },
+        {
+            "name": "ProductDetailLabel",
+            "mode": "full"
+        },
+        {
+            "name": "ProductDetailLabelTranslation",
+            "mode": "full"
+        },
+        {
+            "name": "ProductDetail",
+            "mode": "full",
+            "truncate": true
+        },
+        {
+            "name": "ProductDetailTranslation",
+            "mode": "full",
+            "truncate": true
+        },
+        {
+            "name": "ProductPhoto",
+            "mode": "custom"
+        },
+        {
+            "name": "ProductHasProductPhoto",
+            "mode": "custom",
+            "truncate": true
+        },
+        {
+            "name": "ProductSeason",
+            "mode": "full"
+        },
+        {
+            "name": "ProductSeasonTranslation",
+            "mode": "full"
+        },
+        {
+            "name": "ProductSheetPrototype",
+            "mode": "full",
+            "truncate": true
+        },
+        {
+            "name": "ProductSheetPrototypeHasProductDetailLabel",
+            "mode": "full",
+            "truncate": true
+        },
+        {
+            "name": "ProductSize",
+            "mode": "full"
+        },
+        {
+            "name": "ProductSizeGroup",
+            "mode": "custom"
+        },
+        {
+            "name": "ProductSizeGroupHasProductSize",
+            "mode": "full",
+            "truncate": true
+        },
+        {
+            "name": "ProductStatus",
+            "mode": "full"
+        },
+        {
+            "name": "ProductVariant",
+            "mode": "full"
+        },
+        {
+            "name": "ProductColorGroup",
+            "mode": "full",
+            "truncate": true
+        },{
+            "name": "ProductColorGroupTranslation",
+            "mode": "full",
+            "truncate": true
+        },
+        {
+            "name": "Product",
+            "mode": "custom"
+        },
+        {
+            "name": "ShopHasProduct",
+            "mode": "custom"
+        },
+        {
+            "name": "ProductSku",
+            "mode": "custom"
+        },
+        {
+            "name": "ProductSheetActual",
+            "mode": "custom",
+            "truncate": true
+        },
+        {
+            "name": "ProductNameTranslation",
+            "mode": "custom"
+        },
+        {
+            "name": "ProductDescriptionTranslation",
+            "mode": "custom"
+        },
+        {
+            "name": "ProductCategory",
+            "mode": "full"
+        },{
+            "name": "ProductCategoryTranslation",
+            "mode": "full"
+        },{
+            "name": "ProductHasProductCategory",
+            "mode": "custom",
+            "truncate": true
+        }
+    ]
+}

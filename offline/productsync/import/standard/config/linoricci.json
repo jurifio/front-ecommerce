@@ -1,0 +1,53 @@
+{
+    "filesConfig": {
+        "location": "ftp",
+        "mode": "full",
+        "separator": ";",
+        "delimiter": "\"",
+        "istructions": {
+            "remoteFolder": "Atelier98/Sito1/File",
+            "regex": "#(Riferimenti|Disponibilita|Listini|Prodotti).[xX][mM][lL]#u",
+            "root": "__default__",
+            "folder": "import",
+            "glob": "*.xml"
+        }
+    },
+    "filesFtpConfig": {
+        "host": "www.linoricci.it",
+        "user": "lino75ricci",
+        "pass": "Hlf^g855",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    },
+    "miscellaneous": {
+        "nome-listino" : "SITO",
+        "destFTPClient": {
+            "host": "fiber.office.iwes.it",
+            "user": "shooting",
+            "pass": "PBYI34nbf",
+            "port": "21",
+            "timeout": "10",
+            "mode": "2",
+            "folder": "/shootImport/incoming/"
+        },
+        "photoFTPClient": {
+            "host": "server1.olitec.cloud",
+            "user": "at98riccilinoftp",
+            "pass": "sQ6aS3FmX9kYUXcg",
+            "port": "21",
+            "timeout": "10",
+            "mode": "2",
+            "folder": "/foto"
+        },
+        "photoFTPClient2": {
+            "host": "95.110.234.45",
+            "user": "at98w-IIS",
+            "pass": "=rRH&DCQ]FF-4!5Z",
+            "port": "21",
+            "timeout": "10",
+            "mode": "2",
+            "folder": "/Foto"
+        }
+    }
+}

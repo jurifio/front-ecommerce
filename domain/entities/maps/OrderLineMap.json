@@ -1,0 +1,94 @@
+{
+    "entity": {
+        "name": "OrderLine",
+        "keys": ["id","orderId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name" : "product",
+                "entity" : "Product",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys" : ["id","productVariantId"],
+                "type" : "OneToOne"
+            },
+            {
+                "name" : "productSku",
+                "entity" : "ProductSku",
+                "parentKeys": ["productId","productVariantId","productSizeId","shopId"],
+                "childKeys" : ["productId","productVariantId","productSizeId","shopId"],
+                "type" : "OneToOne"
+            },{
+                "name" : "shop",
+                "entity" : "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },
+            {
+                "name": "orderLineStatus",
+                "entity": "OrderLineStatus",
+                "parentKeys": [
+                    "status"
+                ],
+                "childKeys": [
+                    "code"
+                ],
+                "type": "OneToOne"
+            },{
+                "name" : "order",
+                "entity" : "Order",
+                "parentKeys": ["orderId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
+                "name" : "productSize",
+                "entity" : "ProductSize",
+                "parentKeys": ["productSizeId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
+                "name" : "orderLineFriendPaymentStatus",
+                "entity" : "OrderLineFriendPaymentStatus",
+                "parentKeys": ["orderLineFriendPaymentStatusId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
+                "name" : "invoiceLine",
+                "entity" : "InvoiceLine",
+                "parentKeys": [
+                    "id",
+                    "orderId"
+                ],
+                "childKeys" : ["id", "invoiceId"],
+                "joinOn" :
+                {
+                    "table": "InvoiceLineHasOrderLine",
+                    "childKeys": ["invoiceLineId", "invoiceLineInvoiceId"],
+                    "parentKeys" : ["orderLineId","orderLineOrderId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name" : "shipment",
+                "entity" : "Shipment",
+                "parentKeys": [
+                    "id",
+                    "orderId"
+                ],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "OrderLineHasShipment",
+                    "childKeys": ["shipmentId"],
+                    "parentKeys" : ["orderLineId", "orderId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name" : "warehouseShelfPosition",
+                "entity" : "WarehouseShelfPosition",
+                "parentKeys": ["warehouseShelfPositionId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            }
+        ]
+    }
+}

@@ -1,0 +1,107 @@
+{
+    "entity": {
+        "name": "DirtyProduct",
+        "keys": [
+            "id",
+            "productId",
+            "productVariantId",
+            "shopId"
+        ],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "shopHasProduct",
+                "entity": "ShopHasProduct",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId",
+                    "shopId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId",
+                    "shopId"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "dirtyDetail",
+                "entity": "DirtyDetail",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys": [
+                    "dirtyProductId"
+                ],
+                "type": "OneToMany"
+            },
+            {
+                "name": "dirtyPhoto",
+                "entity": "DirtyPhoto",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys": [
+                    "dirtyProductId"
+                ],
+                "type": "OneToMany"
+            },
+            {
+                "name": "dirtySku",
+                "entity": "DirtySku",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys": [
+                    "dirtyProductId"
+                ],
+                "type": "OneToMany"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": [
+                    "shopId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId"
+                ],
+                "childKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "relationship",
+                "entity": "DirtyProduct",
+                "parentKeys": [
+                    "relationshipId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },{
+                "name": "extend",
+                "entity": "DirtyProductExtend",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys": [
+                    "dirtyProductId"
+                ],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

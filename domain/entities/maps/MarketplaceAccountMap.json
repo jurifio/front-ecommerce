@@ -1,0 +1,28 @@
+{
+    "entity": {
+        "name": "MarketplaceAccount",
+        "keys": ["id","marketplaceId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "marketplaceAccountHasProduct",
+                "entity": "MarketplaceAccountHasProduct",
+                "parentKeys": ["id","marketplaceId"],
+                "childKeys": ["marketplaceAccountId","marketplaceId"],
+                "type": "OneToMany"
+            },{
+                "name": "marketplace",
+                "entity": "Marketplace",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "marketplaceAccountCategory",
+                "entity": "MarketplaceAccountCategory",
+                "parentKeys": ["id","marketplaceId"],
+                "childKeys": ["marketplaceAccountId","marketplaceId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

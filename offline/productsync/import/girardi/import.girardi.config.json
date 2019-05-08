@@ -1,0 +1,47 @@
+{
+    "ftp": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "shoot",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2",
+        "options": {}
+    },
+    "files": {
+        "main": {
+            "location": "main.csv",
+            "columns":  28,
+            "extKeys": ["extId","var"]
+        },
+        "skus": {
+            "location": "skus.csv",
+            "columns":  12,
+            "extKeys": ["extId","var"]
+        }
+    },
+    "mapping": {
+        "main":  {
+            "itemno": 23,
+            "var" : 5,
+            "extId": 4,
+            "price": 18,
+            "salePrice": 25
+        },
+        "skus": {
+            "var" : 10,
+            "extId": 9,
+            "price": 5,
+            "salePrice": 6,
+            "value" : 7,
+            "shopId" : 8,
+            "size" : 2,
+            "qty" : 3
+        }
+    },
+    "miscellaneous": {
+        "separator": ";",
+        "thisShopExtIds": [30]
+    }
+
+}

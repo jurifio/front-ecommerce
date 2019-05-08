@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "DictionaryImageSize",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

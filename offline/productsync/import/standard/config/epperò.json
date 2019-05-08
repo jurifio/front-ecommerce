@@ -1,0 +1,33 @@
+{
+    "filesConfig": {
+        "location": "local",
+        "separator": ",",
+        "delimiter": "\"",
+        "istructions": {
+            "root": "__default__",
+            "folder": "import",
+            "glob": "*.csv"
+        }
+    },
+    "keys": {
+        "product": [
+            "brand",
+            "itemno",
+            "var"
+        ],
+        "sku": [
+            "extSkuId"
+        ]
+    },
+    "miscellaneous": {
+        "destFTPClient": {
+            "host": "fiber.office.iwes.it",
+            "user": "shooting",
+            "pass": "PBYI34nbf",
+            "port": "21",
+            "timeout": "10",
+            "mode": "2"
+        }
+    }
+
+}

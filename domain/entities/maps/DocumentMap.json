@@ -1,0 +1,87 @@
+{
+    "entity": {
+        "name": "document",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "invoiceLine",
+                "entity": "InvoiceLine",
+                "parentKeys": ["id"],
+                "childKeys": ["invoiceId"],
+                "type": "OneToMany"
+            },{
+                "name": "invoiceType",
+                "entity": "InvoiceType",
+                "parentKeys": ["invoiceTypeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "invoiceNumber",
+                "entity": "InvoiceNumber",
+                "parentKeys": ["id"],
+                "childKeys": ["invoiceId"],
+                "type": "OneToOne"
+            },{
+                "name": "invoiceBin",
+                "entity": "InvoiceBin",
+                "parentKeys": ["id"],
+                "childKeys": ["invoiceId"],
+                "type": "OneToOne"
+            },{
+                "name": "user",
+                "entity": "User",
+                "parentKeys": ["userId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "shopAddressBook",
+                "entity": "AddressBook",
+                "parentKeys": ["shopRecipientId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "userAddressBook",
+                "entity": "AddressBook",
+                "parentKeys": ["userAddressRecipientId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name" : "paymentBill",
+                "entity" : "PaymentBill",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "PaymentBillHasInvoiceNew",
+                    "childKeys": ["paymentBillId"],
+                    "parentKeys" : ["invoiceNewId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name": "paymentBillHasInvoiceNew",
+                "entity": "PaymentBillHasInvoiceNew",
+                "parentKeys": ["id"],
+                "childKeys": ["invoiceNewId"],
+                "type": "OneToMany"
+            },{
+                "name" : "orderLine",
+                "entity" : "OrderLine",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys" : ["id","orderId"],
+                "joinOn" :
+                {
+                    "table": "InvoiceLineHasOrderLine",
+                    "parentKeys" : ["invoiceLineInvoiceId"],
+                    "childKeys": ["orderLineId","orderLineOrderId"]
+                },
+                "type" : "ManyToMany"
+            }
+        ]
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "categoryManager": {
+        "class": "\\bamboo\\core\\theming\\nestedCategory\\CCategoryManager",
+        "executeMethod": false,
+        "options": {
+            "rootId": 1
+        }
+    },
+    "orderManager": {
+        "class": "\\bamboo\\ecommerce\\business\\COrderManager",
+        "executeMethod": false,
+        "options": {}
+    }
+}

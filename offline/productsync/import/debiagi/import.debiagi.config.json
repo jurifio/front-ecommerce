@@ -1,0 +1,41 @@
+    {
+    "files": {
+        "main": {
+            "position": "local",
+            "location": "debiagi/import"
+        }
+    },
+    "mapping": {
+        "main":  {
+            "itemno": 23,
+            "var" : 5,
+            "extId": 4,
+            "price": 18,
+            "salePrice": 25
+        },
+        "skus": {
+            "var" : 10,
+            "extId": 9,
+            "price": 5,
+            "salePrice": 6,
+            "value" : 7,
+            "shopId" : 8,
+            "size" : 2,
+            "qty" : 3
+        }
+    },
+    "miscellaneous": {
+        "separator": ";",
+        "photoPath": "debiagi/import/photos",
+        "thisShopExtIds": [27],
+        "destFTPClient": {
+            "host": "fiber.office.iwes.it",
+            "user": "shooting",
+            "pass": "PBYI34nbf",
+            "port": "21",
+            "timeout": "10",
+            "mode": "2"
+        }
+    }
+
+}

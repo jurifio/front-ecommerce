@@ -1,0 +1,21 @@
+{
+    "entity": {
+        "name": "ProductNameTranslation",
+        "keys": ["id"],
+        "children": [
+            {
+                "name": "marketplace",
+                "entity": "Marketplace",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "lang",
+                "entity": "Lang",
+                "parentKeys": ["langId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

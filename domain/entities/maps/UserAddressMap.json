@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "UserAddress",
+        "keys": ["id", "productVariantId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "country",
+                "entity": "Country",
+                "parentKeys": ["countryId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

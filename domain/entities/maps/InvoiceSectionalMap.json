@@ -1,0 +1,36 @@
+{
+    "entity": {
+        "name": "invoiceSectional",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "invoiceType",
+                "entity": "InvoiceType",
+                "parentKeys": ["invoiceTypeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "user",
+                "entity": "User",
+                "parentKeys": ["userId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shoId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "document",
+                "entity": "Document",
+                "parentKeys": ["invoiceTypeId"],
+                "childKeys": ["invoiceTypeId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

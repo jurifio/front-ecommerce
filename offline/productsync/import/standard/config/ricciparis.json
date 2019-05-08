@@ -1,0 +1,44 @@
+{
+    "filesConfig": {
+        "location": "ftp",
+        "mode": "full",
+        "separator": ";",
+        "delimiter": "\"",
+        "istructions": {
+            "remoteFolder": "file",
+            "regex": "#(Riferimenti|Disponibilita|Listini|Prodotti).[xX][mM][lL]#u",
+            "root": "__default__",
+            "folder": "import",
+            "glob": "*.xml"
+        }
+    },
+    "filesFtpConfig": {
+        "host": "server1.olitec.cloud",
+        "user": "at98ricciparisftp",
+        "pass": "UaKjfYQRJ32Ju6M7",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    },
+    "miscellaneous": {
+        "nome-listino" : "SITO",
+        "destFTPClient": {
+            "host": "fiber.office.iwes.it",
+            "user": "shooting",
+            "pass": "PBYI34nbf",
+            "port": "21",
+            "timeout": "10",
+            "mode": "2",
+            "folder": "/shootImport/incoming/"
+        },
+        "photoFTPClient": {
+            "host": "server1.olitec.cloud",
+            "user": "at98ricciparisftp",
+            "pass": "UaKjfYQRJ32Ju6M7",
+            "port": "21",
+            "timeout": "10",
+            "mode": "2",
+            "folder": "/immagini"
+        }
+    }
+}

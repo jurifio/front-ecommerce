@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "DictionarySeason",
+        "keys": ["shopId","term"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "ManyToMany"
+            },
+            {
+                "name": "productSeason",
+                "entity": "ProductSeason",
+                "parentKeys": ["productSeasonId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

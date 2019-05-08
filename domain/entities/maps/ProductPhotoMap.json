@@ -1,0 +1,9 @@
+{
+    "entity": {
+        "name": "ProductPhoto",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 604800,
+        "children": []
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "entity": {
+        "name": "ProductSheetModelPrototypeCategoryGroup",
+        "keys": [
+            "id"
+        ],
+        "children": [
+            {
+                "name": "productSheetModelPrototypeMacroCategoryGroup",
+                "entity": "ProductSheetModelPrototypeMacroCategoryGroup",
+                "parentKeys": [
+                    "macroCategoryGroupId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productSheetModelPrototype",
+                "entity": "ProductSheetModelPrototype",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys": [
+                    "categoryGroupId"
+                ],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "files": {
+        "main": {
+            "location": "dalben/import",
+            "columns": 18
+        }
+    },
+    "mapping": {
+        "main": {
+            "extId": 0,
+            "itemno": 2
+        },
+        "second": {
+            "price": 11,
+            "value": 14,
+            "brand": 12,
+            "var": 15
+        },
+        "extend": {
+            "name": 6,
+            "description": 3,
+            "season": 9,
+            "audience": 10,
+            "cat1": 5,
+            "generalColor": 15
+        },
+        "skusMain": {
+            "size": 1
+        },
+        "skuSecondary": {
+            "qty": 4,
+            "price": 11,
+            "value": 14
+        }
+    },
+    "miscellaneous": {
+        "separator": ";"
+    },
+    "destFTPClient": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "PBYI34nbf",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    },
+    "filesConfig": {
+        "location": "ftp",
+        "mode": "full",
+        "separator": ";",
+        "delimiter": "\"",
+        "istructions": {
+            "remoteFolder": "./",
+            "regex": "#(prodotti)(.*).[cC][sS][vV]#u",
+            "root": "__default__",
+            "folder": "import",
+            "glob": "*.CSV"
+        }
+    },
+    "filesFtpConfig": {
+        "host": "EDS-7.EDS-TEMA.IT",
+        "user": "DALBEN_EC_DISP",
+        "pass": "DALBEN_EC_DISP",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "ProductDetail",
+        "keys": ["id"],
+        "children": [
+            {
+                "name": "productDetailTranslation",
+                "entity": "ProductDetailTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["productDetailId"],
+                "type": "OneToMany",
+                "lang": true
+            },
+            {
+                "name": "productSheetActual",
+                "entity": "ProductSheetActual",
+                "parentKeys": ["id"],
+                "childKeys": ["productDetailId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

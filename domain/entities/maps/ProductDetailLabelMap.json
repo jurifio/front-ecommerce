@@ -1,0 +1,15 @@
+{
+    "entity": {
+        "name": "ProductDetailLabel",
+        "keys": ["id"],
+        "children": [
+            {
+                "name": "productDetailLabelTranslation",
+                "entity": "ProductDetailLabelTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["productDetailLabelId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

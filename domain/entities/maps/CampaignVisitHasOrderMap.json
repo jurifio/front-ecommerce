@@ -1,0 +1,24 @@
+{
+    "entity": {
+        "name": "CampaignVisitHasOrderMap",
+        "keys": ["campaignVisitId",
+                 "campaignId",
+                 "orderId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "campaignVisit",
+                "entity": "CampaignVisit",
+                "parentKeys": ["campaignVisitId","campaignId"],
+                "childKeys": ["id","campaignId"],
+                "type": "OneToOne"
+            },{
+                "name": "order",
+                "entity": "Order",
+                "parentKeys": ["orderId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

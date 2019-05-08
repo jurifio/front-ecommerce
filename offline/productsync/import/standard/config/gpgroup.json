@@ -1,0 +1,28 @@
+{
+    "filesConfig": {
+        "location": "url",
+        "istructions": {
+            "url": "http://stat.filippomarchesani.net:2060/gw_iwes/collect.php?o=iwesG&p=te01d&q=getall&resp=xml&w=a&t=s&for=art",
+            "root": "__default__",
+            "folder": "import",
+            "glob": "*.xml"
+        },
+        "extension": ".xml"
+    },
+    "keys": {
+        "product": [
+            "extId"
+        ],
+        "sku": [
+            "extSkuId"
+        ]
+    },
+    "destFTPClient": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "PBYI34nbf",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    }
+}

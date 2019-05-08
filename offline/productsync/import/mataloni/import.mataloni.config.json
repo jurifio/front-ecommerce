@@ -1,0 +1,32 @@
+{
+    "files": {
+        "main": {
+            "columns":  31,
+            "extKeys": ["itemno","var"]
+        },
+        "skus": {
+            "columns":  31,
+            "extKeys": ["extId"]
+        }
+    },
+    "mapping": {
+        "main":  {
+            "itemno": 7,
+            "var" : 8,
+            "extId": 19,
+            "price": 29,
+            "value": 25,
+            "brand":5
+        },
+        "skus": {
+            "extId": 19,
+            "price": 29,
+            "value": 25,
+            "qty": 26
+        }
+    },
+    "miscellaneous": {
+        "separator": "\t"
+    }
+
+}

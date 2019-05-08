@@ -1,0 +1,271 @@
+{
+    "entity": {
+        "name": "Product",
+        "keys": ["id", "productVariantId"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "productBrand",
+                "entity": "ProductBrand",
+                "parentKeys": ["productBrandId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+              "name": "productSeason",
+              "entity": "ProductSeason",
+              "parentKeys": ["productSeasonId"],
+              "childKeys": ["id"],
+              "type": "OneToOne"
+            },{
+                "name": "productVariant",
+                "entity": "ProductVariant",
+                "parentKeys": ["productVariantId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productSheetActual",
+                "entity": "ProductSheetActual",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            } ,{
+                "name": "productEan",
+                "entity": "ProductEan",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name": "productHasProductCategory",
+                "entity": "ProductHasProductCategory",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name": "productSheetPrototype",
+                "entity": "ProductSheetPrototype",
+                "parentKeys": ["productSheetPrototypeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId"
+                ],
+                "type": "OneToMany"
+            },{
+                "name": "productPublicSku",
+                "entity": "ProductPublicSku",
+                "parentKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId"
+                ],
+                "type": "OneToMany"
+            },{
+                "name" : "productPhoto",
+                "entity" : "ProductPhoto",
+                "parentKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "ProductHasProductPhoto",
+                    "childKeys": ["productPhotoId"],
+                    "parentKeys" : ["productId","productVariantId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name" : "productColorGroup",
+                "entity" : "ProductColorGroup",
+                "parentKeys": [
+                    "productColorGroupId"
+                ],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
+                "name" : "productCategoryTranslation",
+                "entity" : "ProductCategoryTranslation",
+                "parentKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "childKeys" : ["productCategoryId"],
+                "joinOn" :
+                {
+                    "table": "ProductHasProductCategory",
+                    "childKeys": ["productCategoryId"],
+                    "parentKeys" : ["productId","productVariantId"]
+                },
+                "type" : "ManyToMany",
+                "lang" : true
+            },{
+                "name" : "productCategory",
+                "entity" : "ProductCategory",
+                "parentKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "ProductHasProductCategory",
+                    "childKeys": ["productCategoryId"],
+                    "parentKeys" : ["productId","productVariantId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name" : "shop",
+                "entity" : "Shop",
+                "parentKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "ShopHasProduct",
+                    "childKeys": ["shopId"],
+                    "parentKeys" : ["productId","productVariantId"]
+                },
+                "type" : "ManyToMany"
+            },{
+              "name": "productNameTranslation",
+              "entity": "ProductNameTranslation",
+              "parentKeys": [
+                "id",
+                "productVariantId"
+              ],
+              "childKeys": [
+                "productId",
+                "productVariantId"
+              ],
+              "type": "OneToMany",
+              "lang": true
+            },{
+              "name": "productDescriptionTranslation",
+              "entity": "ProductDescriptionTranslation",
+              "parentKeys": [
+                "id",
+                "productVariantId"
+              ],
+              "childKeys": [
+                "productId",
+                "productVariantId"
+              ],
+              "type": "OneToMany",
+              "lang": true
+            },{
+                "name": "productSizeGroup",
+                "entity": "ProductSizeGroup",
+                "parentKeys": ["productSizeGroupId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name" : "tag",
+                "entity" : "Tag",
+                "parentKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "ProductHasTag",
+                    "childKeys": ["tagId"],
+                    "parentKeys" : ["productId","productVariantId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name": "productStatus",
+                "entity": "ProductStatus",
+                "parentKeys": ["productStatusId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productHasTag",
+                "entity": "ProductHasTag",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name": "shopHasProduct",
+                "entity": "ShopHasProduct",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name": "marketplaceAccountHasProduct",
+                "entity": "MarketplaceAccountHasProduct",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name": "orderLine",
+                "entity": "OrderLine",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name": "cartLine",
+                "entity": "CartLine",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name" : "shooting",
+                "entity" : "Shooting",
+                "parentKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "ProductHasShooting",
+                    "childKeys": ["shootingId"],
+                    "parentKeys" : ["productId","productVariantId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name": "productCardPhoto",
+                "entity": "ProductCardPhoto",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "prestashopHasProduct",
+                "entity": "PrestashopHasProduct",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productBrandHasPrestashopManufacturer",
+                "entity": "ProductBrandHasPrestashopManufacturer",
+                "parentKeys": ["productBrandId"],
+                "childKeys": ["productBrandId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productColorGroupHasPrestashopColorOption",
+                "entity": "ProductColorGroupHasPrestashopColorOption",
+                "parentKeys": ["productColorGroupId"],
+                "childKeys": ["productColorGroupId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

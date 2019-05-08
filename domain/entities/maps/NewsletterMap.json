@@ -1,0 +1,33 @@
+{
+    "entity": {
+        "name": "NewsletterUser",
+        "keys": [
+            "id"
+        ],
+        "cacheable": "false",
+        "children": [
+            {
+                "name": "user",
+                "entity": "User",
+                "parentKeys": [
+                    "userId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "lang",
+                "entity": "Lang",
+                "parentKeys": [
+                    "langId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

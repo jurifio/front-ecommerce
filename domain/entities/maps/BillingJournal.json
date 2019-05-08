@@ -1,0 +1,11 @@
+{
+    "entity": {
+        "name": "BillingJournal",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "entity": {
+        "name": "ImporterConnector",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+              "name": "importerConnectorStart",
+              "entity": "ImporterConnectorStart",
+              "parentKeys": ["id"],
+              "childKeys": ["importerConnectorId"],
+              "type": "OneToMany"
+            }
+        ]
+    }
+}

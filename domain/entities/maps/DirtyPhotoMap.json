@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "DirtyPhoto",
+        "keys": ["id", "dirtyProductId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "dirtyProductId",
+                "entity": "DirtyProduct",
+                "parentKeys": ["dirtyProductId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

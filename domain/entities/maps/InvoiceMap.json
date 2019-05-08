@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "Invoice",
+        "keys": ["id", "orderId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "order",
+                "entity": "Order",
+                "parentKeys": ["orderId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

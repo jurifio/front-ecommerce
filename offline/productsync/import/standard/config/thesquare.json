@@ -1,0 +1,68 @@
+{
+    "files": {
+        "main": {
+            "location": "thesquare/import/articoli.txt",
+            "columns": 40,
+            "extKeys": [
+                "extId"
+            ]
+        },
+        "skus": {
+            "location": "thesquare/import/progressivi.txt",
+            "columns": 8,
+            "extKeys": [
+                "extId",
+                "extSizeId"
+            ]
+        },
+        "sizes": {
+            "location": "thesquare/import/taglie.txt",
+            "columns": 6,
+            "extKeys": [
+                "extSizeId"
+            ]
+        }
+    },
+    "mapping": {
+        "main": {
+            "extId": 19,
+            "brand": 12,
+            "itemno": 1,
+            "name": 2,
+            "var": 20,
+            "price": 31,
+            "value": 29,
+            "salePrice": 32,
+            "description": 34,
+            "season": 6,
+            "category2": 14,
+            "category1": 16,
+            "target": 18,
+            "color": 22,
+            "fabric": 24,
+            "detail": 26,
+            "category3": 28
+        },
+        "skus": {
+            "extId": 0,
+            "extSizeId": 1,
+            "qty": 2
+        },
+        "sizes": {
+            "extSizeId": 2,
+            "sizeName": 3
+        }
+    },
+    "miscellaneous": {
+        "photos": "gf888/import/photos",
+        "separator": "|",
+        "destFTPClient": {
+            "host": "fiber.office.iwes.it",
+            "user": "shooting",
+            "pass": "PBYI34nbf",
+            "port": "21",
+            "timeout": "10",
+            "mode": "2"
+        }
+    }
+}

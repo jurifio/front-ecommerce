@@ -1,0 +1,52 @@
+{
+    "entity": {
+        "name": "ProductPublicSkuMap",
+        "keys": [
+            "productId",
+            "productVariantId",
+            "productSizeId"
+        ],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "productSize",
+                "entity": "ProductSize",
+                "parentKeys": [
+                    "productSizeId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId"
+                ],
+                "childKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "cartLine",
+                "entity": "CartLine",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId",
+                    "productSizeId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId",
+                    "productSizeId"
+                ],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

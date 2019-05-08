@@ -1,0 +1,29 @@
+{
+    "entity": {
+        "name": "PostCategory",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "postCategoryTranslation",
+                "entity": "PostCategoryTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["postCategoryId"],
+                "type": "OneToMany",
+                "lang": true
+            },{
+                "name": "parentPostCategory",
+                "entity": "PostCategory",
+                "parentKeys": ["parentPostCategoryId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "childrenPostCategory",
+                "entity": "PostCategory",
+                "parentKeys": ["id"],
+                "childKeys": ["parentPostCategoryId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

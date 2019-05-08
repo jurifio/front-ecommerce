@@ -1,0 +1,58 @@
+{
+    "entity": {
+        "name": "Shop",
+        "keys": [
+            "id"
+        ],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "job",
+                "entity": "Job",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys": [
+                    "defaultArgs"
+                ],
+                "type": "OneToOne"
+            },{
+                "name" : "user",
+                "entity" : "User",
+                "parentKeys": ["id"],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "UserHasShop",
+                    "childKeys": ["UserId"],
+                    "parentKeys" : ["shopId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name" : "billingAddressBook",
+                "entity" : "AddressBook",
+                "parentKeys": ["billingAddressBookId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
+                "name" : "shippingAddressBook",
+                "entity" : "AddressBook",
+                "parentKeys": ["id"],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "ShopHasShippingAddressBook",
+                    "parentKeys" : ["shopId"],
+                    "childKeys": ["addressBookId"]
+                },
+                "type" : "ManyToMany"
+            },{
+                "name": "sectional",
+                "entity": "Sectional",
+                "parentKeys": ["id"],
+                "childKeys": ["shopId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

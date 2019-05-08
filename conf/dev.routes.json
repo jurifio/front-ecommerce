@@ -1,0 +1,272 @@
+{
+    "error": {
+        "404": "/themes/flatize/404.php"
+    },
+    "hosts": [],
+    "routes": [
+        {
+            "name": "Pagina Brand",
+            "pattern": "(/:loc)(/:brand-b:brandId)(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CBrandLandingController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}",
+                "brand": "([a-z0-9]+(-([a-z]+|[0-9]+)){0,4})",
+                "brandId": "([0-9]+)"
+            },
+            "translations": {},
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "name": "Pagina Prodotto",
+            "pattern": "/:loc/:brand/cpf/:itemno/p/:item/v/:variant(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CProductDetailController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}",
+                "brand": "([a-z0-9-]+)",
+                "itemno": "([a-z0-9-]+)",
+                "item": "([0-9]+)",
+                "variant": "([0-9]+)"
+            },
+            "translations": {},
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "name": "Ricerca",
+            "pattern": "/:loc/§searchLabelName/:query",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CProductSearchController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}",
+                "query": "([a-zA-Z0-9-_&=+%])+"
+            },
+            "translations": {
+                "searchLabelName": "(search|cerca|suche)"
+            },
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "name": "Catalogo",
+            "pattern": "/:loc(/:brand-b:brandId)?((?+1)?(/:category-:categoryId))(/tag-:tag-t:tagId)?(/§colorLabelName-:color-c:colorId)?(/§sizeLabelName-:size-s:sizeId)?(/:rootCategory-r:rootCategoryId)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CCatalogController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}",
+                "brand": "([a-z0-9-])+",
+                "brandId": "([0-9]+)",
+                "category": "((?!tag-)(?!§colorLabelName-)(?!§sizeLabelName-)[a-z0-9-])+",
+                "categoryId": "([0-9]+)",
+                "color": "((?!§sizeLabelName)(?!tag)[a-z0-9-])+",
+                "colorId": "([0-9]+)",
+                "tag": "((?!§sizeLabelName)(?!§colorLabelName)[a-z0-9-])+",
+                "tagId": "([0-9]+)",
+                "size": "((?!§colorLabelName)(?!tag)[a-z0-9-])+",
+                "sizeId": "([0-9]+)",
+                "rootCategory": "([a-z0-9]+)",
+                "rootCategoryId": "([0-9]+)"
+            },
+            "translations": {
+                "colorLabelName": "(color|colour|colore|farbe)",
+                "sizeLabelName": "(taglia|size|grose)"
+            },
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "name": "Elenco Brand",
+            "pattern": "/:loc/brands(/:category-:categoryId)(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CBrandListController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}",
+                "category": "([a-z0-9-])+",
+                "categoryId": "([0-9]+)"
+            },
+            "translations": {},
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "name": "Carrello",
+            "pattern": "/:loc/§cartLabelName(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CCartController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}"
+            },
+            "translations": {
+                "cartLabelName": "(carrello|cart|warenkorb)"
+            },
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "name": "Checkout - Riepilogo",
+            "pattern": "/:loc/§checkout(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CCheckoutController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}"
+            },
+            "translations": {
+                "checkout": "(checkout|riepilogo-ordine)"
+            },
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "name": "Checkout - Metodo Pagamento",
+            "pattern": "/:loc/§metodopagamento(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CPaymentMethodController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}"
+            },
+            "translations": {
+                "metodopagamento": "(metodo-pagamento|payment-method|zahlungsart)"
+            },
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "name": "Checkout - Pagamento",
+            "pattern": "/:loc/§pagamento(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CPaymentController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}"
+            },
+            "translations": {
+                "pagamento": "(pagamento|payment)"
+            },
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "name": "Checkout - Spedizione",
+            "pattern": "/:loc/§spedizione(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CShippingAddressController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}"
+            },
+            "translations": {
+                "spedizione": "(spedizione|shipment|versand)"
+            },
+            "methods": [
+                "GET",
+                "POST"
+            ]
+        },
+        {
+            "name": "Checkout - Grazie",
+            "pattern": "/:loc/thank-you/:orderId(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CThankYouController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}",
+                "orderId": "[0-9]{1,9}"
+            },
+            "translations": {},
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "name": "Checkout - Errore",
+            "pattern": "/:loc/error/:orderId(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\COrderErrorController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}",
+                "orderId": "[0-9]{1,9}"
+            },
+            "translations": {},
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "pattern": "/:loc/account-non-attivo(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CActivationRequiredController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}"
+            },
+            "translations": {},
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "pattern": "/:loc/focus/:focus/L:id(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CFocusPageController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}",
+                "focus": "[a-zA-Z0-9-_]+",
+                "id": "[a-zA-Z0-9]+"
+            },
+            "translations": {},
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "pattern": "/:loc/focus/:focus/:id(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CFocusPageController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}",
+                "focus": "[a-zA-Z0-9-_]+",
+                "id": "[a-zA-Z0-9]+"
+            },
+            "translations": {},
+            "methods": [
+                "GET"
+            ]
+        },
+        {
+            "pattern": "/services/feed/:loc/:marketplaceSlug(/)?",
+            "behaviour": {
+                "ctrl": "\\bamboo\\ecommerce\\controllers\\CFeedController"
+            },
+            "filters": {
+                "loc": "[a-z]{2}",
+                "marketplaceSlug": "[a-z-]+"
+            },
+            "translations": {},
+            "methods": [
+                "GET"
+            ]
+        }
+    ]
+}

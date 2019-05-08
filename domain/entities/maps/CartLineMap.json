@@ -1,0 +1,29 @@
+{
+    "entity": {
+        "name": "CartLine",
+        "keys": ["id","cartId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name" : "productPublicSku",
+                "entity" : "ProductPublicSku",
+                "parentKeys": ["productId","productVariantId","productSizeId"],
+                "childKeys" : ["productId","productVariantId","productSizeId"],
+                "type" : "OneToOne"
+            },{
+                "name" : "shop",
+                "entity" : "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },
+            {
+                "name" : "cart",
+                "entity" : "Cart",
+                "parentKeys": ["cartId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            }
+        ]
+    }
+}

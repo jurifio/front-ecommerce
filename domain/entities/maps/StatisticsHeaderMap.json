@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "StatisticsHeader",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "statisticsRow",
+                "entity": "StatisticsRow",
+                "parentKeys": ["id"],
+                "childKeys": ["idStatisticsHeader"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "entity": {
+        "name": "ImporterConnectorOperation",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "importerField",
+                "entity": "ImporterField",
+                "parentKeys": ["importerFieldId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+              "name": "importerOperator",
+              "entity": "ImporterOperator",
+              "parentKeys": ["importerOperatorId"],
+              "childKeys": ["id"],
+              "type": "OneToOne"
+            },{
+              "name": "importerFieldModifier",
+              "entity": "ImporterFieldModifier",
+              "parentKeys": ["importerFieldModifierId"],
+              "childKeys": ["id"],
+              "type": "OneToOne"
+            },{
+                "name": "importerLogicConnector",
+                "entity": "ImporterLogicConnector",
+                "parentKeys": ["importerLogicConnectorId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "nextOperation",
+                "entity": "ImporterConnectorOperation",
+                "parentKeys": ["nextOperationId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "entity": {
+        "name": "paymentBill",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "paymentBillHasInvoiceNew",
+                "entity": "PaymentBillHasInvoiceNew",
+                "parentKeys": ["id"],
+                "childKeys": ["paymentBillId"],
+                "type": "OneToMany"
+            },{
+                "name" : "document",
+                "entity" : "Document",
+                "parentKeys": ["id"],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "PaymentBillHasInvoiceNew",
+                    "childKeys": ["invoiceNewId"],
+                    "parentKeys" : ["paymentBillId"]
+                },
+                "type" : "ManyToMany"
+            }
+        ]
+    }
+}

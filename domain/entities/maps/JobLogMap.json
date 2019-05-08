@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "JobLog",
+        "keys": ["id", "jobId", "jobExecutionId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "jobExecution",
+                "entity": "JobExecution",
+                "parentKeys": ["jobExecutionId"],
+                "childKeys": ["id"],
+                "type": "ManyToMany"
+            },
+            {
+                "name": "job",
+                "entity": "Job",
+                "parentKeys": ["jobId"],
+                "childKeys": ["id"],
+                "type": "ManyToMany"
+            }
+        ]
+    }
+}

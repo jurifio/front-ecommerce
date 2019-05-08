@@ -1,0 +1,18 @@
+{
+    "entity": {
+        "name": "ProductBrand",
+        "keys": [
+            "id"
+        ],
+        "cacheable": "false",
+        "children": [
+            {
+                "name": "productBrandHasPrestashopManufacturer",
+                "entity": "ProductBrandHasPrestashopManufacturer",
+                "parentKeys": ["id"],
+                "childKeys": ["productBrandId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

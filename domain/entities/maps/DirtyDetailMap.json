@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "DirtyDetail",
+        "keys": ["id", "dirtyProductId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "dirtyProduct",
+                "entity": "DirtyProduct",
+                "parentKeys": ["dirtyProductId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

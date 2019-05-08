@@ -1,0 +1,22 @@
+{
+    "entity": {
+        "name": "OrderLineStatus",
+        "keys": ["id"],
+        "children": [
+            {
+                "name" : "nextOrderLineStatus",
+                "entity" : "OrderLineStatus",
+                "parentKeys": ["nextOrderLineStatusId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },
+            {
+                "name" : "errOrderLineStatus",
+                "entity" : "OrderLineStatus",
+                "parentKeys": ["errOrderLineStatusId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            }
+        ]
+    }
+}

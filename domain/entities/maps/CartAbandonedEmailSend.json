@@ -1,0 +1,30 @@
+{
+    "entity": {
+        "name": "CartAbandonedEmailPSend",
+        "keys": ["id"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name" : "couponType",
+                "entity" : "CouponType",
+                "parentKeys": ["couponTypeId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },
+            {
+                "name" : "cart",
+                "entity" : "Cart",
+                "parentKeys": ["cartId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },
+            {
+                "name" : "user",
+                "entity" : "User",
+                "parentKeys": ["userId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            }
+        ]
+    }
+}

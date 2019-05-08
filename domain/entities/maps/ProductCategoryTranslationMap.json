@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "ProductCategoryTranslation",
+        "keys": ["productCategoryId","langId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "productCategory",
+                "entity": "ProductCategory",
+                "parentKeys": ["productCategoryId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

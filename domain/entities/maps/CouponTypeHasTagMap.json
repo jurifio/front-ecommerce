@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "CouponTypeHasTagMap",
+        "keys": ["couponTypeId","tagId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "couponType",
+                "entity": "CouponType",
+                "parentKeys": ["couponTypeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "tag",
+                "entity": "Tag",
+                "parentKeys": ["tagId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

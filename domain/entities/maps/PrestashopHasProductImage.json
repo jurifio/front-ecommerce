@@ -1,0 +1,18 @@
+{
+    "entity": {
+        "name": "PrestashopHasProductImage",
+        "keys": ["idImage"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "prestashopHasProduct",
+                "entity": "PrestaShopHasProduct",
+                "parentKeys": ["prestaId"],
+                "childKeys": ["prestaId"],
+                "type": "OneToOne"
+            }
+
+        ]
+    }
+}

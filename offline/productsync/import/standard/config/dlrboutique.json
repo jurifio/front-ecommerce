@@ -1,0 +1,48 @@
+{
+    "filesConfig": {
+        "location": "url",
+        "istructions": {
+            "url": "https://www.dlrboutique.com/it-IT/home/mclab",
+            "root": "__default__",
+            "folder": "import",
+            "glob": "*.csv"
+        },
+        "extension": ".csv"
+    },
+    "mapping": {
+        "extId": 0,
+        "cat1": 2,
+        "itemno": 3,
+        "cat2": 4,
+        "audience": 5,
+        "generalColor": 6,
+        "brand": 7,
+        "det1": 8,
+        "name": 9,
+        "description": 10,
+        "value": 11,
+        "price": 12,
+        "size": 16,
+        "qty": 17,
+        "img1": 18,
+        "img2": 20,
+        "img3": 21,
+        "img4": 22
+    },
+    "keys": {
+        "product": [
+            "itemno"
+        ],
+        "sku": [
+            "extSkuId"
+        ]
+    },
+    "destFTPClient": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "PBYI34nbf",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    }
+}
