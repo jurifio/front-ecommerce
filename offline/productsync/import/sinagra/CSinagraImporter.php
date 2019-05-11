@@ -121,7 +121,7 @@ class CSinagraImporter extends ABluesealProductImporter
                     continue;
                 }
                 $this->debug('Cycle','product checking item_imgs',$one['img']);
-                $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $newDirtyProductExtend["id"]])->fetchAll();
+                $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' =>  $newDirtyProductExtend["dirtyProductId"]])->fetchAll();
                 $position = 0;
                 foreach ($one['img'] as $img) {
                     if(empty(trim($img))) continue;
@@ -130,7 +130,7 @@ class CSinagraImporter extends ABluesealProductImporter
                     }
                     $position++;
                     \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
-                        'dirtyProductId' => $newDirtyProductExtend['id'],
+                        'dirtyProductId' =>  $newDirtyProductExtend["dirtyProductId"],
                         'shopId' => $this->getShop()->id,
                         'url' => $img,
                         'location' => 'url',

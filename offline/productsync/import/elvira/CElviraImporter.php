@@ -120,6 +120,25 @@ class CElviraImporter extends ABluesealProductImporter
                     $this->error('Multiple dirty product founded', 'Procedure has founded '.$existingDirtyProduct.' dirty product');
                     continue;
                 }
+                $this->debug('Cycle','product checking item_imgs',$one['img']);
+                $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' =>  $newDirtyProductExtend["dirtyProductId"]])->fetchAll();
+                $position = 0;
+                foreach ($one['img'] as $img) {
+                    if(empty(trim($img))) continue;
+                    foreach ($dirtyPhotos as $exImg) {
+                        if ($exImg['url'] == $img) continue 2;
+                    }
+                    $position++;
+                    \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
+                        'dirtyProductId' =>  $newDirtyProductExtend["dirtyProductId"],
+                        'shopId' => $this->getShop()->id,
+                        'url' => $img,
+                        'location' => 'url',
+                        'position' => $position,
+                        'worked' => 0
+                    ]);
+                }
+
 
                 \Monkey::app()->repoFactory->commit();
             } catch (\Throwable $e) {
@@ -144,24 +163,7 @@ class CElviraImporter extends ABluesealProductImporter
                     $this->error( 'Reading Skus', 'Dirty Product not found while looking at sku', json_encode($one));
                     continue;
                 }
-                $this->debug('Cycle','product checking item_imgs',$one['img']);
-                $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $newDirtyProductExtend["id"]])->fetchAll();
-                $position = 0;
-                foreach ($one['img'] as $img) {
-                    if(empty(trim($img))) continue;
-                    foreach ($dirtyPhotos as $exImg) {
-                        if ($exImg['url'] == $img) continue 2;
-                    }
-                    $position++;
-                    \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
-                        'dirtyProductId' => $newDirtyProductExtend['id'],
-                        'shopId' => $this->getShop()->id,
-                        'url' => $img,
-                        'location' => 'url',
-                        'position' => $position,
-                        'worked' => 0
-                    ]);
-                }
+
 
 
                 $newDirtySku["size"] = $one["taglia"];
