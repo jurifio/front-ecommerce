@@ -109,7 +109,24 @@ class CElviraImporter extends ABluesealProductImporter
 
                         //inserisco il prodotto
                         $newDirtyProductExtend["dirtyProductId"] = \Monkey::app()->dbAdapter->insert('DirtyProduct', $newDirtyProduct);
-
+                        $this->debug('Cycle','product checking item_imgs',$one['img']);
+                        $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' =>  $newDirtyProductExtend["dirtyProductId"]])->fetchAll();
+                        $position = 0;
+                        foreach ($one['img'] as $img) {
+                            if(empty(trim($img))) continue;
+                            foreach ($dirtyPhotos as $exImg) {
+                                if ($exImg['url'] == $img) continue 2;
+                            }
+                            $position++;
+                            \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
+                                'dirtyProductId' =>  $newDirtyProductExtend["dirtyProductId"],
+                                'shopId' => $this->getShop()->id,
+                                'url' => $img,
+                                'location' => 'url',
+                                'position' => $position,
+                                'worked' => 0
+                            ]);
+                        }
                         //inserisco dirty product extend
                         $newDirtyProductExtend["shopId"] = $this->getShop()->id;
 
@@ -120,24 +137,7 @@ class CElviraImporter extends ABluesealProductImporter
                     $this->error('Multiple dirty product founded', 'Procedure has founded '.$existingDirtyProduct.' dirty product');
                     continue;
                 }
-                $this->debug('Cycle','product checking item_imgs',$one['img']);
-                $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' =>  $newDirtyProductExtend["dirtyProductId"]])->fetchAll();
-                $position = 0;
-                foreach ($one['img'] as $img) {
-                    if(empty(trim($img))) continue;
-                    foreach ($dirtyPhotos as $exImg) {
-                        if ($exImg['url'] == $img) continue 2;
-                    }
-                    $position++;
-                    \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
-                        'dirtyProductId' =>  $newDirtyProductExtend["dirtyProductId"],
-                        'shopId' => $this->getShop()->id,
-                        'url' => $img,
-                        'location' => 'url',
-                        'position' => $position,
-                        'worked' => 0
-                    ]);
-                }
+
 
 
                 \Monkey::app()->repoFactory->commit();
