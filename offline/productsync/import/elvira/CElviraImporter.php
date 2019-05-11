@@ -8,7 +8,7 @@ use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
  * Class CElviraImporter
- * @package bamboo\offline\productsync\import\alducadaosta
+ * @package bamboo\offline\productsync\import\elvira
  *
  * @author Iwes Team <it@iwes.it>
  *
@@ -143,6 +143,24 @@ class CElviraImporter extends ABluesealProductImporter
                 if(!$dirtyProduct){
                     $this->error( 'Reading Skus', 'Dirty Product not found while looking at sku', json_encode($one));
                     continue;
+                }
+                $this->debug('Cycle','product checking item_imgs',$one['img']);
+                $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $newDirtyProductExtend["id"]])->fetchAll();
+                $position = 0;
+                foreach ($one['img'] as $img) {
+                    if(empty(trim($img))) continue;
+                    foreach ($dirtyPhotos as $exImg) {
+                        if ($exImg['url'] == $img) continue 2;
+                    }
+                    $position++;
+                    \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
+                        'dirtyProductId' => $newDirtyProductExtend['id'],
+                        'shopId' => $this->getShop()->id,
+                        'url' => $img,
+                        'location' => 'url',
+                        'position' => $position,
+                        'worked' => 0
+                    ]);
                 }
 
 

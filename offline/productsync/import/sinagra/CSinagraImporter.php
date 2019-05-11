@@ -8,7 +8,7 @@ use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
  * Class CSinagraImporter
- * @package bamboo\offline\productsync\import\alducadaosta
+ * @package bamboo\offline\productsync\import\sinagra
  *
  * @author Iwes Team <it@iwes.it>
  *
@@ -120,6 +120,26 @@ class CSinagraImporter extends ABluesealProductImporter
                     $this->error('Multiple dirty product founded', 'Procedure has founded '.$existingDirtyProduct.' dirty product');
                     continue;
                 }
+                $this->debug('Cycle','product checking item_imgs',$one['img']);
+                $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $newDirtyProductExtend["id"]])->fetchAll();
+                $position = 0;
+                foreach ($one['img'] as $img) {
+                    if(empty(trim($img))) continue;
+                    foreach ($dirtyPhotos as $exImg) {
+                        if ($exImg['url'] == $img) continue 2;
+                    }
+                    $position++;
+                    \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
+                        'dirtyProductId' => $newDirtyProductExtend['id'],
+                        'shopId' => $this->getShop()->id,
+                        'url' => $img,
+                        'location' => 'url',
+                        'position' => $position,
+                        'worked' => 0
+                    ]);
+                }
+
+
 
                 \Monkey::app()->repoFactory->commit();
             } catch (\Throwable $e) {
