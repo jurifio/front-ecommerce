@@ -49,6 +49,7 @@ class CSinagraImporter extends ABluesealProductImporter
             $newDirtyProduct = [];
             $newDirtyProductExtend = [];
             $newDirtySku = [];
+            $newDirtyPhoto=[];
 
             //DIRTY PRODUCT
             try {
@@ -72,6 +73,7 @@ class CSinagraImporter extends ABluesealProductImporter
                 $newDirtyProductExtend["audience"] = $one["reparto"];
                 $newDirtyProductExtend["cat1"] = $one["categoria"];
                 $newDirtyProductExtend["generalColor"] = $one["colore"];
+
 
 
                 $existingDirtyProduct = \Monkey::app()->dbAdapter->selectCount("DirtyProduct", ['checksum' => $newDirtyProduct['checksum']]);

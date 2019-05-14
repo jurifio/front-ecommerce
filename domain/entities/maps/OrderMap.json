@@ -23,6 +23,12 @@
                 "childKeys": ["id"],
                 "type": "OneToOne"
             },{
+                "name": "invoiceDocument",
+                "entity": "InvoiceDocument",
+                "parentKeys": ["id"],
+                "childKeys": ["orderId"],
+                "type": "OneToMany"
+            },{
                 "name": "billingAddress",
                 "entity": "UserAddress",
                 "parentKeys": ["billingAddressId"],
