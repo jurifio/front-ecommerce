@@ -29,6 +29,12 @@
                 "parentKeys": ["id","productVariantId"],
                 "childKeys": ["productId","productVariantId"],
                 "type": "OneToMany"
+            },{
+                "name": "productHasShopDestination",
+                "entity": "ProductHasShopDestination",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
             } ,{
                 "name": "productEan",
                 "entity": "ProductEan",

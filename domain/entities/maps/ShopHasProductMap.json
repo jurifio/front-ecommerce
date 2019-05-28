@@ -35,6 +35,12 @@
                 "parentKeys": ["productSizeGroupId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"
+            },{
+                "name": "productHasShopDestination",
+                "entity": "ProductHasShopDestination",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
             }
         ]
     }

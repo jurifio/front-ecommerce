@@ -15,7 +15,7 @@
                 "name": "productVariant",
                 "entity": "ProductVariant",
                 "parentKeys": ["productVariantId"],
-                "childKeys": ["id"],
+                "childKeys": ["productVariantId"],
                 "type": "OneToOne"
             },{
                 "name": "productSheetActual",
@@ -204,6 +204,13 @@
             {
                 "name": "prestashopHasProduct",
                 "entity": "PrestashopHasProduct",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shopHasProduct",
+                "entity": "ShopHasProduct",
                 "parentKeys": ["productId","productVariantId"],
                 "childKeys": ["productId","productVariantId"],
                 "type": "OneToOne"
