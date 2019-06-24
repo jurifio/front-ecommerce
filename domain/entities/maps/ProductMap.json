@@ -259,6 +259,13 @@
                 "type": "OneToOne"
             },
             {
+                "name": "productEan",
+                "entity": "ProductEan",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },
+            {
                 "name": "productBrandHasPrestashopManufacturer",
                 "entity": "ProductBrandHasPrestashopManufacturer",
                 "parentKeys": ["productBrandId"],
