@@ -99,9 +99,9 @@ abstract class AExpertFeedBuilder extends ACronJob
      */
     protected function fetchProductsCodeMinusDeleted() {
         $idCycle = $this->app->dbAdapter->query("SELECT concat_ws('-',product,variant) AS code
-                                                  FROM vProductSortingView v LEFT JOIN 
-                                                        MarketplaceAccountHasProduct p ON v.product = p.productId AND 
-                                                                                          v.variant = p.productVariantId AND 
+                                                  FROM Product v LEFT JOIN 
+                                                        MarketplaceAccountHasProduct p ON v.id = p.productId AND 
+                                                                                          v.productVariantId = p.productVariantId AND 
                                                                                           p.marketplaceId = ? AND 
                                                                                           p.marketplaceAccountId = ?
                                                   WHERE ifnull(p.isDeleted, 0) = 0
@@ -119,9 +119,9 @@ abstract class AExpertFeedBuilder extends ACronJob
                                                                     m.productVariantId,
                                                                     m.marketplaceId,
                                                                     m.marketplaceAccountId) as code
-                                                FROM MarketplaceAccountHasProduct m, vProductSortingView p
-                                                WHERE   m.productId = p.product and 
-                                                        m.productVariantId = p.variant and 
+                                                FROM MarketplaceAccountHasProduct m, Product p
+                                                WHERE   m.productId = p.id and 
+                                                        m.productVariantId = p.productVariantId and 
                                                         marketplaceId = ? and 
                                                         marketplaceAccountId = ? and 
                                                         m.isDeleted = 0 
