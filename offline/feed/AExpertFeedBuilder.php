@@ -125,6 +125,7 @@ abstract class AExpertFeedBuilder extends ACronJob
                                                         marketplaceId = ? and 
                                                         marketplaceAccountId = ? and 
                                                         m.isDeleted = 0 
+                                                        and p.qty > 1
                                                 GROUP BY m.productId,m.productVariantId,m.marketplaceId,m.marketplaceAccountId",
             [$this->marketplaceAccount->marketplaceId,$this->marketplaceAccount->id])->fetchAll(\PDO::FETCH_COLUMN,0);
         return $idCycle;

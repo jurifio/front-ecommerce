@@ -122,7 +122,10 @@ class CProduct extends AEntity
         if (is_null($baseUrlLang)) $baseUrlLang = \Monkey::app()->baseUrl();
         $slugify = new CSlugify();
         $campaign = is_null($campaign) ? "" : "?utm_marketing_data[]=" . $campaign;
-        return $baseUrlLang . "/" . $this->productBrand->slug . "/cpf/" . $slugify->slugify($this->itemno) . "/p/" . $this->id . "/v/" . $this->productVariantId . $campaign;
+        $urlLang=str_replace('http://www.iwes.pro','https://www.pickyshop.com',$baseUrlLang);
+
+        return $urlLang . "/" . $this->productBrand->slug . "/cpf/" . $slugify->slugify($this->itemno) . "/p/" . $this->id . "/v/" . $this->productVariantId . $campaign;
+
     }
 
     /**
