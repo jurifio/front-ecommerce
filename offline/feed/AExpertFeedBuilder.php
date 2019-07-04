@@ -53,7 +53,7 @@ abstract class AExpertFeedBuilder extends ACronJob
     public function run($args = null)
     {
         $args = json_decode($args);
-        $this->report('Run', 'Starting To pass argument'.$args);
+        $this->report('Run', 'Starting To pass argument'.$args->marketplaceAccountId);
         $this->report('Run', 'Starting To build');
 
         $this->minized = $args->minified;
