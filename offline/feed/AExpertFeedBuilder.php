@@ -98,14 +98,14 @@ abstract class AExpertFeedBuilder extends ACronJob
      * Returns array of "codes" for products
      */
     protected function fetchProductsCodeMinusDeleted() {
-        $idCycle = $this->app->dbAdapter->query("SELECT concat_ws('-',product,variant) AS code
+        $idCycle = $this->app->dbAdapter->query("SELECT concat_ws('-',id,p.productVariantId) AS code
                                                   FROM Product v LEFT JOIN 
                                                         MarketplaceAccountHasProduct p ON v.id = p.productId AND 
                                                                                           v.productVariantId = p.productVariantId AND 
                                                                                           p.marketplaceId = ? AND 
                                                                                           p.marketplaceAccountId = ?
                                                   WHERE ifnull(p.isDeleted, 0) = 0
-                                                  GROUP BY product,variant", [
+                                                  GROUP BY id,productVariantId", [
             $this->marketplaceAccount->marketplaceId,
             $this->marketplaceAccount->id])->fetchAll(\PDO::FETCH_COLUMN,0);
         return $idCycle;
