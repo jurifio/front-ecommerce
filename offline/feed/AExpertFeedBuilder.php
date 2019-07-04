@@ -61,7 +61,6 @@ abstract class AExpertFeedBuilder extends ACronJob
         $marketplaceAccount = \Monkey::app()->repoFactory->create('MarketplaceAccount')->findOneByStringId($args->marketplaceAccountId);
         if(!$this->checkRightMarketplace($marketplaceAccount)) throw new BambooOutOfBoundException('Wrong marketplace in configuration: '.$marketplaceAccount->marketplace->name);
         $langId = $marketplaceAccount->config['lang'];
-        $urlSite =$marketplaceAccount->config['urlSite'];
         $lang = \Monkey::app()->repoFactory->create('Lang')->findOneBy(["lang" => $langId]);
         $this->lang = new CLang($lang->id, $lang->lang);
         unset($lang);
@@ -93,7 +92,7 @@ abstract class AExpertFeedBuilder extends ACronJob
      * @param CMarketplaceAccountHasProduct|null $marketplaceAccountHasProduct
      * @return string
      */
-    public abstract function writeProductEntry($urlSite =null , CProduct $product = null, CMarketplaceAccountHasProduct $marketplaceAccountHasProduct = null);
+    public abstract function writeProductEntry(CProduct $product = null, CMarketplaceAccountHasProduct $marketplaceAccountHasProduct = null);
 
     /**
      * Returns array of "codes" for products
