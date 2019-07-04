@@ -53,12 +53,14 @@ abstract class AExpertFeedBuilder extends ACronJob
     public function run($args = null)
     {
         $args = json_decode($args);
+        $this->report('Run', 'Starting To pass argument'.$args);
         $this->report('Run', 'Starting To build');
 
         $this->minized = $args->minified;
 
         /** @var CMarketplaceAccount $marketplaceAccount */
-        $idProduct = explode("-", $args->marketplaceAccountId);
+        $idProduct=[];
+        $idProduct= explode("-", $args->marketplaceAccountId);
         $id=$idProduct[0];
         $marketPlaceId=$idProduct[1];
         $marketplaceAccount = \Monkey::app()->repoFactory->create('MarketplaceAccount')->findOneBy(['id'=>$id,'marketPlaceId'=>$marketPlaceId]);
