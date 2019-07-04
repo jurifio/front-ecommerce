@@ -69,7 +69,7 @@ abstract class AExpertFeedBuilder extends ACronJob
         $this->marketplaceAccount = \Monkey::app()->repoFactory->create('MarketplaceAccount', $this->lang)->findOne($marketplaceAccount->getIds());
         $this->helper = new CWidgetHelper($this->app);
         $uri = $this->app->rootPath() . $this->app->cfg()->fetch('paths', 'productSync') . $marketplaceAccount->config['filePath'];
-        $this->report('Run', 'url feed');
+
         return $this->createWriter($uri);
     }
 
@@ -78,6 +78,7 @@ abstract class AExpertFeedBuilder extends ACronJob
      * @return \XMLWriter
      */
     public function createWriter($uri) {
+        $this->report('Run', 'url feed');
         /** INIZIO INTESTAZIONE XML */
         $writer = new \XMLWriter();
         $writer->openUri($uri);
