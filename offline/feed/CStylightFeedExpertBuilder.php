@@ -59,10 +59,11 @@ class CStylightFeedExpertBuilder extends AExpertFeedBuilder
      * @param CMarketplaceAccountHasProduct|null $marketplaceAccountHasProduct
      * @return string
      */
-    public function writeProductEntry(CProduct $product = null, CMarketplaceAccountHasProduct $marketplaceAccountHasProduct = null)
+    public function writeProductEntry($urlSite = null, CProduct $product = null, CMarketplaceAccountHasProduct $marketplaceAccountHasProduct = null)
     {
         $product = $marketplaceAccountHasProduct->product;
-        $baseUrlLang = $this->app->baseUrl($this->lang);
+        //$baseUrlLang = $this->app->baseUrl($this->lang);
+        $baseUrlLang = $urlSite;
         $avai = 0;
         $product->price = 0;
         $product->sale_price = 0;
