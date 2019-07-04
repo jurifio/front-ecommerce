@@ -78,7 +78,6 @@ abstract class AExpertFeedBuilder extends ACronJob
      * @return \XMLWriter
      */
     public function createWriter($uri) {
-        $this->report('Run', 'url feed');
         /** INIZIO INTESTAZIONE XML */
         $writer = new \XMLWriter();
         $writer->openUri($uri);
