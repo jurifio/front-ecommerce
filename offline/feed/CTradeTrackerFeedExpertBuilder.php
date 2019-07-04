@@ -66,7 +66,7 @@ class CTradeTrackerFeedExpertBuilder extends AExpertFeedBuilder
         $writer->writeElement('ID',$product->printId());
         $writer->writeElement('lowestPrice',$product->getDisplayActivePrice());
         $writer->writeElement('originalPrice',$product->getDisplayPrice());
-        $writer->writeElement('productURL',$product->getProductUrl(null,$this->marketplaceAccount->getCampaignCode()));
+        $writer->writeElement('productURL',$product->getProductUrl($this->marketplaceAccount->urlSite,$this->marketplaceAccount->getCampaignCode()));
         $writer->writeElement('stock',$product->qty);
         $writer->writeElement('deliveryCost',$product->getDisplayPrice() > 300 ? "0.00" : "5.00");
         $writer->writeElement('UPC',$product->printCpf());

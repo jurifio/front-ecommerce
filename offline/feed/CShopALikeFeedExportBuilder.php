@@ -116,8 +116,8 @@ class CShopALikeFeedExportBuilder extends AExpertFeedBuilder
         $categories = $product->getMarketplaceAccountCategoryIds($marketplaceAccountHasProduct->marketplaceAccount);
         $writer->writeElement('g:google_product_category', $categories[0]);
 
-		$writer->writeElement('g:link', $product->getProductUrl($this->app->baseUrl($this->lang),$marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
-		$writer->writeElement('g:mobile_link', $product->getProductUrl($this->app->baseUrl($this->lang),$marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
+		$writer->writeElement('g:link', $product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite,$marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
+		$writer->writeElement('g:mobile_link', $product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite,$marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
 		$writer->writeElement('g:image_link', $this->helper->image($product->getPhoto(1, 843), 'amazon'));
 		for ($i = 2; $i < 8; $i++) {
 			$actual = $product->getPhoto($i, 843);
