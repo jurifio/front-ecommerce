@@ -96,7 +96,7 @@ class CStylightFeedExpertBuilder extends AExpertFeedBuilder
         $writer->setIndent(!$this->minized);
         $writer->startElement("Product");
 
-        $writer->writeElement("producturl",$product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite, $marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
+        $writer->writeElement("producturl", $product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite, $marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
         foreach ($product->productCategory as $category) {
             if($category->id == 1) continue;
             $writer->writeElement("category",$category->getLocalizedPath("/"));
