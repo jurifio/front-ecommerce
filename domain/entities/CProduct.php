@@ -344,9 +344,9 @@ class CProduct extends AEntity
     }
 
     /**
-     * @param string $separator
-     * @return string
-     */
+ * @param string $separator
+ * @return string
+ */
     public function getShops($separator = ", ", $getIds = false)
     {
         $shops = [];
@@ -358,6 +358,33 @@ class CProduct extends AEntity
         }
         return implode($separator, $shops);
     }
+    /**
+     * @param string $separator
+     * @return string
+     */
+    public function getShopsIdOrigin($separator = ", ", $getIds = false)
+    {
+        $shops = [];
+        foreach ($this->shopHasProduct as $shopHasProduct) {
+            $single = '';
+            if ($getIds) $single .= $shopHasProduct->shop->id . '-';
+            $single .= $shopHasProduct->shop->name;
+            $shops[] = $single;
+        }
+        return implode($separator, $shops);
+    }
+    public function getShopsIddestination($separator = ", ", $getIds = false)
+    {
+        $shops = [];
+        foreach ($this->shopHasProduct as $shopHasProduct) {
+            $single = '';
+            if ($getIds) $single .= $shopHasProduct->shop->id . '-';
+            $single .= $shopHasProduct->shop->name;
+            $shops[] = $single;
+        }
+        return implode($separator, $shops);
+    }
+
 
     /**
      * @param null $separator
