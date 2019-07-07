@@ -223,6 +223,7 @@ class CProduct extends AEntity
     }
     public function getDisplayFullPrice()
     {
+       //price full
         $price = false;
         foreach ($this->productPublicSku as $sku) {
             if (0 < $sku->stockQty) {
