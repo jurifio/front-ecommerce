@@ -221,6 +221,17 @@ class CProduct extends AEntity
         }
         return $price;
     }
+    public function getDisplayFullPrice()
+    {
+        $price = false;
+        foreach ($this->productPublicSku as $sku) {
+            if (0 < $sku->stockQty) {
+
+                if (0 < $sku->price && ($sku->price < $price || $price === false)) $price = $sku->price;
+            }
+        }
+        return $price;
+    }
 
     /**
      * @return bool
