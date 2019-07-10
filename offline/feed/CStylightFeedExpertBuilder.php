@@ -110,6 +110,7 @@ class CStylightFeedExpertBuilder extends AExpertFeedBuilder
         $writer->writeElement("price",$product->getDisplayActivePrice());
 
         $writer->writeElement('internalid',$product->printId());
+        $writer->writeElement('upc',$product->itemno);
 
         if($onSale) {
             $writer->writeElement("msrp",$product->getDisplayPrice());
