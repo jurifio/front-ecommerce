@@ -8,6 +8,9 @@ use bamboo\domain\entities\CMarketplaceAccountHasProduct;
 use bamboo\core\jobs\ACronJob;
 use bamboo\core\theming\CWidgetHelper;
 use bamboo\domain\entities\CProduct;
+use bamboo\domain\entities\CProductSku;
+use bamboo\domain\entities\CProductPublicSku;
+use bamboo\domain\entities\CProductEan;
 use bamboo\domain\entities\CProductPhoto;
 
 /**
@@ -91,44 +94,60 @@ class CStylightFeedExpertBuilder extends AExpertFeedBuilder
         }
 
 
-        $writer = new \XMLWriter();
-        $writer->openMemory();
-        $writer->setIndent(!$this->minized);
-        $writer->startElement("Product");
-
-        $writer->writeElement("producturl", $product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite, $marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
-        foreach ($product->productCategory as $category) {
-            if($category->id == 1) continue;
-            $writer->writeElement("category",$category->getLocalizedPath("/"));
+            $writer = new \XMLWriter();
+            $writer->openMemory();
+            $writer->setIndent(!$this->minized);
+        if($product->productSku->ean == null){
+            if($product->productEan->ean != null){
+                $ean=$product->productEan->ean;
+                $found=1;
+            }else{
+                $found=0;
+            }
+        }else{
+            $ean=$product->productSku->ean;
+            $found=1;
         }
+        if($found==1) {
 
-        $writer->writeElement('Color',$product->productColorGroup->productColorGroupTranslation->getFirst()->name);
-        $writer->writeElement('Sizes',(implode(',', $sizes)));
-        $writer->writeElement('name',$product->getName());
-        $writer->writeElement("img",$this->helper->image($product->getPhoto(1,CProductPhoto::SIZE_MEDIUM), 'amazon'));
+            $writer->startElement("Product");
 
-        $writer->writeElement("price",$product->getDisplayActivePrice());
+            $writer->writeElement("producturl", $product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite, $marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
+            foreach ($product->productCategory as $category) {
+                if ($category->id == 1) continue;
+                $writer->writeElement("category", $category->getLocalizedPath("/"));
+            }
 
-        $writer->writeElement('internalid',$product->printId());
-        $writer->writeElement('upc',$product->itemno);
+            $writer->writeElement('Color', $product->productColorGroup->productColorGroupTranslation->getFirst()->name);
+            $writer->writeElement('Sizes', (implode(',', $sizes)));
+            $writer->writeElement('name', $product->getName());
+            $writer->writeElement("img", $this->helper->image($product->getPhoto(1, CProductPhoto::SIZE_MEDIUM), 'amazon'));
 
-        if($onSale) {
-            $writer->writeElement("msrp",$product->getDisplayPrice());
+            $writer->writeElement("price", $product->getDisplayActivePrice());
+
+            $writer->writeElement('internalid', $product->printId());
+            $writer->writeElement('upc', $product->itemno);
+
+            $writer->writeElement('ean13', $ean);
+
+            if ($onSale) {
+                $writer->writeElement("msrp", $product->getDisplayPrice());
+            }
+
+            $writer->startElement('desc');
+            $writer->writeCdata($product->getDescription());
+            $writer->endElement();
+
+            $writer->writeElement('Gender', $product->getGender());
+
+            $writer->startElement("brand");
+            $writer->writeCdata($product->productBrand->name);
+            $writer->endElement();
+
+            $writer->endElement();
         }
+            return $writer->outputMemory();
 
-        $writer->startElement('desc');
-        $writer->writeCdata($product->getDescription());
-        $writer->endElement();
-
-        $writer->writeElement('Gender',$product->getGender());
-
-        $writer->startElement("brand");
-        $writer->writeCdata($product->productBrand->name);
-        $writer->endElement();
-
-        $writer->endElement();
-
-        return $writer->outputMemory();
 
     }
 
