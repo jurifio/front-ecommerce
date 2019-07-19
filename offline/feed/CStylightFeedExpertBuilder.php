@@ -64,7 +64,6 @@ class CStylightFeedExpertBuilder extends AExpertFeedBuilder
     public function writeProductEntry(CProduct $product = null, CMarketplaceAccountHasProduct $marketplaceAccountHasProduct = null)
     {
         $product = $marketplaceAccountHasProduct->product;
-        $productSkuRepo = \Monkey::app()->repoFactory->create('ProductSku');
         $productEanRepo = \Monkey::app()->repoFactory->create('ProductEan');
 
         $baseUrlLang = $this->app->baseUrl($this->lang);
@@ -75,20 +74,13 @@ class CStylightFeedExpertBuilder extends AExpertFeedBuilder
         $sizes = [];
         $onSale = $product->isOnSale();
         foreach ($product->productPublicSku as $productPublicSku) {
-            $productSku = $productSkuRepo->findOneBy(['productId' => $productPublicSku->productId, 'productVariantId' => $productPublicSku->productVariantId]);
-            if ($productSku != null) {
-                $ean = $productSku->ean;
-                $found = 1;
-            } else {
-                /** @var CProductEan $productEan */
-                $productEan = $productEanRepo->findOneBy(['productId' => $productPublicSku->productId, 'productVariantId' => $productPublicSku->productVariantId]);
+                $productEan = $productEanRepo->findOneBy(['productId' => $productPublicSku->productId, 'productVariantId' => $productPublicSku->productVariantId,'usedForParent'=>1]);
                 if ($productEan != null) {
                     $ean = $productEan->ean;
                     $found = 1;
                 } else {
                     $found = 2;
                 }
-            }
 
             if ($found == 1) {
                 if ($productPublicSku->stockQty > 0) {
