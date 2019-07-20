@@ -153,6 +153,7 @@ class CShopALikeFeedExportBuilder extends AExpertFeedBuilder
 		$writer->writeElement('g:service', 'Courier');
 
         if($product->getDisplaySalePrice() > 300) {
+
 			$writer->writeElement('g:price', '0.00 EUR');
 		} else {
 			$writer->writeElement('g:price', '5.00 EUR');
