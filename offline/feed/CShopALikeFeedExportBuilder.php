@@ -38,7 +38,7 @@ class CShopALikeFeedExportBuilder extends AExpertFeedBuilder
 	{
 	    $writer = parent::run($args);
 
-        $url = $this->app->baseUrl(false, 'https') . $this->marketplaceAccount->config['feedUrl'];
+        $url = $this->app->baseUrl(false, 'https') . $this->marketplaceAccount->config[' mk'];
 
 		$writer->startElement('rss');
 		$writer->writeAttribute('xmlns:g', 'http://base.google.com/ns/1.0');
@@ -131,7 +131,7 @@ class CShopALikeFeedExportBuilder extends AExpertFeedBuilder
 		$writer->writeElement('g:availability', $avai > 0 ? 'in stock' : 'out of stock');
 		$writer->writeElement('sizes',implode(',',$sizes));
 
-		$writer->writeElement('g:price', $product->getDisplayPrice());
+		$writer->writeElement('g:price', $product->getDisplayActivePrice());
 
 		if($onSale){
 			$writer->writeElement('g:sale_price', $product->getDisplaySalePrice());
@@ -152,7 +152,7 @@ class CShopALikeFeedExportBuilder extends AExpertFeedBuilder
 		$writer->writeElement('g:country', 'IT');
 		$writer->writeElement('g:service', 'Courier');
 
-        if($product->price > 300) {
+        if($product->getDisplaySalePrice() > 300) {
 			$writer->writeElement('g:price', '0.00 EUR');
 		} else {
 			$writer->writeElement('g:price', '5.00 EUR');
