@@ -34,73 +34,76 @@ class CShopALikeFeedExportBuilder extends AExpertFeedBuilder
         return $marketplaceAccount->marketplace->name == 'ShopALike';
     }
 
-	public function run($args = null)
-	{
-	    $writer = parent::run($args);
+    public function run($args = null)
+    {
+        $writer = parent::run($args);
 
-        $url = $this->app->baseUrl(false, 'https') . $this->marketplaceAccount->config[' mk'];
+        $url = $this->app->baseUrl(false, 'https') . $this->marketplaceAccount->config['feedUrl'];
 
-		$writer->startElement('rss');
-		$writer->writeAttribute('xmlns:g', 'http://base.google.com/ns/1.0');
-		$writer->writeAttribute('version', '2.0');
+        $writer->startElement('rss');
+        $writer->writeAttribute('xmlns:g', 'http://base.google.com/ns/1.0');
+        $writer->writeAttribute('version', '2.0');
 
-		$writer->startElement("channel");
-		$writer->writeElement('title', 'ShopALike Product Feed');
-		$writer->writeElement('link', $this->app->baseUrl(false));
+        $writer->startElement("channel");
+        $writer->writeElement('title', 'ShopALike Product Feed');
+        $writer->writeElement('link', $this->app->baseUrl(false));
 
-		$writer->startElement('author');
-		$writer->writeElement('name', 'iwes');
-		$writer->endElement();
-		$writer->writeElement('description', $url);
-		$writer->writeElement('updated', date(DATE_ATOM, time()));
+        $writer->startElement('author');
+        $writer->writeElement('name', 'iwes');
+        $writer->endElement();
+        $writer->writeElement('description', $url);
+        $writer->writeElement('updated', date(DATE_ATOM, time()));
 
         $contoErrori = $this->writeMarketplaceProducts($writer);
 
-		$writer->endElement();
-		$writer->endElement();
-		$writer->endDocument();
-		$writer->flush();
+        $writer->endElement();
+        $writer->endElement();
+        $writer->endDocument();
+        $writer->flush();
 
         $this->report( 'Run', 'End build');
-		$this->report( 'Run', 'End build, errors: ' . $contoErrori);
-	}
+        $this->report( 'Run', 'End build, errors: ' . $contoErrori);
+    }
 
     /**
      * @param CProduct|null $product
      * @param CMarketplaceAccountHasProduct|null $marketplaceAccountHasProduct
      * @return string
      */
-	public function writeProductEntry(CProduct $product = null, CMarketplaceAccountHasProduct $marketplaceAccountHasProduct = null)
-	{
-		$writer = new \XMLWriter();
-		$writer->openMemory();
-		$writer->setIndent(!$this->minized);
-		$writer->startElement("item");
+    public function writeProductEntry(CProduct $product = null, CMarketplaceAccountHasProduct $marketplaceAccountHasProduct = null)
+    {
+        $productEanRepo = \Monkey::app()->repoFactory->create('ProductEan');
         $product = $marketplaceAccountHasProduct->product;
-		$writer->writeElement('g:id', $product->printId());
+        $writer = new \XMLWriter();
+        $writer->openMemory();
+        $writer->setIndent(!$this->minized);
+        $writer->startElement("item");
 
-		$avai = 0;
-		$sizes = [];
-		$onSale = $product->isOnSale();
-		foreach ($product->productPublicSku as $sku) {
-			if ($sku->stockQty > 0) {
-				$sizes[] = $sku->productSize->name;
-				$avai++;
-			}
-		}
+        $writer->writeElement('g:id', $product->printId());
 
-		$writer->startElement('title');
+        $avai = 0;
+        $sizes = [];
+        $onSale = $product->isOnSale();
+        foreach ($product->productPublicSku as $sku) {
+            if ($sku->stockQty > 0) {
+                $sizes[] = $sku->productSize->name;
+                $avai++;
+            }
+        }
+
+
+        $writer->startElement('title');
         $name = $product->getName();
         if(count($sizes)<3) $name.= " (".implode('-',$sizes).")";
-		$writer->writeCdata($name);
-		$writer->endElement();
+        $writer->writeCdata($name);
+        $writer->endElement();
 
-		$writer->startElement('description');
+        $writer->startElement('description');
 
-		$writer->writeCdata($product->getDescription());
-		$writer->endElement();
+        $writer->writeCdata($product->getDescription());
+        $writer->endElement();
 
-		$product_type = [];
+        $product_type = [];
         foreach ($product->productCategory as $category) {
             $cats = $this->app->categoryManager->categories()->getPath($category->id);
             $type = [];
@@ -116,53 +119,57 @@ class CShopALikeFeedExportBuilder extends AExpertFeedBuilder
         $categories = $product->getMarketplaceAccountCategoryIds($marketplaceAccountHasProduct->marketplaceAccount);
         $writer->writeElement('g:google_product_category', $categories[0]);
 
-		$writer->writeElement('g:link', $product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite,$marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
-		$writer->writeElement('g:mobile_link', $product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite,$marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
-		$writer->writeElement('g:image_link', $this->helper->image($product->getPhoto(1, 843), 'amazon'));
-		for ($i = 2; $i < 8; $i++) {
-			$actual = $product->getPhoto($i, 843);
-			if ($actual!= false && !empty($actual)) {
-				$writer->writeElement('g:additional_image_link', $this->helper->image($actual,'amazon'));
-			}
-		}
-		$writer->writeElement('g:condition', 'new');
+        $writer->writeElement('g:link', $product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite,$marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
+        $writer->writeElement('g:mobile_link', $product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite,$marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
+        $writer->writeElement('g:image_link', $this->helper->image($product->getPhoto(1, 843), 'amazon'));
+        for ($i = 2; $i < 8; $i++) {
+            $actual = $product->getPhoto($i, 843);
+            if ($actual!= false && !empty($actual)) {
+                $writer->writeElement('g:additional_image_link', $this->helper->image($actual,'amazon'));
+            }
+        }
+        $writer->writeElement('g:condition', 'new');
 
 
-		$writer->writeElement('g:availability', $avai > 0 ? 'in stock' : 'out of stock');
-		$writer->writeElement('sizes',implode(',',$sizes));
+        $writer->writeElement('g:availability', $avai > 0 ? 'in stock' : 'out of stock');
+        $writer->writeElement('sizes',implode(',',$sizes));
 
-		$writer->writeElement('g:price', $product->getDisplayActivePrice());
+        $writer->writeElement('g:price', $product->getDisplayPrice());
 
-		if($onSale){
-			$writer->writeElement('g:sale_price', $product->getDisplaySalePrice());
-		}
+        if($onSale){
+            $writer->writeElement('g:sale_price', $product->getDisplaySalePrice());
+        }
+        $productEan = $productEanRepo->findOneBy(['productId' => $productPublicSku->productId, 'productVariantId' => $productPublicSku->productVariantId,'usedForParent'=>1]);
+        if ($productEan != null) {
+            $ean = $productEan->ean;
+            $writer->writeElement('g:gtin13', $ean);
+        }
 
-		$writer->writeElement('g:mpn', $product->itemno . ' ' . $product->productVariant->name);
-		$writer->writeElement('g:brand', $product->productBrand->name);
+        $writer->writeElement('g:mpn', $product->itemno . ' ' . $product->productVariant->name);
+        $writer->writeElement('g:brand', $product->productBrand->name);
 
         if (!is_null($product->productColorGroup)) {
             $writer->writeElement('g:color', $product->productColorGroup->productColorGroupTranslation->getFirst()->name);
         }
 
-		$writer->startElement('g:shipping');
-		$writer->writeElement('g:service', 'Courier');
-		$writer->writeElement('g:price', '10.00 EUR');
-		$writer->endElement();
-		$writer->startElement('g:shipping');
-		$writer->writeElement('g:country', 'IT');
-		$writer->writeElement('g:service', 'Courier');
+        $writer->startElement('g:shipping');
+        $writer->writeElement('g:service', 'Courier');
+        $writer->writeElement('g:price', '10.00 EUR');
+        $writer->endElement();
+        $writer->startElement('g:shipping');
+        $writer->writeElement('g:country', 'IT');
+        $writer->writeElement('g:service', 'Courier');
 
-        if($product->getDisplaySalePrice() > 300) {
+        if($product->getDisplayPrice() > 300) {
+            $writer->writeElement('g:price', '0.00 EUR');
+        } else {
+            $writer->writeElement('g:price', '5.00 EUR');
+        }
 
-			$writer->writeElement('g:price', '0.00 EUR');
-		} else {
-			$writer->writeElement('g:price', '5.00 EUR');
-		}
+        $writer->writeElement('g:cpc', $marketplaceAccountHasProduct->fee);
 
-		$writer->writeElement('g:cpc', $marketplaceAccountHasProduct->fee);
-
-		$writer->endElement();
-		$writer->endElement();
-		return $writer->outputMemory();
-	}
+        $writer->endElement();
+        $writer->endElement();
+        return $writer->outputMemory();
+    }
 }
