@@ -33,6 +33,13 @@
                 "parentKeys": ["productId","productVariantId"],
                 "childKeys": ["productId","productVariantId"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
             }
         ]
     }
