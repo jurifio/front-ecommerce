@@ -57,58 +57,72 @@ class CTradeTrackerFeedExpertBuilder extends AExpertFeedBuilder
      */
     public function writeProductEntry(CProduct $product = null,CMarketplaceAccountHasProduct $marketplaceAccountHasProduct = null)
     {
-        $writer = new \XMLWriter();
-        $writer->openMemory();
-        $writer->setIndent(!$this->minized);
-        $writer->startElement("product");
-        /** @var CProduct $product */
 
-        $writer->writeElement('ID',$product->printId());
-        $writer->writeElement('lowestPrice',$product->getDisplayActivePrice());
-        $writer->writeElement('originalPrice',$product->getDisplayPrice());
-        $writer->writeElement('productURL',$product->getProductUrl($this->marketplaceAccount->urlSite,$this->marketplaceAccount->getCampaignCode()));
-        $writer->writeElement('stock',$product->qty);
-        $writer->writeElement('deliveryCost',$product->getDisplayPrice() > 300 ? "0.00" : "5.00");
-        $writer->writeElement('UPC',$product->printCpf());
-        $writer->writeElement('name',$product->getName());
-        $writer->startElement('field');
-        $writer->writeAttribute('name',"brand");
-        $writer->writeAttribute('value',$product->productBrand->name);
-        $writer->endElement();
-        $writer->startElement('images');
-        for ($i = 1;$i< 10; $i++) {
-            if(!empty($product->getPhoto($i,CProductPhoto::SIZE_MEDIUM))) {
-                $writer->writeElement('image',$this->helper->image($product->getPhoto($i, CProductPhoto::SIZE_MEDIUM), 'amazon'));
-            }
+        $productEanRepo = \Monkey::app()->repoFactory->create('ProductEan');
+        $productEan = $productEanRepo->findOneBy(['productId' => $product->productId, 'productVariantId' => $product->productVariantId, 'usedForParent' => 1]);
+        if ($productEan != null) {
+            $ean = $productEan->ean;
+            $found = 1;
+        } else {
+            $found = 2;
         }
-        $writer->endElement();
 
-        $writer->startElement('variations');
+        if ($found == 1) {
 
-        foreach ($product->productPublicSku as $productPublicSku) {
-            if($productPublicSku->stockQty > 0) {
-                $writer->startElement('variation');
-                $writer->writeElement('size', $productPublicSku->productSize->name);
-                $writer->writeElement('color', $productPublicSku->product->productColorGroup->productColorGroupTranslation->getFirst()->name);
-                $writer->writeElement('price', $productPublicSku->price);
-                $writer->endElement();
+
+            $writer = new \XMLWriter();
+            $writer->openMemory();
+            $writer->setIndent(!$this->minized);
+            $writer->startElement("product");
+            /** @var CProduct $product */
+
+            $writer->writeElement('ID', $product->printId());
+            $writer->writeElement('lowestPrice', $product->getDisplayActivePrice());
+            $writer->writeElement('originalPrice', $product->getDisplayPrice());
+            $writer->writeElement('productURL', $product->getProductUrl($this->marketplaceAccount->urlSite, $this->marketplaceAccount->getCampaignCode()));
+            $writer->writeElement('stock', $product->qty);
+            $writer->writeElement('deliveryCost', $product->getDisplayPrice() > 300 ? "0.00" : "5.00");
+            $writer->writeElement('UPC', $product->printCpf());
+            $writer->writeElement('name', $product->getName());
+            $writer->startElement('field');
+            $writer->writeAttribute('name', "brand");
+            $writer->writeAttribute('value', $product->productBrand->name);
+            $writer->endElement();
+            $writer->startElement('images');
+            for ($i = 1; $i < 10; $i++) {
+                if (!empty($product->getPhoto($i, CProductPhoto::SIZE_MEDIUM))) {
+                    $writer->writeElement('image', $this->helper->image($product->getPhoto($i, CProductPhoto::SIZE_MEDIUM), 'amazon'));
+                }
             }
-        }
-        $writer->endElement();
+            $writer->endElement();
 
-        $writer->startElement('categories');
-        foreach ($product->productCategory as $category) {
-            $categoryPath = $category->getLocalizedPathArray();
-            $writer->writeElement('category',$categoryPath[0]);
-            unset($categoryPath[0]);
-            foreach ($categoryPath as $piece) {
-                $writer->writeElement('subcategory',$piece);
+            $writer->startElement('variations');
+
+            foreach ($product->productPublicSku as $productPublicSku) {
+                if ($productPublicSku->stockQty > 0) {
+                    $writer->startElement('variation');
+                    $writer->writeElement('size', $productPublicSku->productSize->name);
+                    $writer->writeElement('color', $productPublicSku->product->productColorGroup->productColorGroupTranslation->getFirst()->name);
+                    $writer->writeElement('price', $productPublicSku->price);
+                    $writer->endElement();
+                }
             }
+            $writer->endElement();
+
+            $writer->startElement('categories');
+            foreach ($product->productCategory as $category) {
+                $categoryPath = $category->getLocalizedPathArray();
+                $writer->writeElement('category', $categoryPath[0]);
+                unset($categoryPath[0]);
+                foreach ($categoryPath as $piece) {
+                    $writer->writeElement('subcategory', $piece);
+                }
+            }
+            $writer->endElement();
+
+            $writer->endElement();
+
+            return $writer->outputMemory();
         }
-        $writer->endElement();
-
-        $writer->endElement();
-
-        return $writer->outputMemory();
     }
 }
