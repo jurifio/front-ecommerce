@@ -74,7 +74,7 @@ class CStylightFeedExpertBuilder extends AExpertFeedBuilder
         $sizes = [];
         $onSale = $product->isOnSale();
         foreach ($product->productPublicSku as $productPublicSku) {
-            $productEan = $productEanRepo->findOneBy(['productId' => $productPublicSku->productId, 'productVariantId' => $productPublicSku->productVariantId,'usedForParent'=>1]);
+            $productEan = $productEanRepo->findOneBy(['productId' => $productPublicSku->productId, 'productVariantId' => $productPublicSku->productVariantId,'productSizeId'=>$productPublicSku->productSizeId]);
             if ($productEan != null) {
                 $ean = $productEan->ean;
             }else{
