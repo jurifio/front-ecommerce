@@ -74,76 +74,75 @@ class CStylightFeedExpertBuilder extends AExpertFeedBuilder
         $sizes = [];
         $onSale = $product->isOnSale();
         foreach ($product->productPublicSku as $productPublicSku) {
-                $productEan = $productEanRepo->findOneBy(['productId' => $productPublicSku->productId, 'productVariantId' => $productPublicSku->productVariantId,'usedForParent'=>1]);
-                if ($productEan != null) {
-                    $ean = $productEan->ean;
-                    $found = 1;
-                } else {
-                    $found = 2;
-                }
-
-            if ($found == 1) {
-                if ($productPublicSku->stockQty > 0) {
-                    switch ($productPublicSku->productSize->name) {
-                        case 'Taglia Unica':
-                        case 'U':
-                        case 'D':
-                        case 'UNI':
-                        case 'T.U.':
-                        case 'UNICA':
-                        case 'QT':
-                            $sizes[] = 'unisize';
-                            break;
-                        default:
-                            $sizes[] = $productPublicSku->productSize->name;
-                            break;
-                    }
-
-                    $avai++;
-                }
-
-
-                $writer = new \XMLWriter();
-                $writer->openMemory();
-                $writer->setIndent(!$this->minized);
-                $writer->startElement("Product");
-
-                $writer->writeElement("producturl", $product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite, $marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
-                foreach ($product->productCategory as $category) {
-                    if ($category->id == 1) continue;
-                    $writer->writeElement("category", $category->getLocalizedPath("/"));
-                }
-
-                $writer->writeElement('Color', $product->productColorGroup->productColorGroupTranslation->getFirst()->name);
-                $writer->writeElement('Sizes', (implode(',', $sizes)));
-                $writer->writeElement('name', $product->getName());
-                $writer->writeElement("img", $this->helper->image($product->getPhoto(1, CProductPhoto::SIZE_MEDIUM), 'amazon'));
-
-                $writer->writeElement("price", $product->getDisplayActivePrice());
-
-                $writer->writeElement('internalid', $product->printId());
-                $writer->writeElement('upc', $product->itemno);
-                $writer->writeElement('ean13', $ean);
-
-                if ($onSale) {
-                    $writer->writeElement("msrp", $product->getDisplayPrice());
-                }
-
-                $writer->startElement('desc');
-                $writer->writeCdata($product->getDescription());
-                $writer->endElement();
-
-                $writer->writeElement('Gender', $product->getGender());
-
-                $writer->startElement("brand");
-                $writer->writeCdata($product->productBrand->name);
-                $writer->endElement();
-
-                $writer->endElement();
-
-                return $writer->outputMemory();
+            $productEan = $productEanRepo->findOneBy(['productId' => $productPublicSku->productId, 'productVariantId' => $productPublicSku->productVariantId,'usedForParent'=>1]);
+            if ($productEan != null) {
+                $ean = $productEan->ean;
+            }else{
+                $ean='';
             }
+
+
+            if ($productPublicSku->stockQty > 0) {
+                switch ($productPublicSku->productSize->name) {
+                    case 'Taglia Unica':
+                    case 'U':
+                    case 'D':
+                    case 'UNI':
+                    case 'T.U.':
+                    case 'UNICA':
+                    case 'QT':
+                        $sizes[] = 'unisize';
+                        break;
+                    default:
+                        $sizes[] = $productPublicSku->productSize->name;
+                        break;
+                }
+
+                $avai++;
+            }
+
+
+            $writer = new \XMLWriter();
+            $writer->openMemory();
+            $writer->setIndent(!$this->minized);
+            $writer->startElement("Product");
+
+            $writer->writeElement("producturl", $product->getProductUrl($marketplaceAccountHasProduct->marketplaceAccount->urlSite, $marketplaceAccountHasProduct->marketplaceAccount->getCampaignCode()));
+            foreach ($product->productCategory as $category) {
+                if ($category->id == 1) continue;
+                $writer->writeElement("category", $category->getLocalizedPath("/"));
+            }
+
+            $writer->writeElement('Color', $product->productColorGroup->productColorGroupTranslation->getFirst()->name);
+            $writer->writeElement('Sizes', (implode(',', $sizes)));
+            $writer->writeElement('name', $product->getName());
+            $writer->writeElement("img", $this->helper->image($product->getPhoto(1, CProductPhoto::SIZE_MEDIUM), 'amazon'));
+
+            $writer->writeElement("price", $product->getDisplayActivePrice());
+
+            $writer->writeElement('internalid', $product->printId());
+            $writer->writeElement('upc', $product->itemno);
+            $writer->writeElement('ean13', $ean);
+
+            if ($onSale) {
+                $writer->writeElement("msrp", $product->getDisplayPrice());
+            }
+
+            $writer->startElement('desc');
+            $writer->writeCdata($product->getDescription());
+            $writer->endElement();
+
+            $writer->writeElement('Gender', $product->getGender());
+
+            $writer->startElement("brand");
+            $writer->writeCdata($product->productBrand->name);
+            $writer->endElement();
+
+            $writer->endElement();
+
+            return $writer->outputMemory();
         }
+
     }
 
 }
