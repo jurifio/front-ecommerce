@@ -1,14 +1,14 @@
 <?php
 
-namespace bamboo\offline\productsync\import\barbagallo;
+namespace bamboo\offline\productsync\import\sinagra;
 
 use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooLogicException;
 use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
- * Class CBarbagalloImporter
- * @package bamboo\offline\productsync\import\alducadaosta
+ * Class CAtelierImporter
+ * @package bamboo\offline\productsync\import\sinagra
  *
  * @author Iwes Team <it@iwes.it>
  *
@@ -16,7 +16,7 @@ use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  *
- * @date 11/04/2018
+ * @date 29/07/2019
  * @since 1.0
  */
 class CAtelierImporter extends ABluesealProductImporter
@@ -49,10 +49,11 @@ class CAtelierImporter extends ABluesealProductImporter
             $newDirtyProduct = [];
             $newDirtyProductExtend = [];
             $newDirtySku = [];
+            $newDirtyPhoto=[];
 
             //DIRTY PRODUCT
             try {
-                 $this->report('processFile', 'Process DirtyProduct');
+                $this->report('processFile', 'Process DirtyProduct');
 
                 \Monkey::app()->repoFactory->beginTransaction();
 
@@ -60,7 +61,7 @@ class CAtelierImporter extends ABluesealProductImporter
                 $newDirtyProduct["brand"] = $one["marchio"];
                 $newDirtyProduct["itemno"] = $one["articolo"];
                 $newDirtyProduct["value"] = floatval(str_replace(',','.',$one["PrAcquisto"]));
-                $newDirtyProduct["price"] = floatval(str_replace(',','.',$one["PrListino"]));
+                $newDirtyProduct["price"] = floatval(str_replace(',','.',$one["prListino"]));
                 $newDirtyProduct["var"] = $one["colore"];
                 $newDirtyProduct["text"] = implode(',', $newDirtyProduct);
 
@@ -74,6 +75,7 @@ class CAtelierImporter extends ABluesealProductImporter
                 $newDirtyProductExtend["generalColor"] = $one["colore"];
 
 
+
                 $existingDirtyProduct = \Monkey::app()->dbAdapter->selectCount("DirtyProduct", ['checksum' => $newDirtyProduct['checksum']]);
 
                 $mainKey = [];
@@ -83,6 +85,7 @@ class CAtelierImporter extends ABluesealProductImporter
                     $mainKey["itemno"] = $newDirtyProduct["itemno"];
                     $mainKey["var"] = $newDirtyProduct["var"];
                     $mainKey["shopId"] = $this->getShop()->id;
+
 
                     $existProductWithMainKey = \Monkey::app()->dbAdapter->select('DirtyProduct', $mainKey)->fetch();
 
@@ -110,6 +113,8 @@ class CAtelierImporter extends ABluesealProductImporter
                         //inserisco il prodotto
                         $newDirtyProductExtend["dirtyProductId"] = \Monkey::app()->dbAdapter->insert('DirtyProduct', $newDirtyProduct);
 
+
+
                         //inserisco dirty product extend
                         $newDirtyProductExtend["shopId"] = $this->getShop()->id;
 
@@ -120,6 +125,8 @@ class CAtelierImporter extends ABluesealProductImporter
                     $this->error('Multiple dirty product founded', 'Procedure has founded '.$existingDirtyProduct.' dirty product');
                     continue;
                 }
+
+
 
                 \Monkey::app()->repoFactory->commit();
             } catch (\Throwable $e) {
@@ -150,7 +157,7 @@ class CAtelierImporter extends ABluesealProductImporter
                 $newDirtySku["shopId"] = $this->getShop()->id;
                 $newDirtySku["dirtyProductId"] = $dirtyProduct["id"];
                 $newDirtySku["value"] = floatval(str_replace(',','.',$one["PrAcquisto"]));
-                $newDirtySku["price"] = floatval(str_replace(',','.',$one["PrListino"]));
+                $newDirtySku["price"] = floatval(str_replace(',','.',$one["prListino"]));
                 $newDirtySku["qty"] = $one["esistenza"];
                 $newDirtySku["barcode"] = $one["barcode"];
                 $newDirtySku["text"] = implode(',', $newDirtySku);
@@ -198,6 +205,24 @@ class CAtelierImporter extends ABluesealProductImporter
                 } else if ($existDirtySku == 1){
                     $noChangedSku = \Monkey::app()->dbAdapter->select('DirtySku', ['checksum' => $newDirtySku["checksum"]])->fetch();
                     $seenSkus[] = $noChangedSku['id'];
+                }
+                $this->debug('Cycle','product checking item_imgs',$one['img']);
+                $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' =>  $dirtyProduct["id"]])->fetchAll();
+                $position = 0;
+                foreach ($one['img'] as $img) {
+                    if(empty(trim($img))) continue;
+                    foreach ($dirtyPhotos as $exImg) {
+                        if ($exImg['url'] == $img) continue 2;
+                    }
+                    $position++;
+                    \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
+                        'dirtyProductId' =>  $dirtyProduct["id"],
+                        'shopId' => $this->getShop()->id,
+                        'url' => $img,
+                        'location' => 'url',
+                        'position' => $position,
+                        'worked' => 0
+                    ]);
                 }
 
 
