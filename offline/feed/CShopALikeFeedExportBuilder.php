@@ -73,6 +73,7 @@ class CShopALikeFeedExportBuilder extends AExpertFeedBuilder
     public function writeProductEntry(CProduct $product = null, CMarketplaceAccountHasProduct $marketplaceAccountHasProduct = null)
     {
         $productEanRepo = \Monkey::app()->repoFactory->create('ProductEan');
+        $productFind=\Monkey::app()->repoFactory->create('Product');
         $product = $marketplaceAccountHasProduct->product;
         $writer = new \XMLWriter();
         $writer->openMemory();
@@ -139,11 +140,12 @@ class CShopALikeFeedExportBuilder extends AExpertFeedBuilder
         if($onSale){
             $writer->writeElement('g:sale_price', $product->getDisplaySalePrice());
         }
-        $productEan =  $productEanRepo->findOneBy(['productId' => $productPublicSku->productId, 'productVariantId' => $productPublicSku->productVariantId,'productSizeId'=>$productPublicSku->productSizeId]);
+
+      /*  $productEan =  $productEanRepo->findOneBy(['productId' => $product->productId, 'productVariantId' => $product->productVariantId,'used'=>'1']);
         if ($productEan != null) {
             $ean = $productEan->ean;
             $writer->writeElement('g:gtin13', $ean);
-        }
+        }*/
 
         $writer->writeElement('g:mpn', $product->itemno . ' ' . $product->productVariant->name);
         $writer->writeElement('g:brand', $product->productBrand->name);
