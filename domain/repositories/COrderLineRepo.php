@@ -12,6 +12,8 @@ use bamboo\core\db\pandaorm\repositories\ARepo;
 use bamboo\domain\entities\COrderLineStatus;
 use bamboo\domain\entities\CProductSku;
 use bamboo\utils\time\STimeToolbox;
+use PDO;
+use PDOException;
 
 /**
  * Class COrderStatusRepo
@@ -172,6 +174,27 @@ class COrderLineRepo extends ARepo
 
         $code = $newStatusE->code;
         $oldStatus = $orderLine->orderLineStatus;
+        $shopRepo=\Monkey::app()->repoFactory->create('Shop')->findOneBy(['id'=>$orderLine->remoteShopId]);
+        $orderRepo=\Monkey::app()->repoFactory->create('Order')->findOneBy(['id'=>$orderLine->orderId,'remoteShopId'=>$orderLine->remoteShopId]);
+        $db_host = $shopRepo->dbHost;
+        $db_name = $shopRepo->dbName;
+        $db_user = $shopRepo->dbUsername;
+        $db_pass = $shopRepo->dbPassword;
+        $shop =$shopRepo->id;
+        try {
+
+            $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}", $db_user, $db_pass);
+            $db_con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $res = ' connessione ok <br>';
+        } catch (PDOException $e) {
+            $res = $e->getMessage();
+        }
+        if(ENV==='prod') {
+            $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteId . " and orderId=" . $orderLine->orderId);
+            $stmtOrderLine->execute();
+            $stmtOrder = $db_con->prepare("UPDATE `Order` SET `status`='" . $orderRepo->status . "' WHERE id=" . $orderRepo->remoteId);
+            $stmtOrder->execute();
+        }
 
         switch($code) {
             case 'ORD_CANCEL':
