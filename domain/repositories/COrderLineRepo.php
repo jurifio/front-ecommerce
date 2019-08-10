@@ -189,12 +189,12 @@ class COrderLineRepo extends ARepo
         } catch (PDOException $e) {
             $res = $e->getMessage();
         }
-        if(ENV==='prod') {
-            $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteId . " and orderId=" . $orderLine->orderId);
+
+            $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteId . " and orderId=" . $orderLine->remoteOrderId);
             $stmtOrderLine->execute();
             $stmtOrder = $db_con->prepare("UPDATE `Order` SET `status`='" . $orderRepo->status . "' WHERE id=" . $orderRepo->remoteId);
             $stmtOrder->execute();
-        }
+
 
         switch($code) {
             case 'ORD_CANCEL':
