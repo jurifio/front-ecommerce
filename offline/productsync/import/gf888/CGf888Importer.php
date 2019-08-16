@@ -60,19 +60,23 @@ class CGf888Importer extends ABluesealProductImporter
                 $newDirtyProduct["shopId"] = $this->getShop()->id;
                 $newDirtyProduct["brand"] = $one["brandName"];
                 $newDirtyProduct["itemno"] = $one["spuID"];
-                $newDirtyProduct["value"] = floatval(str_replace(',', '.', $one["salePrice"]));
-                $newDirtyProduct["price"] = floatval(str_replace(',', '.', $one["marketPrice"]));
+                $newDirtyProduct["value"] = (float)str_replace(',', '.', $one["salePrice"]);
+                $newDirtyProduct["price"] = (float)str_replace(',', '.', $one["marketPrice"]);
                 $newDirtyProduct["var"] = $one["color"];
                 $newDirtyProduct["text"] = implode(',', $newDirtyProduct);
 
                 $newDirtyProduct["checksum"] = md5(implode(',', $newDirtyProduct));
 
                 $newDirtyProduct["dirtyStatus"] = "F";
-
+                $newDirtyProductExtend['name']=$one['productName'];
+                $newDirtyProductExtend['description']=$one['productDescription'];
                 $newDirtyProductExtend["season"] = $one["seasonName"];
                 $newDirtyProductExtend["audience"] = $one["gender"];
                 $newDirtyProductExtend["cat1"] = $one["path"];
                 $newDirtyProductExtend["generalColor"] = $one["color"];
+                $newDirtyProductExtend['description']=$one['productDescription'];
+
+
 
 
                 $existingDirtyProduct = \Monkey::app()->dbAdapter->selectCount("DirtyProduct", ['checksum' => $newDirtyProduct['checksum']]);
@@ -206,26 +210,27 @@ class CGf888Importer extends ABluesealProductImporter
                 $this->debug('Cycle', 'product checking item_imgs', $one['images']);
                 $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $dirtyProduct["id"]])->fetchAll();
                 $position = 0;
+                $this->report('processImage', 'array image: ' . $one['images']);
+                $imgs=explode('||', $one['images']);
 
-                foreach ($one['images'] as $images) {
-
-                    if (empty(trim($images))) continue;
-                    $imgs[] = implode('||', $images);
-                    foreach ($imgs as $img) {
-                        foreach ($dirtyPhotos as $exImg) {
-                            if ($exImg['url'] == $img) continue 2;
-                        }
-                        $position++;
-                        \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
-                            'dirtyProductId' => $dirtyProduct["id"],
-                            'shopId' => $this->getShop()->id,
-                            'url' => $img,
-                            'location' => 'url',
-                            'position' => $position,
-                            'worked' => 0
-                        ]);
+                foreach ($imgs as $img) {
+                    if(empty(trim($img))) {
+                        continue;
                     }
+                    foreach ($dirtyPhotos as $exImg) {
+                        if ($exImg['url'] == $img) continue 2;
+                    }
+                    $position++;
+                    \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
+                        'dirtyProductId' => $dirtyProduct["id"],
+                        'url' => $img,
+                        'location' => 'url',
+                        'position' => $position,
+                        'worked' => 0,
+                        'shopId' => $this->getShop()->id
+                    ]);
                 }
+
 
             } catch (\Throwable $e) {
                 $this->error('processFile', 'Error reading Product: ' . json_encode($one), $e);
