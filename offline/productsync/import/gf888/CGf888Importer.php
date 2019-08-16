@@ -1,14 +1,14 @@
 <?php
 
-namespace bamboo\offline\productsync\import\sinagra;
+namespace bamboo\offline\productsync\import\gf888;
 
 use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooLogicException;
 use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
- * Class CSinagraImporter
- * @package bamboo\offline\productsync\import\sinagra
+ * Class CGf888Importer
+ * @package bamboo\offline\productsync\import\gf888
  *
  * @author Iwes Team <it@iwes.it>
  *
@@ -16,7 +16,7 @@ use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  *
- * @date 11/04/2018
+ * @date 16/08/2019
  * @since 1.0
  */
 class CGf888Importer extends ABluesealProductImporter
@@ -41,15 +41,15 @@ class CGf888Importer extends ABluesealProductImporter
         $countUpdatedDirtySku = 0;
         $seenSkus = [];
 
-        $rawData = json_decode(file_get_contents($file),true);
-        $this->report('processFile', 'Elements: '. count($rawData));
+        $rawData = json_decode(file_get_contents($file), true);
+        $this->report('processFile', 'Elements: ' . count($rawData));
 
         foreach ($rawData as $one) {
 
             $newDirtyProduct = [];
             $newDirtyProductExtend = [];
             $newDirtySku = [];
-            $newDirtyPhoto=[];
+            $newDirtyPhoto = [];
 
             //DIRTY PRODUCT
             try {
@@ -60,8 +60,8 @@ class CGf888Importer extends ABluesealProductImporter
                 $newDirtyProduct["shopId"] = $this->getShop()->id;
                 $newDirtyProduct["brand"] = $one["brandName"];
                 $newDirtyProduct["itemno"] = $one["spuID"];
-                $newDirtyProduct["value"] = floatval(str_replace(',','.',$one["salePrice"]));
-                $newDirtyProduct["price"] = floatval(str_replace(',','.',$one["marketPrice"]));
+                $newDirtyProduct["value"] = floatval(str_replace(',', '.', $one["salePrice"]));
+                $newDirtyProduct["price"] = floatval(str_replace(',', '.', $one["marketPrice"]));
                 $newDirtyProduct["var"] = $one["color"];
                 $newDirtyProduct["text"] = implode(',', $newDirtyProduct);
 
@@ -73,7 +73,6 @@ class CGf888Importer extends ABluesealProductImporter
                 $newDirtyProductExtend["audience"] = $one["gender"];
                 $newDirtyProductExtend["cat1"] = $one["path"];
                 $newDirtyProductExtend["generalColor"] = $one["color"];
-
 
 
                 $existingDirtyProduct = \Monkey::app()->dbAdapter->selectCount("DirtyProduct", ['checksum' => $newDirtyProduct['checksum']]);
@@ -114,18 +113,16 @@ class CGf888Importer extends ABluesealProductImporter
                         $newDirtyProductExtend["dirtyProductId"] = \Monkey::app()->dbAdapter->insert('DirtyProduct', $newDirtyProduct);
 
 
-
                         //inserisco dirty product extend
                         $newDirtyProductExtend["shopId"] = $this->getShop()->id;
 
                         \Monkey::app()->dbAdapter->insert('DirtyProductExtend', $newDirtyProductExtend);
                         $countNewDirtyProduct++;
                     }
-                } else if ($existingDirtyProduct > 1){
-                    $this->error('Multiple dirty product founded', 'Procedure has founded '.$existingDirtyProduct.' dirty product');
+                } else if ($existingDirtyProduct > 1) {
+                    $this->error('Multiple dirty product founded', 'Procedure has founded ' . $existingDirtyProduct . ' dirty product');
                     continue;
                 }
-
 
 
                 \Monkey::app()->repoFactory->commit();
@@ -147,8 +144,8 @@ class CGf888Importer extends ABluesealProductImporter
 
                 $dirtyProduct = $existingDirtyProductExtend = \Monkey::app()->dbAdapter->select('DirtyProduct', $mainKeyForSku)->fetch();
 
-                if(!$dirtyProduct){
-                    $this->error( 'Reading Skus', 'Dirty Product not found while looking at sku', json_encode($one));
+                if (!$dirtyProduct) {
+                    $this->error('Reading Skus', 'Dirty Product not found while looking at sku', json_encode($one));
                     continue;
                 }
 
@@ -156,8 +153,8 @@ class CGf888Importer extends ABluesealProductImporter
                 $newDirtySku["size"] = $one["size"];
                 $newDirtySku["shopId"] = $this->getShop()->id;
                 $newDirtySku["dirtyProductId"] = $dirtyProduct["id"];
-                $newDirtySku["value"] = floatval(str_replace(',','.',$one["salePrice"]));
-                $newDirtySku["price"] = floatval(str_replace(',','.',$one["marketPrice"]));
+                $newDirtySku["value"] = floatval(str_replace(',', '.', $one["salePrice"]));
+                $newDirtySku["price"] = floatval(str_replace(',', '.', $one["marketPrice"]));
                 $newDirtySku["qty"] = $one["stock"];
                 $newDirtySku["barcode"] = $one["productCode"];
                 $newDirtySku["text"] = implode(',', $newDirtySku);
@@ -166,15 +163,15 @@ class CGf888Importer extends ABluesealProductImporter
                 //cerco lo sku con il checksum
                 $existDirtySku = \Monkey::app()->dbAdapter->selectCount('DirtySku', ['checksum' => $newDirtySku["checksum"]]);
 
-                if($existDirtySku == 0){
+                if ($existDirtySku == 0) {
 
                     $existDirtySkuWithMainKey = \Monkey::app()->dbAdapter->select('DirtySku', [
-                        'dirtyProductId' =>  $newDirtySku["dirtyProductId"],
+                        'dirtyProductId' => $newDirtySku["dirtyProductId"],
                         'shopId' => $newDirtySku["shopId"],
                         'size' => $newDirtySku["size"]
                     ])->fetch();
 
-                    if($existDirtySkuWithMainKey){
+                    if ($existDirtySkuWithMainKey) {
                         //update
                         \Monkey::app()->dbAdapter->update('DirtySku', [
                             'value' => $newDirtySku["value"],
@@ -184,7 +181,7 @@ class CGf888Importer extends ABluesealProductImporter
                             'text' => $newDirtySku["text"],
                             'checksum' => $newDirtySku["checksum"]
                         ], [
-                            'dirtyProductId' =>  $existDirtySkuWithMainKey["dirtyProductId"],
+                            'dirtyProductId' => $existDirtySkuWithMainKey["dirtyProductId"],
                             'shopId' => $existDirtySkuWithMainKey["shopId"],
                             'size' => $existDirtySkuWithMainKey["size"]
                         ]);
@@ -199,42 +196,46 @@ class CGf888Importer extends ABluesealProductImporter
                         $countNewDirtySku++;
                     }
 
-                } else if ($existDirtySku > 1){
-                    $this->error('Multiple dirty sku founded', 'Procedure has founded '.$existDirtySku.' dirty sku');
+                } else if ($existDirtySku > 1) {
+                    $this->error('Multiple dirty sku founded', 'Procedure has founded ' . $existDirtySku . ' dirty sku');
                     continue;
-                } else if ($existDirtySku == 1){
+                } else if ($existDirtySku == 1) {
                     $noChangedSku = \Monkey::app()->dbAdapter->select('DirtySku', ['checksum' => $newDirtySku["checksum"]])->fetch();
                     $seenSkus[] = $noChangedSku['id'];
                 }
-                $this->debug('Cycle','product checking item_imgs',$one['images']);
-                $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' =>  $dirtyProduct["id"]])->fetchAll();
+                $this->debug('Cycle', 'product checking item_imgs', $one['images']);
+                $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $dirtyProduct["id"]])->fetchAll();
                 $position = 0;
-                foreach ($one['images'] as $img) {
-                    if(empty(trim($img))) continue;
-                    foreach ($dirtyPhotos as $exImg) {
-                        if ($exImg['url'] == $img) continue 2;
+
+                foreach ($one['images'] as $images) {
+
+                    if (empty(trim($images))) continue;
+                    $imgs[] = implode('||', $images);
+                    foreach ($imgs as $img) {
+                        foreach ($dirtyPhotos as $exImg) {
+                            if ($exImg['url'] == $img) continue 2;
+                        }
+                        $position++;
+                        \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
+                            'dirtyProductId' => $dirtyProduct["id"],
+                            'shopId' => $this->getShop()->id,
+                            'url' => $img,
+                            'location' => 'url',
+                            'position' => $position,
+                            'worked' => 0
+                        ]);
                     }
-                    $position++;
-                    \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
-                        'dirtyProductId' =>  $dirtyProduct["id"],
-                        'shopId' => $this->getShop()->id,
-                        'url' => $img,
-                        'location' => 'url',
-                        'position' => $position,
-                        'worked' => 0
-                    ]);
                 }
 
-
-            } catch (\Throwable $e){
+            } catch (\Throwable $e) {
                 $this->error('processFile', 'Error reading Product: ' . json_encode($one), $e);
                 continue;
             }
 
         }
 
-        $this->report('processFile', 'End of reading and writing dirty product: New Dirty Product: '.$countNewDirtyProduct.' Updated Dirty product: '.$countUpdatedDirtyProduct);
-        $this->report('processFile', 'End of reading and writing dirty skus: New Dirty Sku: '.$countNewDirtySku.' Updated Dirty product: '.$countUpdatedDirtySku);
+        $this->report('processFile', 'End of reading and writing dirty product: New Dirty Product: ' . $countNewDirtyProduct . ' Updated Dirty product: ' . $countUpdatedDirtyProduct);
+        $this->report('processFile', 'End of reading and writing dirty skus: New Dirty Sku: ' . $countNewDirtySku . ' Updated Dirty product: ' . $countUpdatedDirtySku);
 
         $this->findZeroSkus($seenSkus);
     }
