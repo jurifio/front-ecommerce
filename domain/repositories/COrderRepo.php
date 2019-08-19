@@ -18,6 +18,7 @@ use bamboo\domain\entities\COrderLine;
 use bamboo\domain\entities\COrderStatus;
 use bamboo\domain\entities\CPrestashopHasProduct;
 use bamboo\domain\entities\CPrestashopHasProductHasMarketplaceHasShop;
+use bamboo\domain\entities\CProductPublicSku;
 use bamboo\domain\entities\CProductSku;
 use bamboo\offline\productsync\import\alducadaosta\CAlducadaostaOrderAPI;
 use bamboo\utils\price\SPriceToolbox;
@@ -807,6 +808,8 @@ class COrderRepo extends ARepo
      */
     public function prepareNewOrderFromCart(CCart $cart)
     {
+        $productSkuRepo=\Monkey::app()->repoFactory->create('ProductSku');
+        $productPublicSkuRepo=\Monkey::app()->repoFactory->create('ProductPublicSku');
         /** @var COrder $order */
         $order = $this->getEmptyEntity();
         $order->orderPaymentMethodId = $cart->orderPaymentMethodId;
@@ -833,14 +836,18 @@ class COrderRepo extends ARepo
             $orderLine = \Monkey::app()->repoFactory->create('OrderLine')->getEmptyEntity();
             /** @var CProductSku $productSku */
             $productSku = $cartLine->productPublicSku->getActualDisposableSku();
+            /** @var CProductSku $productSkuFind */
+            $productSkuFind=$productSkuRepo->findOneBy(['productId'=>$cartLine->productId,'productVariantId'=>$cartLine->productVariantId,'productSizeId'=>$cartLine->productSizeId]);
+            /** @var CProductPublicSku $productPublicSkuFind */
+            $productPublicSkuFind=$productPublicSkuRepo->findOneBy(['productId'=>$cartLine->productId,'productVariantId'=>$cartLine->productVariantId,'productSizeId'=>$cartLine->productSizeId]);
             $orderLine->orderId = $order->id;
-            $orderLine->productId = $productSku->productId;
-            $orderLine->productVariantId = $productSku->productVariantId;
-            $orderLine->productSizeId = $productSku->productSizeId;
-            $orderLine->shopId = $productSku->shopId;
-            $orderLine->cost = $productSku->value;
+            $orderLine->productId = $cartLine->productId;
+            $orderLine->productVariantId = $cartLine->productVariantId;
+            $orderLine->productSizeId = $cartLine->productSizeId;
+            $orderLine->shopId = $productSkuFind->shopId;
+            $orderLine->cost = $productSkuFind->value;
             $orderLine->status = $orderLine::INIT_STATUS;
-            $orderLine->frozenProduct = $productSku->froze();
+            $orderLine->frozenProduct = $productSkuFind->froze();
             $orderLine->smartInsert();
             \Monkey::app()->repoFactory->create('ProductSku')->saveQty($orderLine->productSku);
             $this->fillOrderLineValuesByCartLine($orderLine, $cartLine);
