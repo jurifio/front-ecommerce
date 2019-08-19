@@ -152,10 +152,11 @@ class COrderLineRepo extends ARepo
      * @return mixed
      * @throws RedPandaException
      */
-    public function updateStatus($orderLine, $newStatus, $time = null) {
+    public function updateStatus($orderLine, $newStatus, $time = null)
+    {
         $olsR = \Monkey::app()->repoFactory->create('OrderLineStatus');
         $newStatusE = null;
-        if($newStatus instanceof COrderLineStatus) $newStatusE = $newStatus;
+        if ($newStatus instanceof COrderLineStatus) $newStatusE = $newStatus;
 
         if (!($newStatus instanceof COrderLineStatus)) {
             $newStatusE = $olsR->findOneBy(['id' => $newStatus]);
@@ -169,37 +170,34 @@ class COrderLineRepo extends ARepo
         }
 
         /** @var  $this ->app->dbAdapter CMySQLAdapter */
-        $this->log($orderLine, "Change Line", "Changing Status to ".$newStatusE->code);
+        $this->log($orderLine, "Change Line", "Changing Status to " . $newStatusE->code);
         \Monkey::app()->eventManager->triggerEvent("orderLineStatusChange", ['orderLine' => $orderLine, 'newStatus' => $newStatusE]);
 
         $code = $newStatusE->code;
         $oldStatus = $orderLine->orderLineStatus;
-        $shopRepo=\Monkey::app()->repoFactory->create('Shop')->findOneBy(['id'=>$orderLine->remoteShopId]);
-        $orderRepo=\Monkey::app()->repoFactory->create('Order')->findOneBy(['id'=>$orderLine->orderId,'remoteShopId'=>$orderLine->remoteShopId]);
-        $db_host = $shopRepo->dbHost;
-        $db_name = $shopRepo->dbName;
-        $db_user = $shopRepo->dbUsername;
-        $db_pass = $shopRepo->dbPassword;
-        $shop =$shopRepo->id;
-        try {
+        $shopRepo = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->remoteShopId]);
+        $orderRepo = \Monkey::app()->repoFactory->create('Order')->findOneBy(['id' => $orderLine->orderId, 'remoteShopId' => $orderLine->remoteShopId]);
+        if ($orderLine->remoteOrderId != null) {
+            $db_host = $shopRepo->dbHost;
+            $db_name = $shopRepo->dbName;
+            $db_user = $shopRepo->dbUsername;
+            $db_pass = $shopRepo->dbPassword;
+            $shop = $shopRepo->id;
+            try {
 
-            $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}", $db_user, $db_pass);
-            $db_con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $res = ' connessione ok <br>';
-        } catch (PDOException $e) {
-            $res = $e->getMessage();
-        }
-            $stmtOrderFind=$db_con->prepare("select count(*) as countOrder from  `Order`  WHERE id=" . $orderLine->remoteId . " and orderId=" . $orderLine->remoteOrderId);
-        $stmtOrderFind->execute();
-        while ($rowOrderFind = $stmtOrderFind->fetch(PDO::FETCH_ASSOC)) {
-       $orderFind= $rowOrderFind['countOrder'];
-        }
-        if($orderFind>=1) {
+                $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}", $db_user, $db_pass);
+                $db_con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $res = ' connessione ok <br>';
+            } catch (PDOException $e) {
+                $res = $e->getMessage();
+            }
+
             $stmtOrder = $db_con->prepare("UPDATE `Order` SET `status`='" . $orderRepo->status . "' WHERE id=" . $orderRepo->remoteId);
             $stmtOrder->execute();
             $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteId . " and orderId=" . $orderLine->remoteOrderId);
             $stmtOrderLine->execute();
         }
+
 
 
 
