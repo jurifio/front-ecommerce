@@ -876,14 +876,14 @@ class COrderRepo extends ARepo
         /** @var CPrestashopHasProduct $php */
         $php = $phpRepo->findOneBy(['productId'=>$productId, 'productVariantId'=>$productVariantId]);
 
-        if(is_null($php)) return false;
-
-        $prestashopShopIds = $php->getShopsForProduct();
-
-        $prestashopProduct = new CPrestashopProduct();
-        $prestashopProduct->updateProductQuantity($php->prestaId, $productSizeId, $newQty, $differential, $prestashopShopIds);
-
-        return true;
+        if($php!=null) {
+            $prestashopShopIds = $php->getShopsForProduct();
+            $prestashopProduct = new CPrestashopProduct();
+            $prestashopProduct->updateProductQuantity($php->prestaId, $productSizeId, $newQty, $differential, $prestashopShopIds);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
