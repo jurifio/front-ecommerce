@@ -189,11 +189,19 @@ class COrderLineRepo extends ARepo
         } catch (PDOException $e) {
             $res = $e->getMessage();
         }
-
-            $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteId . " and orderId=" . $orderLine->remoteOrderId);
-            $stmtOrderLine->execute();
+            $stmtOrderFind=$db_con->prepare("select count(*) as countOrder from  `Order`  WHERE id=" . $orderLine->remoteId . " and orderId=" . $orderLine->remoteOrderId);
+        $stmtOrderFind->execute();
+        while ($rowOrderFind = $stmtOrderFind->fetch(PDO::FETCH_ASSOC)) {
+       $orderFind= $rowOrderFind['countOrder'];
+        }
+        if($orderFind>=1) {
             $stmtOrder = $db_con->prepare("UPDATE `Order` SET `status`='" . $orderRepo->status . "' WHERE id=" . $orderRepo->remoteId);
             $stmtOrder->execute();
+            $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteId . " and orderId=" . $orderLine->remoteOrderId);
+            $stmtOrderLine->execute();
+        }
+
+
 
 
         switch($code) {
