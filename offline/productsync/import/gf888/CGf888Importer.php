@@ -27,220 +27,202 @@ class CGf888Importer extends ABluesealProductImporter
         return true;
     }
 
-    /**
-     * @param $file
-     * @throws BambooLogicException
-     * @throws \bamboo\core\exceptions\BambooDBALException
-     */
     public function processFile($file)
     {
+        $productKeys = $this->config->fetch('keys', 'product');
 
-        $countNewDirtyProduct = 0;
-        $countUpdatedDirtyProduct = 0;
-        $countNewDirtySku = 0;
-        $countUpdatedDirtySku = 0;
+        $rows = \Monkey::app()->dbAdapter->query('SELECT keysChecksum, id, checksum FROM DirtyProduct WHERE shopId = ? AND keysChecksum IS NOT NULL', [$this->getShop()->id])->fetchAll();
+        $keysChecksums = [];
+        $checksums = [];
+
         $seenSkus = [];
 
-        $rawData = json_decode(file_get_contents($file), true);
-        $this->report('processFile', 'Elements: ' . count($rawData));
-
-        foreach ($rawData as $one) {
-
-            $newDirtyProduct = [];
-            $newDirtyProductExtend = [];
-            $newDirtySku = [];
-            $newDirtyPhoto = [];
-
-            //DIRTY PRODUCT
-            try {
-                $this->report('processFile', 'Process DirtyProduct');
-
-                \Monkey::app()->repoFactory->beginTransaction();
-
-                $newDirtyProduct["shopId"] = $this->getShop()->id;
-                $newDirtyProduct["brand"] = $one["brandName"];
-                $newDirtyProduct["itemno"] = $one["spuID"];
-                $newDirtyProduct["value"] = (float)str_replace(',', '.', $one["salePrice"]);
-                $newDirtyProduct["price"] = (float)str_replace(',', '.', $one["marketPrice"]);
-                $newDirtyProduct["var"] = $one["color"];
-                $newDirtyProduct["text"] = implode(',', $newDirtyProduct);
-
-                $newDirtyProduct["checksum"] = md5(implode(',', $newDirtyProduct));
-
-                $newDirtyProduct["dirtyStatus"] = "F";
-                $newDirtyProductExtend['name']=$one['productName'];
-                $newDirtyProductExtend['description']=$one['productDescription'];
-                $newDirtyProductExtend["season"] = $one["seasonName"];
-                $newDirtyProductExtend["audience"] = $one["gender"];
-                $newDirtyProductExtend["cat1"] = $one["path"];
-                $newDirtyProductExtend["generalColor"] = $one["color"];
-                $newDirtyProductExtend['description']=$one['productDescription'];
-
-
-
-
-                $existingDirtyProduct = \Monkey::app()->dbAdapter->selectCount("DirtyProduct", ['checksum' => $newDirtyProduct['checksum']]);
-
-                $mainKey = [];
-                if ($existingDirtyProduct == 0) {
-                    //se non esiste lo cerco con l'articolo
-
-                    $mainKey["itemno"] = $newDirtyProduct["itemno"];
-                    $mainKey["var"] = $newDirtyProduct["var"];
-                    $mainKey["shopId"] = $this->getShop()->id;
-
-
-                    $existProductWithMainKey = \Monkey::app()->dbAdapter->select('DirtyProduct', $mainKey)->fetch();
-
-                    //lo trovo --> qualcosa è cambiato presumibilmente il value o il price
-                    if ($existProductWithMainKey) {
-                        \Monkey::app()->dbAdapter->update('DirtyProduct', [
-                            'value' => $newDirtyProduct["value"],
-                            'price' => $newDirtyProduct["price"],
-                            'text' => $newDirtyProduct["text"],
-                            'checksum' => $newDirtyProduct["checksum"]
-                        ], $mainKey);
-
-                        $countUpdatedDirtyProduct++;
-
-                        //aggiorno DirtyProductExtend
-                        $existingDirtyProductExtend = \Monkey::app()->dbAdapter->select('DirtyProductExtend', ['dirtyProductId' => $existProductWithMainKey["id"]])->fetch();
-
-                        if ($existingDirtyProductExtend) {
-                            \Monkey::app()->dbAdapter->update('DirtyProductExtend', $newDirtyProductExtend, ['dirtyProductId' => $existProductWithMainKey["id"]]);
-                        } else {
-                            $this->error('DirtyProductExtend', 'Error while looking at dirtyProductId: ' . $existProductWithMainKey["id"] . ' on DirtyProductExtend table');
-                        }
-                    } else {
-
-                        //inserisco il prodotto
-                        $newDirtyProductExtend["dirtyProductId"] = \Monkey::app()->dbAdapter->insert('DirtyProduct', $newDirtyProduct);
-
-
-                        //inserisco dirty product extend
-                        $newDirtyProductExtend["shopId"] = $this->getShop()->id;
-
-                        \Monkey::app()->dbAdapter->insert('DirtyProductExtend', $newDirtyProductExtend);
-                        $countNewDirtyProduct++;
-                    }
-                } else if ($existingDirtyProduct > 1) {
-                    $this->error('Multiple dirty product founded', 'Procedure has founded ' . $existingDirtyProduct . ' dirty product');
-                    continue;
-                }
-
-
-                \Monkey::app()->repoFactory->commit();
-            } catch (\Throwable $e) {
-                \Monkey::app()->repoFactory->rollback();
-                $this->error('processFile', 'Error reading Product: ' . json_encode($one), $e);
-                continue;
-            }
-
-            //DIRTY SKU
-            try {
-                $this->report('processFile', 'Process DirtySku');
-
-                $dirtySku = [];
-                $mainKeyForSku = [];
-                $mainKeyForSku["itemno"] = $one["spuID"];
-                $mainKeyForSku["var"] = $one["color"];
-                $mainKeyForSku["shopId"] = $this->getShop()->id;
-
-                $dirtyProduct = $existingDirtyProductExtend = \Monkey::app()->dbAdapter->select('DirtyProduct', $mainKeyForSku)->fetch();
-
-                if (!$dirtyProduct) {
-                    $this->error('Reading Skus', 'Dirty Product not found while looking at sku', json_encode($one));
-                    continue;
-                }
-
-
-                $newDirtySku["size"] = $one["size"];
-                $newDirtySku["shopId"] = $this->getShop()->id;
-                $newDirtySku["dirtyProductId"] = $dirtyProduct["id"];
-                $newDirtySku["value"] = floatval(str_replace(',', '.', $one["salePrice"]));
-                $newDirtySku["price"] = floatval(str_replace(',', '.', $one["marketPrice"]));
-                $newDirtySku["qty"] = $one["stock"];
-                $newDirtySku["barcode"] = $one["productCode"];
-                $newDirtySku["text"] = implode(',', $newDirtySku);
-                $newDirtySku["checksum"] = md5(implode(',', $newDirtySku));
-
-                //cerco lo sku con il checksum
-                $existDirtySku = \Monkey::app()->dbAdapter->selectCount('DirtySku', ['checksum' => $newDirtySku["checksum"]]);
-
-                if ($existDirtySku == 0) {
-
-                    $existDirtySkuWithMainKey = \Monkey::app()->dbAdapter->select('DirtySku', [
-                        'dirtyProductId' => $newDirtySku["dirtyProductId"],
-                        'shopId' => $newDirtySku["shopId"],
-                        'size' => $newDirtySku["size"]
-                    ])->fetch();
-
-                    if ($existDirtySkuWithMainKey) {
-                        //update
-                        \Monkey::app()->dbAdapter->update('DirtySku', [
-                            'value' => $newDirtySku["value"],
-                            'price' => $newDirtySku["price"],
-                            'qty' => $newDirtySku["qty"],
-                            'changed' => 1,
-                            'text' => $newDirtySku["text"],
-                            'checksum' => $newDirtySku["checksum"]
-                        ], [
-                            'dirtyProductId' => $existDirtySkuWithMainKey["dirtyProductId"],
-                            'shopId' => $existDirtySkuWithMainKey["shopId"],
-                            'size' => $existDirtySkuWithMainKey["size"]
-                        ]);
-
-                        $dirtySku["id"] = $existDirtySkuWithMainKey["id"];
-                        $seenSkus[] = $dirtySku['id'];
-                        $countUpdatedDirtySku++;
-                    } else {
-                        //INSERT
-                        $dirtySku["id"] = \Monkey::app()->dbAdapter->insert('DirtySku', $newDirtySku);
-                        $seenSkus[] = $dirtySku['id'];
-                        $countNewDirtySku++;
-                    }
-
-                } else if ($existDirtySku > 1) {
-                    $this->error('Multiple dirty sku founded', 'Procedure has founded ' . $existDirtySku . ' dirty sku');
-                    continue;
-                } else if ($existDirtySku == 1) {
-                    $noChangedSku = \Monkey::app()->dbAdapter->select('DirtySku', ['checksum' => $newDirtySku["checksum"]])->fetch();
-                    $seenSkus[] = $noChangedSku['id'];
-                }
-                $this->debug('Cycle', 'product checking item_imgs', $one['images']);
-                $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $dirtyProduct["id"]])->fetchAll();
-                $position = 0;
-                $this->report('processImage', 'array image: ' . $one['images']);
-                $imgs=explode('||', $one['images']);
-
-                foreach ($imgs as $img) {
-                    if(empty(trim($img))) {
-                        continue;
-                    }
-                    foreach ($dirtyPhotos as $exImg) {
-                        if ($exImg['url'] == $img) continue 2;
-                    }
-                    $position++;
-                    \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
-                        'dirtyProductId' => $dirtyProduct["id"],
-                        'url' => $img,
-                        'location' => 'url',
-                        'position' => $position,
-                        'worked' => 0,
-                        'shopId' => $this->getShop()->id
-                    ]);
-                }
-
-
-            } catch (\Throwable $e) {
-                $this->error('processFile', 'Error reading Product: ' . json_encode($one), $e);
-                continue;
-            }
-
+        foreach ($rows as $one) {
+            $keysChecksums[$one['keysChecksum']] = $one['id'];
+            $checksums[$one['checksum']] = $one['id'];
         }
 
-        $this->report('processFile', 'End of reading and writing dirty product: New Dirty Product: ' . $countNewDirtyProduct . ' Updated Dirty product: ' . $countUpdatedDirtyProduct);
-        $this->report('processFile', 'End of reading and writing dirty skus: New Dirty Sku: ' . $countNewDirtySku . ' Updated Dirty product: ' . $countUpdatedDirtySku);
+        $rows = \Monkey::app()->dbAdapter->query('SELECT checksum, id FROM DirtySku WHERE shopId = ? and qty > 0', [$this->getShop()->id])->fetchAll();
+        $skusChecksums = [];
+        foreach ($rows as $row) {
+            $skusChecksums[$row['checksum']] = $row['id'];
+        }
+
+        $rawData = json_decode(file_get_contents($file),true);
+        $this->report('processFile', 'Elements: '. count($rawData));
+
+        $productSkus = 0;
+        foreach ($rawData as $rawSku) {
+            $productSkus++;
+            if($productSkus%200 == 0) {
+                $this->report('Cycle','Working skus: '.$productSkus);
+            }
+            try {
+                $dirtyProduct = [];
+                $this->debug('Cycle','start work',$rawSku);
+                $rawProduct = $rawSku;
+                unset($rawProduct['skuID']);
+                unset($rawProduct['size']);
+                unset($rawProduct['stock']);
+                unset($rawProduct['salePrice']);
+                unset($rawProduct['marketPrice']);
+                $dirtyProduct['checksum'] = md5(json_encode($rawProduct));
+                unset($rawProduct);
+
+                if (isset($checksums[$dirtyProduct['checksum']])) {
+                    $dirtyProduct['id'] = $checksums[$dirtyProduct['checksum']];
+                    $this->debug('Cycle','product checksum exists',$dirtyProduct);
+                } else {
+
+                    \Monkey::app()->repoFactory->beginTransaction();
+                    $dirtyProductExtend = [];
+
+                    $this->debug('Cycle','product checksum don\'t exists',$dirtyProduct);
+                    //populate dirties
+                    $dirtyProduct['extId'] = $rawSku['spuID'];
+                    $dirtyProduct['brand'] = $rawSku['brandName'];
+                    $dirtyProduct['itemno'] = $rawSku['productCode'];
+                    $dirtyProduct['var'] = $rawSku['color'];
+                    $dirtyProduct['keysChecksum'] = md5(implode('::', $this->mapKeys($dirtyProduct, $productKeys)));
+
+                    $dirtyProductExtend['audience'] = $rawSku['gender'];
+                    $dirtyProductExtend['cat1'] = $rawSku['path'];
+                    $dirtyProductExtend['generalColor'] = $rawSku['color'];
+                    $dirtyProductExtend['sizeGroup'] = $rawSku['country_size'];
+                    $dirtyProductExtend['name'] = $rawSku['productName'];
+                    $dirtyProductExtend['description'] = $rawSku['item_description'];
+                    $dirtyProductExtend['season'] = $rawSku['seasonName'];
+
+                    //Filling Details
+                    $details = [
+                        'det1' => $rawSku['material'],
+                        'det2' => $rawSku['color'],
+                        'det3' => $rawSku['categoryName']
+                    ];
+
+                    if (isset($keysChecksums[$dirtyProduct['keysChecksum']])) {
+                        $this->debug('Cycle','product exists, update',$dirtyProduct);
+                        //product already Existing UPDATE
+                        $dirtyProductId = $keysChecksums[$dirtyProduct['keysChecksum']];
+                        \Monkey::app()->dbAdapter->update('DirtyProduct', $dirtyProduct, [
+                                'id' => $dirtyProductId,
+                                'shopId' => $this->getShop()->id
+                            ]
+                        );
+                        $dirtyProduct['id'] = $dirtyProductId;
+                        $dirtyProduct['shopId'] = $this->getShop()->id;
+
+                        \Monkey::app()->dbAdapter->update('DirtyProductExtend', $dirtyProductExtend, [
+                            'dirtyProductId' => $dirtyProduct['id'],
+                            'shopId' => $this->getShop()->id
+                        ]);
+
+                        $checksums[$dirtyProduct['checksum']] = $dirtyProduct['id'];
+                    } else {
+                        $this->debug('Cycle','product don\'t exist, insert',$dirtyProduct);
+                        //INSERT
+                        $dirtyProduct['shopId'] = $this->getShop()->id;
+                        $dirtyProduct['dirtyStatus'] = 'F';
+                        $dirtyProduct['id'] = \Monkey::app()->dbAdapter->insert('DirtyProduct', $dirtyProduct);
+
+                        $dirtyProductExtend['shopId'] = $this->getShop()->id;
+                        $dirtyProductExtend['dirtyProductId'] = $dirtyProduct['id'];
+                        \Monkey::app()->dbAdapter->insert('DirtyProductExtend', $dirtyProductExtend);
+
+                        $checksums[$dirtyProduct['checksum']] = $dirtyProduct['id'];
+                        $keysChecksums[$dirtyProduct['keysChecksum']] = $dirtyProduct['id'];
+                    }
+
+                    $this->debug('Cycle','product checking details',$details);
+                    $dirtyDetails = \Monkey::app()->dbAdapter->select('DirtyDetail', ['dirtyProductId' => $dirtyProduct['id']])->fetchAll();
+                    foreach ($details as $key => $detail) {
+                        if(empty(trim($detail))) continue;
+                        foreach ($dirtyDetails as $dirtyDetail) {
+                            if ($detail == $dirtyDetail['content']) continue 2;
+                        }
+                        \Monkey::app()->dbAdapter->insert('DirtyDetail', [
+                            'dirtyProductId' => $dirtyProduct['id'],
+                            'label' => $key,
+                            'content' => $detail
+                        ]);
+                    }
+
+                    $this->debug('Cycle', 'product checking item_imgs', $rawSku['images']);
+                    $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $dirtyProduct["id"]])->fetchAll();
+                    $position = 0;
+                    $this->report('processImage', 'array image: ' . $rawSku['images']);
+                    $imgs=explode('||', $rawSku['images']);
+
+                    foreach ($imgs as $img) {
+                        if(empty(trim($img))) {
+                            continue;
+                        }
+                        foreach ($dirtyPhotos as $exImg) {
+                            if ($exImg['url'] == $img) continue 2;
+                        }
+                        $position++;
+                        \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
+                            'dirtyProductId' => $dirtyProduct["id"],
+                            'url' => $img,
+                            'location' => 'url',
+                            'position' => $position,
+                            'worked' => 0,
+                            'shopId' => $this->getShop()->id
+                        ]);
+                    }
+
+                    \Monkey::app()->repoFactory->commit();
+                }
+            } catch (\Throwable $e) {
+                \Monkey::app()->repoFactory->rollback();
+                $this->error('processFile', 'Error reading Product: '.json_encode($rawSku), $e);
+                continue;
+            }
+
+            try {
+
+                $this->debug('processFile', 'Going with Sku');
+                $dirtySku = [];
+                $dirtySku['dirtyProductId'] = $dirtyProduct['id'];
+                $dirtySku['shopId'] = $this->getShop()->id;
+                $dirtySku['size'] = $rawSku['size'];
+                $dirtySku['extSkuId'] = $rawSku['skuID'];
+                $dirtySku['size'] = $rawSku['size'];
+                $dirtySku['qty'] = $rawSku['stock'];
+                $dirtySku['value'] = $rawSku['salePrice'];
+                $dirtySku['price'] = $rawSku['marketPrice'];
+
+                $dirtySku['checksum'] = md5(json_encode($dirtySku));
+                if(isset($skusChecksums[$dirtySku['checksum']])) {
+                    $dirtySku['id'] = $skusChecksums[$dirtySku['checksum']];
+                    $this->debug('processFile','Sku checksum Exist, save it',$dirtySku);
+                } else {
+                    $dirtySku['changed'] = 1;
+
+                    $existingSku = \Monkey::app()->dbAdapter->select('DirtySku',[
+                        'shopId'=>$this->getShop()->id,
+                        'dirtyProductId' => $dirtyProduct['id'],
+                        'extSkuId'=>$dirtySku['extSkuId']
+                    ])->fetchAll();
+
+                    if(count($existingSku) == 0) {
+                        $dirtySku['id'] = \Monkey::app()->dbAdapter->insert('DirtySku',$dirtySku);
+                        $this->debug('processFile','Sku don\'t Exist, insert',$dirtySku);
+
+                    } elseif(count($existingSku) == 1) {
+                        \Monkey::app()->dbAdapter->update('DirtySku',$dirtySku,['id'=>$existingSku[0]['id']]);
+                        $dirtySku['id'] = $existingSku[0]['id'];
+                        $this->debug('processFile','Sku Exist, update',$dirtySku);
+
+                    } else throw new BambooException('More than 1 sku found to update');
+                }
+
+                $seenSkus[] = $dirtySku['id'];
+
+            } catch (\Throwable $e) {
+                $this->error('processFile', 'Error reading Sku: '.json_encode($rawSku), $e);
+            }
+        }
 
         $this->findZeroSkus($seenSkus);
     }

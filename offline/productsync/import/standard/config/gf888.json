@@ -9,6 +9,14 @@
     },
     "extension": ".json"
   },
+  "keys": {
+    "product": [
+      "extId"
+    ],
+    "sku": [
+      "extSkuId"
+    ]
+  },
   "destFTPClient": {
     "host": "fiber.office.iwes.it",
     "user": "shooting",
