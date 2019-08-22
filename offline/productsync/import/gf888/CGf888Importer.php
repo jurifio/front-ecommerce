@@ -88,8 +88,9 @@ class CGf888Importer extends ABluesealProductImporter
                     $dirtyProductExtend['audience'] = $rawSku['gender'];
                     $dirtyProductExtend['cat1'] = $rawSku['path'];
                     $dirtyProductExtend['generalColor'] = $rawSku['color'];
+                    $dirtyProductExtend['sizeGroup'] = 'IT';
                     $dirtyProductExtend['name'] = $rawSku['productName'];
-                    $dirtyProductExtend['description'] = $rawSku['item_description'];
+                    $dirtyProductExtend['description'] = $rawSku['productDescription'];
                     $dirtyProductExtend['season'] = $rawSku['seasonName'];
 
                     //Filling Details
@@ -188,7 +189,7 @@ class CGf888Importer extends ABluesealProductImporter
                 $dirtySku['extSkuId'] = $rawSku['skuID'];
                 $dirtySku['size'] = $rawSku['size'];
                 $dirtySku['qty'] = $rawSku['stock'];
-                $dirtySku['value'] = $rawSku['salePrice'];
+                $dirtySku['salePrice'] = $rawSku['salePrice'];
                 $dirtySku['price'] = $rawSku['marketPrice'];
 
                 $dirtySku['checksum'] = md5(json_encode($dirtySku));
