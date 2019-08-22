@@ -88,7 +88,6 @@ class CGf888Importer extends ABluesealProductImporter
                     $dirtyProductExtend['audience'] = $rawSku['gender'];
                     $dirtyProductExtend['cat1'] = $rawSku['path'];
                     $dirtyProductExtend['generalColor'] = $rawSku['color'];
-                    $dirtyProductExtend['sizeGroup'] = $rawSku['country_size'];
                     $dirtyProductExtend['name'] = $rawSku['productName'];
                     $dirtyProductExtend['description'] = $rawSku['item_description'];
                     $dirtyProductExtend['season'] = $rawSku['seasonName'];
