@@ -851,12 +851,7 @@ class COrderRepo extends ARepo
             $orderLine->smartInsert();
             \Monkey::app()->repoFactory->create('ProductSku')->saveQty($orderLine->productSku);
             $this->fillOrderLineValuesByCartLine($orderLine, $cartLine);
-            $findPrestashopHasProduct=\Monkey::app()->repoFactory->create('PrestashopHasProduct')-$this->findOneBy([
-                'productId'=>$orderLine->productId,
-                'productVariantId'=>$orderLine->productVariantId]);
-            if($findPrestashopHasProduct!=null) {
                 $this->updatePrestashopQty($orderLine->productId, $orderLine->productVariantId, $orderLine->productSizeId, null, -1);
-            }
         }
 
 
