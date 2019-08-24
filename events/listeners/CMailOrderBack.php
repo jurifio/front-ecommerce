@@ -27,7 +27,8 @@ class CMailOrderBack extends AEventListener
 
         $order = \Monkey::app()->repoFactory->create('Order')->findOne([$event->getEventData('orderId')]);
         $to = $this->app->cfg()->fetch('miscellaneous','mailer')['clientRecipient']['orders'];
-        //$to= ['it@iwes.it'];
+        $toIwes=['gianluca@iwes.it'];
+        $toIt=['it@iwes.it'];
 
         /*$this->app->mailer->prepare('neworderback','no-reply', $to,[],[],['order'=>$order,'orderId'=>$event->getEventData('orderId')]);
         $res = $this->app->mailer->send();*/
@@ -35,5 +36,7 @@ class CMailOrderBack extends AEventListener
         /** @var CEmailRepo $emailRepo */
         $emailRepo = \Monkey::app()->repoFactory->create('Email');
         $emailRepo->newPackagedMail('neworderback','no-reply@pickyshop.com', $to,[],[],['order'=>$order,'orderId'=>$event->getEventData('orderId')]);
+        $emailRepo->newPackagedMail('neworderback','no-reply@pickyshop.com', $toIwes,[],[],['order'=>$order,'orderId'=>$event->getEventData('orderId')]);
+        $emailRepo->newPackagedMail('neworderback','no-reply@pickyshop.com', $toIt,[],[],['order'=>$order,'orderId'=>$event->getEventData('orderId')]);
     }
 }
