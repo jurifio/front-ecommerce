@@ -24,6 +24,8 @@ class CMailOrderClient extends AEventListener
             $this->report('Sending Mail', "begin to send mail",$event);
             $order = \Monkey::app()->repoFactory->create('Order')->findOne([$event->getEventData('orderId')]);
 		    $to = [$order->user->email];
+		    $toIwes=['gianluca@iwes.it'];
+		    $toIt=['it@iwes.it'];
 
 		    /*$this->app->mailer->prepare('neworderclient','no-reply', $to,[],[],['order'=>$order,'orderId'=>$order->id]);
 		    $res = $this->app->mailer->send();*/
@@ -31,7 +33,8 @@ class CMailOrderClient extends AEventListener
 		    /** @var CEmailRepo $emailRepo */
             $emailRepo = \Monkey::app()->repoFactory->create('Email');
             $emailRepo->newPackagedMail('neworderclient','no-reply@pickyshop.com', $to,[],[],['order'=>$order,'orderId'=>$order->id]);
-
+            $emailRepo->newPackagedMail('neworderclient','no-reply@pickyshop.com', $toIwes,[],[],['order'=>$order,'orderId'=>$order->id]);
+            $emailRepo->newPackagedMail('neworderclient','no-reply@pickyshop.com', $toIt,[],[],['order'=>$order,'orderId'=>$order->id]);
 
 	    } catch (\Throwable $e) {
 		    $this->error('MailOrderClient',$e->getMessage(),$e);
