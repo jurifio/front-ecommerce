@@ -33,6 +33,7 @@ class CShipment extends AEntity
     const SCOPE_US_TO_SUPPLIER = 'usToSupplier';
     const SCOPE_SUPPLIER_TO_US = 'supplierToUs';
     const SCOPE_USER_TO_US = 'userToUs';
+    const SCOPE_SUPPLIER_TO_USER ='supplierToUser';
 
     /**
      * @return CShipment

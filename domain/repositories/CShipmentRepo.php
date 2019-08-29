@@ -71,6 +71,78 @@ class CShipmentRepo extends ARepo
 
         return $shipment;
     }
+    /**
+     * Crea una nuova spedizione di un ordine per un cliente
+     * @param $carrierId
+     * @param $bookingNumber
+     * @param $time
+     * @param COrder $order
+     * @return CShipment
+     * @throws BambooException
+     */
+    public function newOrderShipmentFromSupplierToClient($carrierId, $fromId, $bookingNumber, $time, $orderLines)
+    {
+        foreach ($orderLines as $ol){
+           $orderId=$ol->orderId;
+        }
+        $orderRepo=\Monkey::app()->repoFactory->create('Order')->findOneBy(['id'=>$orderId]);
+        if($orderRepo!=null){
+            $shipmentAddress=$orderRepo->frozenShippingAddress;
+        }
+        /** @var CShipment $shipment */
+        /** @var CAddressBookRepo $addressBookRepo */
+            $addressBookRepo = \Monkey::app()->repoFactory->create('AddressBook');
+            $toAddressBook = $addressBookRepo->findOrInsertUserAddress(CUserAddress::defrost($shipmentAddress));
+
+        $shipment = \Monkey::app()->repoFactory->create('Shipment')->findBySql("SELECT id,date(predictedShipmentDate)
+                                                                            FROM Shipment
+                                                                            WHERE date(predictedShipmentDate) = DATE(?) AND
+                                                                                  shipmentDate is null AND 
+                                                                                  cancellationDate is null AND
+                                                                                  carrierId = ? AND
+                                                                                  fromAddressBookId = ? AND
+                                                                                  toAddressBookId = ?", [$time,
+            $carrierId,
+            $fromId,
+            $toAddressBook->id]);
+
+        if ($shipment->isEmpty()) {
+            $shipment = \Monkey::app()->repoFactory->create('Shipment')->getEmptyEntity();
+            $shipment->carrierId = $carrierId;
+            $shipment->scope = $shipment::SCOPE_SUPPLIER_TO_USER;
+            $shipment->bookingNumber = trim($bookingNumber);
+            $shipment->predictedShipmentDate = $time;
+            $shipment->predictedDeliveryDate = STimeToolbox::DbFormattedDate(SDateToolbox::GetNextWorkingDay(STimeToolbox::GetDateTime($time)));
+            $shipment->declaredValue = 0;
+            $shipment->fromAddressBookId = $fromId;
+            $shipment->toAddressBookId = $toAddressBook->id;
+            $shipment->id = $shipment->insert();
+            $shipment = $this->findOne(['id' => $shipment->id]);
+
+            $this->addPickUp($shipment);
+
+        } else {
+            $shipment = $shipment->getFirst();
+        }
+
+        foreach ($orderLines as $orderLine) {
+            $olhs = \Monkey::app()->repoFactory->create('OrderLineHasShipment')->getEmptyEntity();
+            $olhs->orderId = $orderLine->orderId;
+            $olhs->orderLineId = $orderLine->id;
+            $olhs->shipmentId = $shipment->id;
+            if (\Monkey::app()->repoFactory->create('OrderLineHasShipment')->findOneBy($olhs->getIds())) continue;
+            $olhs->insert();
+            $shipment->declaredValue += $orderLine->friendRevenue;
+        }
+        $shipment->update();
+        if ($shipment->carrier->implementation != null) {
+            $shipment->sendToCarrier();
+        } else {
+            if (!$trackingNumber) throw new BambooException('Per una spedizione Manuale è necessario fornire il Tracking Number');
+            $shipment->trackingNumber = trim($trackingNumber);
+        }
+        return $shipment;
+    }
 
     /**
      * returns an array of dates (Y-m-d) to do the shipping
