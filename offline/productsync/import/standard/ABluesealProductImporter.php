@@ -992,6 +992,9 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         $i = 0;
         foreach ($res as $k => $v) {
             try {
+                preg_replace("/ /", "%20", $v['url']);
+                $linktransform=preg_replace("/ /", "%20", $v['url']);
+                $this->report('download immagine', 'link trasformato: ' . $linktransform);
                 if ($i % 50 == 0) $this->report('download immagini', 'tentate ' . $k . ' immagini');
                 if (2000 < $i) break;
                 $this->debug('Download Immagine', $v['url']);
@@ -1003,13 +1006,24 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
                 if ($newMethod) {
                     $this->debug('Download Immagine', 'going to file_get_contents');
-                    $imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
-                    $imgBody = str_replace(" ", "%20", $imgBody);
+
+
+                  //  $imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
+                    if(preg_replace("/ /", "%20", $v['url'])){
+                        $imgBody = file_get_contents($linktransform);
+                    }else{
+                        $imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
+                    }
+                    preg_replace("/ /", "%20",$imgBody);
                     $this->debug('Download Immagine', 'got content');
                 } else {
                     $this->debug('Download Immagine', 'going to curl');
                     $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $v['url']);
+                    if(preg_replace("/ /", "%20", $v['url'])){
+                        curl_setopt($ch, CURLOPT_URL, $linktransform);
+                    }else{
+                        curl_setopt($ch, CURLOPT_URL, $v['url']);
+                    }
                     curl_setopt($ch, CURLOPT_HEADER, FALSE);
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
