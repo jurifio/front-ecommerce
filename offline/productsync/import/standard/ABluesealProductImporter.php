@@ -1004,6 +1004,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 if ($newMethod) {
                     $this->debug('Download Immagine', 'going to file_get_contents');
                     $imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
+                    $imgBody = str_replace(" ", "%20", $imgBody);
                     $this->debug('Download Immagine', 'got content');
                 } else {
                     $this->debug('Download Immagine', 'going to curl');
