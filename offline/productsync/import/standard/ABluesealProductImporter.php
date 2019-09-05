@@ -317,7 +317,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         $retValue = curl_exec($ch);
         curl_close($ch);
 
-        $filename = $localDir . '//' . time() . ($this->config->fetch('filesConfig', 'extension') ?? '.xml');
+        $filename = $localDir . '/' . time() . ($this->config->fetch('filesConfig', 'extension') ?? '.xml');
         if (empty($retValue)) {
             $this->warning('fetchWebFiles', 'Got Empty File!');
         } else {
