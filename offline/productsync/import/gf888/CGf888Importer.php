@@ -4,6 +4,7 @@ namespace bamboo\offline\productsync\import\gf888;
 
 use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooLogicException;
+use bamboo\offline\productsync\import\standard\ABluesealGF888ProductImporter;
 use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
@@ -19,7 +20,7 @@ use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
  * @date 16/08/2019
  * @since 1.0
  */
-class CGf888Importer extends ABluesealProductImporter
+class CGf888Importer extends ABluesealGF888ProductImporter
 {
 
     public function readFile($file)

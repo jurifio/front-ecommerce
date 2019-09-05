@@ -21,16 +21,19 @@ use bamboo\ecommerce\offline\productsync\import\IBluesealProductImporter;
 use bamboo\core\base\CFTPClient;
 
 /**
- * Class ABluesealProductImporter
- * @package bamboo\htdocs\pickyshop\import\blueseal
- * @author Bambooshoot Team <emanuele@bambooshoot.agency>, 13/01/2016
- * @copyright (c) Bambooshoot snc - All rights reserved
+ * Class ABluesealGF888ProductImporter
+ * @package bamboo\offline\productsync\import\standard
+ *
+ * @author Iwes Team <it@iwes.it>
+ *
+ * @copyright (c) Iwes  snc - All rights reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  *
- * @since ${VERSION}
+ * @date 05/09/2019
+ * @since 1.0
  */
-abstract class ABluesealProductImporter extends ACronJob implements IBluesealProductImporter
+abstract class ABluesealGF888ProductImporter extends ACronJob implements IBluesealProductImporter
 {
     /** @var CConfig $genericConfig */
     protected $genericConfig;
@@ -317,7 +320,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         $retValue = curl_exec($ch);
         curl_close($ch);
 
-        $filename = $localDir . '/import/' . time() . ($this->config->fetch('filesConfig', 'extension') ?? '.xml');
+        $filename = $localDir . '/' . time() . ($this->config->fetch('filesConfig', 'extension') ?? '.xml');
         if (empty($retValue)) {
             $this->warning('fetchWebFiles', 'Got Empty File!');
         } else {
@@ -987,13 +990,14 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
         //creo la cartella
         $destDir = $this->app->rootPath() . "/temp/tempImgs/";
-        if (!is_dir(rtrim($destDir, "/"))) if (!mkdir($destDir, 0777, true) && !is_dir($destDir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $destDir));
-        }
+        if (!is_dir(rtrim($destDir, "/"))) mkdir($destDir, 0777, true);
         $newMethod = true;
         $i = 0;
         foreach ($res as $k => $v) {
             try {
+                preg_replace("/ /", "%20", $v['url']);
+                $linktransform=preg_replace("/ /", "%20", $v['url']);
+                $this->report('download immagine', 'link trasformato: ' . $linktransform);
                 if ($i % 50 == 0) $this->report('download immagini', 'tentate ' . $k . ' immagini');
                 if (2000 < $i) break;
                 $this->debug('Download Immagine', $v['url']);
@@ -1005,12 +1009,24 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
                 if ($newMethod) {
                     $this->debug('Download Immagine', 'going to file_get_contents');
-                    $imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
+
+
+                    //  $imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
+                    if(preg_replace("/ /", "%20", $v['url'])){
+                        $imgBody = file_get_contents($linktransform);
+                    }else{
+                        $imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
+                    }
+                    preg_replace("/ /", "%20",$imgBody);
                     $this->debug('Download Immagine', 'got content');
                 } else {
                     $this->debug('Download Immagine', 'going to curl');
                     $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $v['url']);
+                    if(preg_replace("/ /", "%20", $v['url'])){
+                        curl_setopt($ch, CURLOPT_URL, $linktransform);
+                    }else{
+                        curl_setopt($ch, CURLOPT_URL, $v['url']);
+                    }
                     curl_setopt($ch, CURLOPT_HEADER, FALSE);
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -1063,11 +1079,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                     }
                 } catch (\Throwable $e) {
                     $this->error("download immagini", $destFileName . "non salvato. File scaricato, ma impossibile salvarlo su disco. Url corrispondente: " . $v['url'], $e);
-                    if (!is_dir(rtrim($destDir, "/"))) {
-                        if (!mkdir($destDir, 0777, true) && !is_dir($destDir)) {
-                            throw new \RuntimeException(sprintf('Directory "%s" was not created', $destDir));
-                        }
-                    }
+                    if (!is_dir(rtrim($destDir, "/"))) mkdir($destDir, 0777, true);
                 }
 
             } catch (\Throwable $e) {
