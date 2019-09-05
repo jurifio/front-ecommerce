@@ -1123,7 +1123,7 @@ abstract class ABluesealGF888ProductImporter extends ACronJob implements IBluese
                 $this->debug('Download Immagine', 'going to resize: ' . $width);
                 $this->debug('Download Immagine', 'going to resize: ' . $imager->getWidth());
                 $imager->resizeToWidth($width);
-                $this->debug('Download Immagine', 'goijng to save: ' . $dummyFolder . '/' . $dummyName);
+                $this->debug('Download Immagine', 'going to save: ' . $dummyFolder . '/' . $dummyName);
                 $imager->save($dummyFolder . '/' . $dummyName);
                 $this->debug('Download Immagine', 'Saved Dummy');
                 $p->dummyPicture = $dummyName;

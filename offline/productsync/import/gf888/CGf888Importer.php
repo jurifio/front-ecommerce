@@ -4,7 +4,6 @@ namespace bamboo\offline\productsync\import\gf888;
 
 use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooLogicException;
-use bamboo\offline\productsync\import\standard\ABluesealGF888ProductImporter;
 use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
@@ -20,7 +19,7 @@ use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
  * @date 16/08/2019
  * @since 1.0
  */
-class CGf888Importer extends ABluesealGF888ProductImporter
+class CGf888Importer extends ABluesealProductImporter
 {
 
     public function readFile($file)
@@ -96,25 +95,19 @@ class CGf888Importer extends ABluesealGF888ProductImporter
                     $collectDetails=explode('-',$rawSku['productDescription']);
                     //Filling Details
                     array_count_values($collectDetails);
-                    $countDet=0;
-                    $key='det';
+
                     $details=[];
                     foreach($collectDetails as $collectDetail){
+                            array_push($details, $collectDetail);
 
-                        if($countDet > 0){
-                            $stringCountDet=(string)$countDet;
-                            $det=$key.$stringCountDet;
-                       array_push($details, [$det => $collectDetail]);
-                        }
-                        $countDet++;
                     }
 
                     //Filling Details
-                  /*  $details = [
-                        'det1' => $rawSku['material'],
-                        'det2' => $rawSku['color'],
-                        'det3' => $rawSku['categoryName']
-                    ];*/
+                    /*  $details = [
+                          'det1' => $rawSku['material'],
+                          'det2' => $rawSku['color'],
+                          'det3' => $rawSku['categoryName']
+                      ];*/
 
                     if (isset($keysChecksums[$dirtyProduct['keysChecksum']])) {
                         $this->debug('Cycle','product exists, update',$dirtyProduct);
@@ -151,16 +144,20 @@ class CGf888Importer extends ABluesealGF888ProductImporter
 
                     $this->debug('Cycle','product checking details',$details);
                     $dirtyDetails = \Monkey::app()->dbAdapter->select('DirtyDetail', ['dirtyProductId' => $dirtyProduct['id']])->fetchAll();
-                    foreach ($details as $key => $detail) {
+                   $insertDet='det';
+                   $countInsertDet=1;
+                    foreach ($details as  $detail) {
                         if(empty(trim($detail))) continue;
                         foreach ($dirtyDetails as $dirtyDetail) {
                             if ($detail == $dirtyDetail['content']) continue 2;
                         }
+                        $key=$insertDet.$countInsertDet;
                         \Monkey::app()->dbAdapter->insert('DirtyDetail', [
                             'dirtyProductId' => $dirtyProduct['id'],
                             'label' => $key,
                             'content' => $detail
                         ]);
+                        $countInsertDet=$countInsertDet+1;
                     }
 
                     $this->debug('Cycle', 'product checking item_imgs', $rawSku['images']);
