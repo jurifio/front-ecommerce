@@ -93,7 +93,7 @@ class CMpkImporter extends ABluesealProductImporter
                         $dirtyProductExtend['generalColor'] = $rawSku['color'];
                         $dirtyProductExtend['sizeGroup'] = 'IT';
                         $dirtyProductExtend['name'] = $rawSku['productName'];
-                        $dirtyProductExtend['description'] = $rawSku['productDescription'];
+                        $dirtyProductExtend['description'] = $rawSku['item_description'];
                         $dirtyProductExtend['season'] = $rawSku['season_year'];
                         $collectDetails = explode('-', $rawSku['item_description']);
                         //Filling Details
