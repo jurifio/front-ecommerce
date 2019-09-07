@@ -147,7 +147,7 @@ class CGf888Importer extends ABluesealProductImporter
                    $insertDet='det';
                    $countInsertDet=1;
                     foreach ($details as  $detail) {
-                        if(empty(trim($detail))) continue;
+                        if(empty($detail)) continue;
                         foreach ($dirtyDetails as $dirtyDetail) {
                             if ($detail == $dirtyDetail['content']) continue 2;
                         }
