@@ -204,8 +204,7 @@ class CMpkImporter extends ABluesealProductImporter
                     $dirtySku['size'] = $rawSku['size'];
                     $dirtySku['extSkuId'] = $rawSku['skuID'];
                     $dirtySku['size'] = $rawSku['size'];
-                    $dirtySku['qty'] = $rawSku['stock'];
-                    $dirtySku['salePrice'] = $rawSku['salePrice'];
+                    $dirtySku['qty'] = $rawSku['quantity'];
                     $dirtySku['price'] = $rawSku['marketPrice'];
 
                     $dirtySku['checksum'] = md5(json_encode($dirtySku));
