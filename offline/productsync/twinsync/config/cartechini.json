@@ -3,9 +3,9 @@
         "engine": "mysql",
         "host": "5.189.152.89",
         "port": "3306",
-        "name": "cartechinishp",
-        "user": "cartechinishp",
-        "pass": "lwjGxt1y",
+        "name": "cartechininew",
+        "user": "root",
+        "pass": "F1fiI3EYv9JXl8Z",
         "options": {}
     },
     "tables": [
