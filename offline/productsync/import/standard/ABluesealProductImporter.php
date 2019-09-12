@@ -1012,7 +1012,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $v['url']);
                     curl_setopt($ch, CURLOPT_HEADER, FALSE);
-                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
                     $imgBody = curl_exec($ch);
