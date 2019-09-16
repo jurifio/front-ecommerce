@@ -9,6 +9,8 @@ use bamboo\domain\entities\CMarketplace;
 use bamboo\domain\entities\CMarketplaceAccount;
 use bamboo\domain\entities\CMarketplaceAccountHasProduct;
 use bamboo\domain\entities\CProduct;
+use bamboo\domain\Entities\CProductSku;
+use bamboo\domain\repositories\CProductSkuRepo;
 
 /**
  * Class CMarketplaceAccountHasProductRepo
@@ -26,7 +28,7 @@ use bamboo\domain\entities\CProduct;
 class CMarketplaceAccountHasProductRepo extends ARepo
 {
 
-    public function addProductToMarketplaceAccount(CProduct $product, CMarketplaceAccount $marketplaceAccount,$cpc = null, $priceModifier = null)
+    public function addProductToMarketplaceAccount(CProduct $product, CMarketplaceAccount $marketplaceAccount,$cpc = null, $priceModifier = null,$activeAutomatic = null)
     {
         $config = $marketplaceAccount->config;
         if(!is_null($cpc)) {
@@ -35,35 +37,68 @@ class CMarketplaceAccountHasProductRepo extends ARepo
         if(!is_null($priceModifier)) {
             $config['priceModifier'] = $priceModifier;
         }
+        if($automaticActive=='0') {
 
-        $marketplaceAccountHasProduct = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->getEmptyEntity();
-        $marketplaceAccountHasProduct->productId = $product->id;
-        $marketplaceAccountHasProduct->productVariantId = $product->productVariantId;
-        $marketplaceAccountHasProduct->marketplaceAccountId = $marketplaceAccount->id;
-        $marketplaceAccountHasProduct->marketplaceId = $marketplaceAccount->marketplaceId;
+            $marketplaceAccountHasProduct = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->getEmptyEntity();
+            $marketplaceAccountHasProduct->productId = $product->id;
+            $marketplaceAccountHasProduct->productVariantId = $product->productVariantId;
+            $marketplaceAccountHasProduct->marketplaceAccountId = $marketplaceAccount->id;
+            $marketplaceAccountHasProduct->marketplaceId = $marketplaceAccount->marketplaceId;
 
-        if($marketplaceAccountHasProduct2 = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->findOneBy($marketplaceAccountHasProduct->getIds())) {
-            $marketplaceAccountHasProduct = $marketplaceAccountHasProduct2;
+            if ($marketplaceAccountHasProduct2 = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->findOneBy($marketplaceAccountHasProduct->getIds())) {
+                $marketplaceAccountHasProduct = $marketplaceAccountHasProduct2;
 
-            $marketplaceAccountHasProduct->priceModifier = $config['priceModifier'];
-            if($marketplaceAccount->marketplace->type == 'cpc') {
-                $marketplaceAccountHasProduct->fee = $config['cpc'];
-            }
+                $marketplaceAccountHasProduct->priceModifier = $config['priceModifier'];
+                if ($marketplaceAccount->marketplace->type == 'cpc') {
+                    $marketplaceAccountHasProduct->fee = $config['cpc'];
+                }
 
-            if($marketplaceAccountHasProduct->isDeleted) {
-                $marketplaceAccountHasProduct->isDeleted = 0;
-                $marketplaceAccountHasProduct->isToWork = 1;
-                $marketplaceAccountHasProduct->update();
-                //reinsert
-                $this->app->eventManager->triggerEvent('marketplace.product.add',['marketplaceAccountHasProductId'=>$marketplaceAccountHasProduct->printId()]);
+                if ($marketplaceAccountHasProduct->isDeleted) {
+                    $marketplaceAccountHasProduct->isDeleted = 0;
+                    $marketplaceAccountHasProduct->isToWork = 1;
+                    $marketplaceAccountHasProduct->update();
+                    //reinsert
+                    $this->app->eventManager->triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
 
+                } else {
+                    $this->app->eventManager->triggerEvent('product.marketplace.change', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
+                }
             } else {
-                $this->app->eventManager->triggerEvent('product.marketplace.change',['marketplaceAccountHasProductId'=>$marketplaceAccountHasProduct->printId()]);
+                //insert
+                $marketplaceAccountHasProduct->insert();
+                $this->app->eventManager->triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
             }
-        } else {
-            //insert
-            $marketplaceAccountHasProduct->insert();
-            $this->app->eventManager->triggerEvent('marketplace.product.add',['marketplaceAccountHasProductId'=>$marketplaceAccountHasProduct->printId()]);
+        }else{
+            $marketplaceAccountHasProduct = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->getEmptyEntity();
+            $marketplaceAccountHasProduct->productId = $product->id;
+            $marketplaceAccountHasProduct->productVariantId = $product->productVariantId;
+            $marketplaceAccountHasProduct->marketplaceAccountId = $marketplaceAccount->id;
+            $marketplaceAccountHasProduct->marketplaceId = $marketplaceAccount->marketplaceId;
+
+            if ($marketplaceAccountHasProduct2 = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->findOneBy($marketplaceAccountHasProduct->getIds())) {
+                $marketplaceAccountHasProduct = $marketplaceAccountHasProduct2;
+
+                $marketplaceAccountHasProduct->priceModifier = $config['priceModifier'];
+                if ($marketplaceAccount->marketplace->type == 'cpc') {
+                    $marketplaceAccountHasProduct->fee = $config['cpc'];
+                }
+
+                if ($marketplaceAccountHasProduct->isDeleted) {
+                    $marketplaceAccountHasProduct->isDeleted = 0;
+                    $marketplaceAccountHasProduct->isToWork = 1;
+                    $marketplaceAccountHasProduct->update();
+                    //reinsert
+                    $this->app->eventManager->triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
+
+                } else {
+                    $this->app->eventManager->triggerEvent('product.marketplace.change', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
+                }
+            } else {
+                //insert
+                $marketplaceAccountHasProduct->insert();
+                $this->app->eventManager->triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
+            }
+
         }
     }
 
