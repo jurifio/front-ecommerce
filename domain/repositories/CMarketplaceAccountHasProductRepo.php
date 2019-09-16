@@ -28,75 +28,104 @@ use bamboo\domain\repositories\CProductSkuRepo;
 class CMarketplaceAccountHasProductRepo extends ARepo
 {
 
-    public function addProductToMarketplaceAccount(CProduct $product, CMarketplaceAccount $marketplaceAccount,$cpc = null, $priceModifier = null,$activeAutomatic = null)
+    public function addProductToMarketplaceAccount(CProduct $product, CMarketplaceAccount $marketplaceAccount, $cpc = null, $priceModifier = null, $activeAutomatic = null)
     {
-        $config = $marketplaceAccount->config;
-        if(!is_null($cpc)) {
+        $config = $marketplaceAccount -> config;
+        if (!is_null($cpc)) {
             $config['cpc'] = $cpc;
         }
-        if(!is_null($priceModifier)) {
+        if (!is_null($priceModifier)) {
             $config['priceModifier'] = $priceModifier;
         }
-        if($automaticActive=='0') {
+        if ($automaticActive == '0') {
 
-            $marketplaceAccountHasProduct = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->getEmptyEntity();
-            $marketplaceAccountHasProduct->productId = $product->id;
-            $marketplaceAccountHasProduct->productVariantId = $product->productVariantId;
-            $marketplaceAccountHasProduct->marketplaceAccountId = $marketplaceAccount->id;
-            $marketplaceAccountHasProduct->marketplaceId = $marketplaceAccount->marketplaceId;
+            $marketplaceAccountHasProduct = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> getEmptyEntity();
+            $marketplaceAccountHasProduct -> productId = $product -> id;
+            $marketplaceAccountHasProduct -> productVariantId = $product -> productVariantId;
+            $marketplaceAccountHasProduct -> marketplaceAccountId = $marketplaceAccount -> id;
+            $marketplaceAccountHasProduct -> marketplaceId = $marketplaceAccount -> marketplaceId;
 
-            if ($marketplaceAccountHasProduct2 = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->findOneBy($marketplaceAccountHasProduct->getIds())) {
+            if ($marketplaceAccountHasProduct2 = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> findOneBy($marketplaceAccountHasProduct -> getIds())) {
                 $marketplaceAccountHasProduct = $marketplaceAccountHasProduct2;
 
-                $marketplaceAccountHasProduct->priceModifier = $config['priceModifier'];
-                if ($marketplaceAccount->marketplace->type == 'cpc') {
-                    $marketplaceAccountHasProduct->fee = $config['cpc'];
+                $marketplaceAccountHasProduct -> priceModifier = $config['priceModifier'];
+                if ($marketplaceAccount -> marketplace -> type == 'cpc') {
+                    $marketplaceAccountHasProduct -> fee = $config['cpc'];
                 }
 
-                if ($marketplaceAccountHasProduct->isDeleted) {
-                    $marketplaceAccountHasProduct->isDeleted = 0;
-                    $marketplaceAccountHasProduct->isToWork = 1;
-                    $marketplaceAccountHasProduct->update();
+                if ($marketplaceAccountHasProduct -> isDeleted) {
+                    $marketplaceAccountHasProduct -> isDeleted = 0;
+                    $marketplaceAccountHasProduct -> isToWork = 1;
+                    $marketplaceAccountHasProduct -> update();
                     //reinsert
-                    $this->app->eventManager->triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
+                    $this -> app -> eventManager -> triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
 
                 } else {
-                    $this->app->eventManager->triggerEvent('product.marketplace.change', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
+                    $this -> app -> eventManager -> triggerEvent('product.marketplace.change', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
                 }
             } else {
                 //insert
-                $marketplaceAccountHasProduct->insert();
-                $this->app->eventManager->triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
+                $marketplaceAccountHasProduct -> insert();
+                $this -> app -> eventManager -> triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
             }
-        }else{
-            $marketplaceAccountHasProduct = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->getEmptyEntity();
-            $marketplaceAccountHasProduct->productId = $product->id;
-            $marketplaceAccountHasProduct->productVariantId = $product->productVariantId;
-            $marketplaceAccountHasProduct->marketplaceAccountId = $marketplaceAccount->id;
-            $marketplaceAccountHasProduct->marketplaceId = $marketplaceAccount->marketplaceId;
+        } else {
+            $isOnSale = $product -> isOnSale;
+            $productSku = \Monkey ::app() -> repoFactory -> create('ProductSku') -> findOneBy(['productId' => $product -> id, 'productVariantId' => $product -> productVariantId]);
+            $price = $productSku -> price;
+            $salePrice = $productSku -> salePrice;
+            if (isOnSale == 1) {
+                $activePrice = $salePrice;
+            } else {
+                $activePrice = $price;
+            }
 
-            if ($marketplaceAccountHasProduct2 = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->findOneBy($marketplaceAccountHasProduct->getIds())) {
+            $priceRange1=explode('-',$config['priceModifierRange1']);
+            $priceRange2=explode('-',$config['priceModifierRange2']);
+            $priceRange3=explode('-',$config['priceModifierRange3']);
+            $priceRange4=explode('-',$config['priceModifierRange4']);
+
+            switch(true){
+                case $activePrice>=$priceRange1[0] && $activePrice<=$priceRange1[1]:
+                    $priceModifier=$config['range1Cpc'];
+                    break;
+                case $activePrice>=$priceRange2[0] && $activePrice<=$priceRange2[1]:
+                    $priceModifier=$config['range2Cpc'];
+                    break;
+                case $activePrice>=$priceRange3[0] && $activePrice<=$priceRange3[1]:
+                    $priceModifier=$config['range2Cpc'];
+                    break;
+                case $activePrice>=$priceRange4[0] && $activePrice<=$priceRange4[1]:
+                    $priceModifier=$config['range1Cpc'];
+                    break;
+            }
+            $marketplaceAccountHasProduct = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> getEmptyEntity();
+            $marketplaceAccountHasProduct -> productId = $product -> id;
+            $marketplaceAccountHasProduct -> productVariantId = $product -> productVariantId;
+            $marketplaceAccountHasProduct -> marketplaceAccountId = $marketplaceAccount -> id;
+            $marketplaceAccountHasProduct -> marketplaceId = $marketplaceAccount -> marketplaceId;
+
+            if ($marketplaceAccountHasProduct2 = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> findOneBy($marketplaceAccountHasProduct -> getIds())) {
                 $marketplaceAccountHasProduct = $marketplaceAccountHasProduct2;
 
-                $marketplaceAccountHasProduct->priceModifier = $config['priceModifier'];
-                if ($marketplaceAccount->marketplace->type == 'cpc') {
-                    $marketplaceAccountHasProduct->fee = $config['cpc'];
+                $marketplaceAccountHasProduct -> priceModifier = $priceModifier;
+                if ($marketplaceAccount -> marketplace -> type == 'cpc') {
+                    $marketplaceAccountHasProduct -> fee = $config['defaultCpc'];
                 }
 
-                if ($marketplaceAccountHasProduct->isDeleted) {
-                    $marketplaceAccountHasProduct->isDeleted = 0;
-                    $marketplaceAccountHasProduct->isToWork = 1;
-                    $marketplaceAccountHasProduct->update();
+                if ($marketplaceAccountHasProduct -> isDeleted) {
+                    $marketplaceAccountHasProduct -> isDeleted = 0;
+                    $marketplaceAccountHasProduct -> isToWork = 1;
+                    $marketplaceAccountHasProduct -> update();
                     //reinsert
-                    $this->app->eventManager->triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
+                    $this -> app -> eventManager -> triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
 
                 } else {
-                    $this->app->eventManager->triggerEvent('product.marketplace.change', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
+                    $this -> app -> eventManager -> triggerEvent('product.marketplace.change', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
                 }
             } else {
                 //insert
-                $marketplaceAccountHasProduct->insert();
-                $this->app->eventManager->triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
+                $marketplaceAccountHasProduct -> insert();
+                $this -> app -> eventManager -> triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
             }
 
         }
@@ -109,24 +138,24 @@ class CMarketplaceAccountHasProductRepo extends ARepo
     public function deleteProductFromMarketplaceAccount($marketplaceAccountHasProduct)
     {
         try {
-            if(!($marketplaceAccountHasProduct instanceof CMarketplaceAccountHasProduct)) {
+            if (!($marketplaceAccountHasProduct instanceof CMarketplaceAccountHasProduct)) {
                 $stringId = $marketplaceAccountHasProduct;
-                $marketplaceAccountHasProduct = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->findOneByStringId($stringId);
+                $marketplaceAccountHasProduct = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> findOneByStringId($stringId);
             }
 
             if (null == $marketplaceAccountHasProduct) {
-                $marketplaceAccountHasProduct = \Monkey::app()->repoFactory->create('MarketplaceAccountHasProduct')->getEmptyEntity();
-                $marketplaceAccountHasProduct->readId($stringId);
-                $marketplaceAccountHasProduct->isDeleted = 1;
-                $marketplaceAccountHasProduct->isRevised = 0;
-                $marketplaceAccountHasProduct->isToWork = 0;
-                $marketplaceAccountHasProduct->insert();
+                $marketplaceAccountHasProduct = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> getEmptyEntity();
+                $marketplaceAccountHasProduct -> readId($stringId);
+                $marketplaceAccountHasProduct -> isDeleted = 1;
+                $marketplaceAccountHasProduct -> isRevised = 0;
+                $marketplaceAccountHasProduct -> isToWork = 0;
+                $marketplaceAccountHasProduct -> insert();
             } else {
-                $marketplaceAccountHasProduct->isRevised = 0;
-                $marketplaceAccountHasProduct->isDeleted = 1;
-                $marketplaceAccountHasProduct->update();
+                $marketplaceAccountHasProduct -> isRevised = 0;
+                $marketplaceAccountHasProduct -> isDeleted = 1;
+                $marketplaceAccountHasProduct -> update();
             }
-            $this->app->eventManager->triggerEvent('product.marketplace.change', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct->printId()]);
+            $this -> app -> eventManager -> triggerEvent('product.marketplace.change', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
             return true;
         } catch (\Throwable $e) {
             return false;
@@ -141,32 +170,32 @@ class CMarketplaceAccountHasProductRepo extends ARepo
      */
     public function detectAction(CMarketplaceAccountHasProduct $marketplaceAccountHasProduct)
     {
-        if (!$marketplaceAccountHasProduct->isToWork && !$marketplaceAccountHasProduct->isDeleted) {
-            foreach ($marketplaceAccountHasProduct->product->productSku as $productSku) {
-                if ($productSku->stockQty > 0) return 'revise';
+        if (!$marketplaceAccountHasProduct -> isToWork && !$marketplaceAccountHasProduct -> isDeleted) {
+            foreach ($marketplaceAccountHasProduct -> product -> productSku as $productSku) {
+                if ($productSku -> stockQty > 0) return 'revise';
             }
-            $marketplaceAccountHasProduct->isDeleted = 1;
-            $marketplaceAccountHasProduct->update();
+            $marketplaceAccountHasProduct -> isDeleted = 1;
+            $marketplaceAccountHasProduct -> update();
             return 'end';
-        } elseif (!$marketplaceAccountHasProduct->isToWork &&
-            !$marketplaceAccountHasProduct->isRevised &&
-            $marketplaceAccountHasProduct->isDeleted
+        } elseif (!$marketplaceAccountHasProduct -> isToWork &&
+            !$marketplaceAccountHasProduct -> isRevised &&
+            $marketplaceAccountHasProduct -> isDeleted
         ) return 'end';
-        elseif ($marketplaceAccountHasProduct->isToWork &&
-            !$marketplaceAccountHasProduct->isRevised &&
-            !$marketplaceAccountHasProduct->isDeleted
+        elseif ($marketplaceAccountHasProduct -> isToWork &&
+            !$marketplaceAccountHasProduct -> isRevised &&
+            !$marketplaceAccountHasProduct -> isDeleted
         ) return 'add';
-        elseif (!$marketplaceAccountHasProduct->isToWork &&
-            $marketplaceAccountHasProduct->isRevised &&
-            $marketplaceAccountHasProduct->isDeleted &&
-            !$marketplaceAccountHasProduct->hasError
+        elseif (!$marketplaceAccountHasProduct -> isToWork &&
+            $marketplaceAccountHasProduct -> isRevised &&
+            $marketplaceAccountHasProduct -> isDeleted &&
+            !$marketplaceAccountHasProduct -> hasError
         ) return null;
 
-        $marketplaceAccountHasProduct->isToWork = 0;
-        $marketplaceAccountHasProduct->isRevised = 1;
-        $marketplaceAccountHasProduct->isDeleted = 1;
-        $marketplaceAccountHasProduct->hasError = 0;
-        $marketplaceAccountHasProduct->update();
+        $marketplaceAccountHasProduct -> isToWork = 0;
+        $marketplaceAccountHasProduct -> isRevised = 1;
+        $marketplaceAccountHasProduct -> isDeleted = 1;
+        $marketplaceAccountHasProduct -> hasError = 0;
+        $marketplaceAccountHasProduct -> update();
         return null;
     }
 }
