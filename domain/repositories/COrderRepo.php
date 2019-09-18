@@ -827,6 +827,7 @@ class COrderRepo extends ARepo
         $order->shippingPrice = $cart->getShippingModifier($order->grossTotal);
         $order->cartId = $cart->id;
         $order->hasInvoice=$cart->hasInvoice;
+        $order->remoteShopSellerId=$cart->remoteShopSellerId;
         $order->smartInsert();
         $order = $this->fillOrderValuesByCart($order);
 
