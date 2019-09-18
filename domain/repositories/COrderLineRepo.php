@@ -175,9 +175,9 @@ class COrderLineRepo extends ARepo
 
         $code = $newStatusE->code;
         $oldStatus = $orderLine->orderLineStatus;
-        $shopRepo = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->remoteShopId]);
-        $orderRepo = \Monkey::app()->repoFactory->create('Order')->findOneBy(['id' => $orderLine->orderId, 'remoteShopId' => $orderLine->remoteShopId]);
-        if ($orderLine->remoteOrderId != null) {
+        $shopRepo = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->remoteShopSellerId]);
+        $orderRepo = \Monkey::app()->repoFactory->create('Order')->findOneBy(['id' => $orderLine->orderId, 'remoteShopSellerId' => $orderLine->remoteShopSellerId]);
+        if ($orderLine->remoteOrderSellerId != null) {
             $db_host = $shopRepo->dbHost;
             $db_name = $shopRepo->dbName;
             $db_user = $shopRepo->dbUsername;
@@ -192,9 +192,9 @@ class COrderLineRepo extends ARepo
                 $res = $e->getMessage();
             }
 
-            $stmtOrder = $db_con->prepare("UPDATE `Order` SET `status`='" . $orderRepo->status . "' WHERE id=" . $orderRepo->remoteId);
+            $stmtOrder = $db_con->prepare("UPDATE `Order` SET `status`='" . $orderRepo->status . "' WHERE id=" . $orderRepo->remoteOrderSellerId);
             $stmtOrder->execute();
-            $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteId . " and orderId=" . $orderLine->remoteOrderId);
+            $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteOrderLineSellerId . " and orderId=" . $orderLine->remoteOrderSellerId);
             $stmtOrderLine->execute();
         }
 
