@@ -449,8 +449,11 @@ class CCartRepo extends ARepo
      * @param CCart|null $cart
      * @return int
      */
-    public function addSku(CProductPublicSku $productPublicSku, $qty = 1, CCart $cart = null)
+    public function addSku(CProductPublicSku $productPublicSku, $qty = 1, CCart $cart = null,$remoteShopSellerId= null)
     {
+        if(!isset($remoteShopSellerId)){
+            $remoteShopSellerId=44;
+        }
         $cart = $cart ?? $this->currentCart();
         $lines = $cart->cartLine->findByKeys(['productId' => $productPublicSku->productId,
             'productVariantId' => $productPublicSku->productVariantId,
@@ -465,6 +468,7 @@ class CCartRepo extends ARepo
             $cartLine->productId = $productPublicSku->productId;
             $cartLine->productVariantId = $productPublicSku->productVariantId;
             $cartLine->productSizeId = $productPublicSku->productSizeId;
+            $cartLine->remoteShopSellerId=$remoteShopSellerId;
 
             while ($qty > 0) {
                 $qty--;
