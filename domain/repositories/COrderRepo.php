@@ -473,9 +473,13 @@ class COrderRepo extends ARepo
         $ol->fullPrice = $productSku->price;
         $ol->activePrice = ($productSku->product->isOnSale) ? $productSku->salePrice : $productSku->price;
         $ol->cost = $productSku->value;
+        $ol->remoteOrderSellerId=$order->id;
+        $ol->remoteShopSellerId=$order->remoteOrderSellerId;
         $ol->insert();
 
         $ol = $this->getMaxIdOrderLine($order);
+        $ol->remoteOrderLineSellerId=$ol->id;
+        $ol->update();
         $this->registerEvent($order->id, 'Aggiungo riga a ordine preesistente', 'Riga inserita: ' . $ol->id . '-' . $ol->orderId, $order->status);
 
         $this->fillOrderValuesByCart($order);
@@ -849,10 +853,11 @@ class COrderRepo extends ARepo
             $orderLine->cost = $productSkuFind->value;
             $orderLine->status = $orderLine::INIT_STATUS;
             $orderLine->frozenProduct = $productSkuFind->froze();
+            $orderLine->remoteShopSellerId=$order->remoteShopSellerId;
             $orderLine->smartInsert();
             \Monkey::app()->repoFactory->create('ProductSku')->saveQty($orderLine->productSku);
             $this->fillOrderLineValuesByCartLine($orderLine, $cartLine);
-                $this->updatePrestashopQty($orderLine->productId, $orderLine->productVariantId, $orderLine->productSizeId, null, -1);
+            $this->updatePrestashopQty($orderLine->productId, $orderLine->productVariantId, $orderLine->productSizeId, null, -1);
         }
 
 
