@@ -853,7 +853,7 @@ class COrderRepo extends ARepo
             $orderLine->cost = $productSkuFind->value;
             $orderLine->status = $orderLine::INIT_STATUS;
             $orderLine->frozenProduct = $productSkuFind->froze();
-            $orderLine->remoteShopSellerId=$order->remoteShopSellerId;
+            $orderLine->remoteShopSellerId = $order->remoteShopSellerId;
             $orderLine->smartInsert();
             \Monkey::app()->repoFactory->create('ProductSku')->saveQty($orderLine->productSku);
             $this->fillOrderLineValuesByCartLine($orderLine, $cartLine);
