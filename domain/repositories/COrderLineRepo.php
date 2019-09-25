@@ -464,7 +464,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
             } catch (\Throwable $e) {
                 \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote order to Shop ' . $findShopId->id,$e);
             }
-            $findLastRemoteOrder = $db_con->prepare("select MAX(id) as orderId from Order ");
+            $findLastRemoteOrder = $db_con->prepare("select MAX(id) as orderId from `Order` ");
             $findLastRemoteOrder->execute();
             $rowFindLastRemoteOrder = $findLastRemoteOrder->fetch(PDO::FETCH_ASSOC);
             $orderId = $rowFindLastRemoteOrder['orderId'];
@@ -503,7 +503,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                           ' . $orderLine->productVariantId . ',
                           ' . $orderLine->productSizeId . ',
                           ' . $orderLine->shopId . ',
-                          ' . $newStatus->code . ',
+                          \'' . $newStatus->code . '\',
                           null,
                           null,
                           null,
@@ -555,7 +555,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                        `note`,
                        `warehouseShelfPositionId`,
                        `remoteId` 
-                       VALUES (
+                      ) VALUES (
                           ' . $orderId . ',
                           ' . $orderLine->productId . ',
                           ' . $orderLine->productVariantId . ',
