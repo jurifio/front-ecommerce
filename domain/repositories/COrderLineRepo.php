@@ -376,12 +376,9 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 ['productId' => $orderLine->productId,
                     'productVariantId' => $orderLine->productVariantId,
                     'productSizeId' => $orderLine->productSizeId]);
-            $wholeSale = $productSku->value;
-            $fee = $findShopId->feeParallelOrder;
-            $revenueGoods = $wholeSale + ($wholeSale / 100 * $fee);
-            $friendRevenue = $wholeSale / 100 * $fee;
-            $vat = ($revenueGoods / 100) * 22;
-            $revenueTotal = $revenueGoods + $vat;
+            $friendRevenue=$orderLine->friendRevenue;
+            $vat = ($friendRevenue / 100) * 22;
+            $revenueTotal = $friendRevenue + $vat;
             if ($orderForRemote->remoteShopSellerId == '44') {
                 $isOrdermarketplace = '1';
             } else {
@@ -518,7 +515,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                           0,
                           0,
                           0,
-                          ' . $revenueGoods . ',
+                          ' . $friendRevenue . ',
                           ' . $friendRevenue . ',
                           \'' . $orderLine->creationDate . '\',
                           \'' . $orderLine->lastUpdate . '\',
@@ -574,7 +571,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                           0,
                           0,
                           0,
-                          ' . $revenueGoods . ',
+                          ' . $friendRevenue . ',
                           ' . $friendRevenue . ',
                           \'' . $orderLine->creationDate . '\',
                           \'' . $orderLine->lastUpdate . '\',
@@ -603,6 +600,45 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 1
                 )');
                 $stmtWalletMovements->execute();
+
+                /*select  shop seller to udpate Waller */
+
+                $shopFindSeller=\Monkey::app()->repoFactory->create('Shop')->findOneBy(['id'=>$orderLine->shopId]);
+                $db_hostSeller = $shopFindSeller->dbHost;
+                $db_nameSeller = $shopFindSeller->dbName;
+                $db_userSeller = $shopFindSeller->dbUsername;
+                $db_passSeller = $shopFindSeller->dbPassword;
+
+                try {
+
+                    $db_conSeller = new PDO("mysql:host={$db_hostSeller};dbname={$db_nameSeller}",$db_userSeller,$db_passSeller);
+                    $db_conSeller->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+                    $res = " connessione ok <br>";
+                } catch (PDOException $e) {
+                    throw new BambooException('fail to connect');
+
+                }
+                $feeSeller=$shopFindSeller->paralellFee;
+                $fee=($activePrice/100)*$feeSeller;
+                $activePrice=$orderLine->activePrice;
+                $amount=$fee-$activePrice;
+                $stmtWalletMovementsSeller = $db_conSeller->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible) 
+                VALUES (
+                ' . $orderLine->remoteOrderSellerId . ',
+                null,
+                null,
+                '.$amount.',
+                \'' . date("Y-m-d H:i:s") . '\',
+                \'' . date("Y-m-d H:i:s") . '\',
+                1,
+                1,
+                \'Ordine Parallelo Acquisto Prodotto \',
+                1
+                )');
+                $stmtWalletMovementsSeller->execute();
+
+
+
             } catch (\Throwable $e) {
                 \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet to Shop ' . $findShopId->id,$e);
             }
