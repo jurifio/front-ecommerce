@@ -361,7 +361,7 @@ class COrderLineRepo extends ARepo
             $findLastRemoteCart->execute();
             $rowFindLastRemoteCart = $findLastRemoteCart->fetch(PDO::FETCH_ASSOC);
             $cartId = $rowFindLastRemoteCart['cartId'];
-            /*
+            /* caricare i prodotti sul carrello
             try {
                 $insertRemoteCartLine = $db_con->prepare(sprintf('INSERT INTO CartLine (cartId, productId,productVariantId,productSizeId)
 VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,$orderLine->productSizeId));
@@ -370,6 +370,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote CartLine to Shop ' . $findShopId->id,$e);
             }
             */
+
             $productSku = \Monkey::app()->repoFactory->
             create('ProductSku')->
             findOneBy(
