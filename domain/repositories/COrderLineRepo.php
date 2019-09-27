@@ -620,8 +620,8 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
 
                 }
                 $feeSeller=$shopFindSeller->paralellFee;
-                $fee=($activePrice/100)*$feeSeller;
                 $activePrice=$orderLine->activePrice;
+                $fee=($activePrice/100)*$feeSeller;
                 $amount=$fee-$activePrice;
                 $stmtWalletMovementsSeller = $db_conSeller->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible) 
                 VALUES (
