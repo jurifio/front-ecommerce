@@ -103,15 +103,12 @@ class CAmazonPhotoSender extends ACronJob
     public function doFile($file) {
         $match = "";
         preg_match('/([0-9]{1,7}-[0-9]{1,8})( - |_|__)/u', $file, $match);
-
         $this->debug('doFile','Match: '.json_encode($match).' on file: '.$file);
         $names = pathinfo($file);
         if (!$this->ftp->fileExist($file)) return 0;
-
         $product = \Monkey::app()->repoFactory->create('Product')->findOneByStringId($match[1]);
         if($product == null) throw new BambooException('Product not found for: '.$match[1]);
         $futureName = $this->calculatePhotoNameStandard($product, $file);
-
         $localName = $this->localTempFolder . $names['basename'];
         if (!$this->ftp->get($localName, $file, false)) {
             throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
