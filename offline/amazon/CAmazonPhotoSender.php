@@ -81,7 +81,7 @@ class CAmazonPhotoSender extends ACronJob
         $i = 0;
         foreach ($files as $file) {
             try {
-                set_time_limit(60);
+                set_time_limit(120);
                 $this->debug('Work Cycle', 'Working Photo '.$file);
                 if($this->doFile($file)>0) $done++;
                 $this->debug('Work Cycle', 'Done Photo' . $file);
