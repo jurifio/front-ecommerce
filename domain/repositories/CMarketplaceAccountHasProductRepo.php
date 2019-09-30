@@ -37,7 +37,7 @@ class CMarketplaceAccountHasProductRepo extends ARepo
         if (!is_null($priceModifier)) {
             $config['priceModifier'] = $priceModifier;
         }
-        if ($automaticActive == '0') {
+        if ($activeAutomatic == '0') {
 
             $marketplaceAccountHasProduct = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> getEmptyEntity();
             $marketplaceAccountHasProduct -> productId = $product -> id;
@@ -73,7 +73,7 @@ class CMarketplaceAccountHasProductRepo extends ARepo
             $productSku = \Monkey ::app() -> repoFactory -> create('ProductSku') -> findOneBy(['productId' => $product -> id, 'productVariantId' => $product -> productVariantId]);
             $price = $productSku -> price;
             $salePrice = $productSku -> salePrice;
-            if (isOnSale == 1) {
+            if ($isOnSale == 1) {
                 $activePrice = $salePrice;
             } else {
                 $activePrice = $price;
@@ -92,10 +92,10 @@ class CMarketplaceAccountHasProductRepo extends ARepo
                     $priceModifier=$config['range2Cpc'];
                     break;
                 case $activePrice>=$priceRange3[0] && $activePrice<=$priceRange3[1]:
-                    $priceModifier=$config['range2Cpc'];
+                    $priceModifier=$config['range3Cpc'];
                     break;
                 case $activePrice>=$priceRange4[0] && $activePrice<=$priceRange4[1]:
-                    $priceModifier=$config['range1Cpc'];
+                    $priceModifier=$config['range4Cpc'];
                     break;
             }
             $marketplaceAccountHasProduct = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> getEmptyEntity();
