@@ -482,16 +482,44 @@ class CProduct extends AEntity
     }
 
     /**
-     * @param string $separator1
-     * @param string $separator2
-     * @return string
-     */
+ * @param string $separator1
+ * @param string $separator2
+ * @return string
+ */
     public function getMarketplaceAccountsName($separator1 = " - ", $separator2 = ", ", $excludeDeleted = false)
     {
         $data = [];
         foreach ($this->marketplaceAccountHasProduct as $marketplaceLine) {
             if ($excludeDeleted && $marketplaceLine->isDeleted == 1) continue;
             $data[] = $marketplaceLine->marketplaceAccount->marketplace->name . $separator1 . $marketplaceLine->marketplaceAccount->name;
+        }
+        return implode($separator2, $data);
+    }
+    /**
+     * @param string $separator1
+     * @param string $separator2
+     * @return string
+     */
+    public function getMarketplaceAccountsNameShopDestination($separator1 = " - ", $separator2 = ", ", $excludeDeleted = false)
+    {
+        $data = [];
+        foreach ($this->marketplaceAccountHasProduct as $marketplaceLine) {
+            if ($excludeDeleted && $marketplaceLine->isDeleted == 1) continue;
+            $data[] =  $separator1 . $marketplaceLine->marketplaceAccount->name;
+        }
+        return implode($separator2, $data);
+    }
+    /**
+     * @param string $separator1
+     * @param string $separator2
+     * @return string
+     */
+    public function getShopIdOriginName($separator1 = " - ", $separator2 = ",", $excludeDeleted = false)
+    {
+        $data = [];
+        foreach ($this->shop as $shopLine) {
+            if ($excludeDeleted && $shopLine->isActive == 0) continue;
+            $data[] = $shopLine->id . $separator1 . $shopLine->name;
         }
         return implode($separator2, $data);
     }
