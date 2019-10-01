@@ -46,11 +46,7 @@ class CInvoiceRepo extends ARepo
         $invoiceUe = $shopInvoices->invoiceUe;
         $invoiceExtraUe = $shopInvoices->invoiceExtraUe;
         $siteInvoiceChar = $shopInvoices->siteInvoiceChar;
-        /*** dati db esterno ***/
-        $db_host = $shopInvoices->dbHost;
-        $db_name = $shopInvoices->dbName;
-        $db_user = $shopInvoices->dbUsername;
-        $db_pass = $shopInvoices->dbPassword;
+
 
         $customerDataSeller = $shopRepo->findOneBy(['id' => $remoteShopSellerId]);
         $userAddress=$addressBookRepo->findOneBy(['id'=>$customerDataSeller->billingAddressBookId]);
@@ -58,6 +54,11 @@ class CInvoiceRepo extends ARepo
         $countryRepo = \Monkey::app()->repoFactory->create('Country');
         $findIsExtraUe = $countryRepo->findOneBy(['id' => $extraUe]);
         $isExtraUe = $findIsExtraUe->extraue;
+        /*** dati db esterno ***/
+        $db_host = $customerDataSeller->dbHost;
+        $db_name = $customerDataSeller->dbName;
+        $db_user = $customerDataSeller->dbUsername;
+        $db_pass = $customerDataSeller->dbPassword;
 
         if ($extraUe != '110') {
             $changelanguage = "1";
@@ -90,7 +91,7 @@ class CInvoiceRepo extends ARepo
                             // è Pickyshop
                             $invoiceType = 'X';
                             $invoiceTypeVat = 'newX';
-                            $documentType = '17';
+                            $documentType = '21';
                         } else {
                             //è Ecommerce Parallelo
                             $invoiceType = $invoiceExtraUe;
@@ -176,7 +177,7 @@ class CInvoiceRepo extends ARepo
                                       WHERE
                                       Invoice.invoiceYear = ? AND
                                       Invoice.invoiceType='" . $invoiceType . "' AND
-                                      Invoice.invoiceShopId='".$remoteShopSellerId."' AND
+                                      Invoice.invoiceShopId='".$shopInvoices->id."' AND
                                       Invoice.invoiceSiteChar= ?", [$year, $siteChar])->fetchAll()[0]['new'];
 
                 $invoiceNew->invoiceShopId=$remoteShopSellerId;
