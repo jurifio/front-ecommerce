@@ -214,9 +214,9 @@ class COrderLineRepo extends ARepo
                 $orderLine = $this->updateFriendOrderSent($orderLine,$newStatusE,$time);
                 break;
             case 'ORD_FRND_SNDING':
-
-                $orderLine = $this->updateFriendOrderSending($orderLine,$newStatusE);
-            default:
+                $orderLine = $this->updateFriendOrderSending($orderLine,$newStatusE,$time);
+            break;
+                default:
                 $orderLine->status = $newStatusE->code;
                 $orderLine->update();
         }
@@ -293,7 +293,7 @@ class COrderLineRepo extends ARepo
      * @param null $time
      */
 
-    private function updateFriendOrderSending($orderLine,$newStatus)
+    private function updateFriendOrderSending($orderLine,$newStatus,$time=null)
     {
         $orderLine->status = $newStatus->code;
 
@@ -639,14 +639,14 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 $stmtWalletMovementsSeller->execute();
 
 
-
             } catch (\Throwable $e) {
                 \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet to Shop ' . $findShopId->id,$e);
             }
-
+            $orderLine->remoteOrderSupplierId = $orderId;
         }
-        $orderLine->remoteOrderSupplierId = $orderId;
+
         $orderLine->update();
+        return $orderLine;
     }
 
     /**
