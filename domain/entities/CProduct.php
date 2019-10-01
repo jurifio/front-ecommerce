@@ -491,7 +491,7 @@ class CProduct extends AEntity
         $data = [];
         foreach ($this->marketplaceAccountHasProduct as $marketplaceLine) {
             if ($excludeDeleted && $marketplaceLine->isDeleted == 1) continue;
-            $data[] = $marketplaceLine->marketplaceAccount->marketplace->name . $separator1 . $marketplaceLine->marketplaceAccount->name;
+            $data[] = $separator1 . $marketplaceLine->marketplaceAccount->name;
         }
         return implode($separator2, $data);
     }
