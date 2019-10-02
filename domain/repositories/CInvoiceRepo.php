@@ -89,10 +89,7 @@ class CInvoiceRepo extends ARepo
                         // se è Pickyshop
                         if ($remoteShopSellerId == 44) {
                             // è Pickyshop
-                            $invoiceType = 'X';
-                            $invoiceTypeVat = 'newX';
-                            $documentType = '21';
-                        } else {
+
                             //è Ecommerce Parallelo
                             $invoiceType = $invoiceExtraUe;
                             $invoiceTypeVat = 'newX';
@@ -104,7 +101,7 @@ class CInvoiceRepo extends ARepo
                             $invoiceTypeText = "Fattura N. :";
                             $invoiceHeaderText = "FATTURA";
                             $invoiceTotalDocumentText = "Totale Fattura";
-                            $documentType = '18';
+                            $documentType = '20';
                         } else {
                             //è italiano
                             $invoiceTypeText = "Invoice N. :";
@@ -118,10 +115,6 @@ class CInvoiceRepo extends ARepo
                         // se è pickyshop
                         if ($remoteShopSellerId == '44') {
                             // è pickyshop
-                            $invoiceType = 'P';
-                            $invoiceTypeVat = 'newP';
-                            $documentType = '17';
-                        } else {
                             // è fattura Ecommerce Parallelo
                             $invoiceType = $invoiceUe;
                             $documentType = '21';
@@ -180,7 +173,7 @@ class CInvoiceRepo extends ARepo
                                       Invoice.invoiceShopId='".$shopInvoices->id."' AND
                                       Invoice.invoiceSiteChar= ?", [$year, $siteChar])->fetchAll()[0]['new'];
 
-                $invoiceNew->invoiceShopId=$remoteShopSellerId;
+                $invoiceNew->invoiceShopId=$shopInvoices->id;
                 $invoiceNew->invoiceNumber = $number;
                 $invoiceNew->invoiceSiteChar =$siteChar;
                 $invoiceNew->invoiceType = $invoiceType;
