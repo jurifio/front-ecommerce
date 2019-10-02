@@ -15,6 +15,7 @@ use bamboo\domain\entities\CProductSku;
 use bamboo\utils\time\STimeToolbox;
 use PDO;
 use PDOException;
+use bamboo\domain\repositories\CInvoiceRepo;
 
 /**
  * Class COrderStatusRepo
@@ -291,6 +292,7 @@ class COrderLineRepo extends ARepo
      * @param $orderLine
      * @param $newStatus
      * @param null $time
+     * @throws \Throwable
      */
 
     private function updateFriendOrderSending($orderLine,$newStatus,$time=null)
@@ -643,6 +645,10 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet to Shop ' . $findShopId->id,$e);
             }
             $orderLine->remoteOrderSupplierId = $orderId;
+            /** @var  CInvoiceRepo $invoiceRepo */
+            /** @var  $udpateExternalShop */
+            /** @throws BambooException*/
+            $udpateExternalShop=$invoiceRepo->createNewInvoiceToOrderParallel($orderLine->productId,$orderId);
         }
 
         $orderLine->update();
