@@ -625,6 +625,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 $activePrice=$orderLine->activePrice;
                 $fee=($activePrice/100)*$feeSeller;
                 $amount=$fee-$activePrice;
+                $amountForInvoice=abs($amount);
                 $stmtWalletMovementsSeller = $db_conSeller->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible) 
                 VALUES (
                 ' . $orderLine->remoteOrderSellerId . ',
@@ -649,7 +650,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
             /** @var  CInvoiceRepo $invoiceRepo */
             /** @var  $udpateExternalShop */
             /** @throws BambooException*/
-            $udpateExternalShop=$invoiceRepo->createNewInvoiceToOrderParallel($orderLine->productId,$orderId,$remoteShopSupplierId);
+            $udpateExternalShop=$invoiceRepo->createNewInvoiceToOrderParallel($orderLine->productId,$orderId,$remoteShopSupplierId,$amountForInvoice);
         }
 
         $orderLine->update();
