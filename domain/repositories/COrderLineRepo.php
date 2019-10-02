@@ -604,7 +604,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 )');
                 $stmtWalletMovements->execute();
 
-                /*select  shop seller to udpate Waller */
+                /*select  shop seller to udpate Wallet */
 
                 $shopFindSeller=\Monkey::app()->repoFactory->create('Shop')->findOneBy(['id'=>$orderLine->shopId]);
                 $db_hostSeller = $shopFindSeller->dbHost;
@@ -645,10 +645,11 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet to Shop ' . $findShopId->id,$e);
             }
             $orderLine->remoteOrderSupplierId = $orderId;
+            $remoteShopSupplierId=$findShopId->id;
             /** @var  CInvoiceRepo $invoiceRepo */
             /** @var  $udpateExternalShop */
             /** @throws BambooException*/
-            $udpateExternalShop=$invoiceRepo->createNewInvoiceToOrderParallel($orderLine->productId,$orderId);
+            $udpateExternalShop=$invoiceRepo->createNewInvoiceToOrderParallel($orderLine->productId,$orderId,$remoteShopSupplierId);
         }
 
         $orderLine->update();

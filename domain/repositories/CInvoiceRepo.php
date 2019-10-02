@@ -20,7 +20,7 @@ use PDO;
  */
 class CInvoiceRepo extends ARepo
 {
-    public function createNewInvoiceToOrderParallel(int $orderId, int $remoteOrderSupplierId): bool
+    public function createNewInvoiceToOrderParallel(int $orderId, int $remoteOrderSupplierId,int $remoteShopSupplierId): bool
     {
 
         $orderRepo = \Monkey ::app() -> repoFactory -> create('Order');
@@ -54,11 +54,7 @@ class CInvoiceRepo extends ARepo
         $countryRepo = \Monkey ::app() -> repoFactory -> create('Country');
         $findIsExtraUe = $countryRepo -> findOneBy(['id' => $extraUe]);
         $isExtraUe = $findIsExtraUe -> extraue;
-        /*** dati db esterno ***/
-        $db_host = $customerDataSeller -> dbHost;
-        $db_name = $customerDataSeller -> dbName;
-        $db_user = $customerDataSeller -> dbUsername;
-        $db_pass = $customerDataSeller -> dbPassword;
+
 
         if ($extraUe != '110') {
             $changelanguage = "1";
@@ -198,7 +194,12 @@ class CInvoiceRepo extends ARepo
                     $insertDocument -> year = $year;
                     $insertDocument -> insert();
                 }
-                $remoteShopSupplier=\Monkey::app()->repoFactory->create('Shop')->findOneBy
+                $remoteShopSupplier=\Monkey::app()->repoFactory->create('Shop')->findOneBy(['id'=>$remoteShopSupplierId]);
+                /*** dati db esterno ***/
+                $db_host = $remoteShopSupplier -> dbHost;
+                $db_name = $remoteShopSupplier -> dbName;
+                $db_user = $remoteShopSupplier -> dbUsername;
+                $db_pass = $remoteShopSupplier -> dbPassword;
 
                 $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}", $db_user, $db_pass);
                 $db_con -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
