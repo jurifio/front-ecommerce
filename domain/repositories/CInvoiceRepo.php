@@ -159,9 +159,17 @@ class CInvoiceRepo extends ARepo
 
                     }
                 }
+                switch($customerDataSeller->id){
+                    case 1:
+                        $filterUserShop=3692;
+                        break;
+                    case 51:
+                        $filterUserShop=5935;
+                        break;
+                }
 
                 //definzione dello shop seller al fine di reperire l'id utente che lo gestisce
-                $userHasShop = \Monkey::app()->repoFactory->create('UserHasShop')->findOneBy(['shopId' => $customerDataSeller->id]);
+                $userHasShop = \Monkey::app()->repoFactory->create('UserHasShop')->findOneBy(['shopId' => $customerDataSeller->id,'id'=>$filterUserShop]);
                 $remoteUserSellerId = $userHasShop->userId;
 
                 $number = $em->query("SELECT ifnull(MAX(invoiceNumber),0)+1 AS new
@@ -225,8 +233,8 @@ class CInvoiceRepo extends ARepo
 
         foreach ($order->invoice as $invoice) {
             if (is_null($invoice->invoiceText)) {
-                $userAddress=$customerDataSeller;
-                $userShipping=$customerDataSeller;
+                $userAddress=\Monkey::app()->repoFactory->create('UserAddress')->findOneBy(['id'=>$filterUserShop]);
+                $userShipping=\Monkey::app()->repoFactory->create('UserAddress')->findOneBy(['id'=>$filterUserShop]);
 
 
                 $productRepo = \Monkey::app()->repoFactory->create('ProductNameTranslation');
@@ -292,7 +300,8 @@ class CInvoiceRepo extends ARepo
 
                 /*'logo' => $this->app->cfg()->fetch("miscellaneous", "logo"),
                     'fiscalData' => $this->app->cfg()->fetch("miscellaneous", "fiscalData"),*/
-                $invoice->invoiceText = compileParallelInvoicecompileParallelInvoice($userAddress,
+                $invoice->invoiceText = compileParallelInvoicecompileParallelInvoice(
+                    $userAddress,
                     $userShipping,
                     $order,
                     $invoice,
@@ -577,24 +586,25 @@ class CInvoiceRepo extends ARepo
      * @return string $invoiceText;
      */
 
-    public function compileParallelInvoice($userAddress,
-                                           $userShipping,
-                                           $order,
-                                           $invoice,
-                                           $productRepo,
-                                           $logo,
-                                           $intestation,
-                                           $intestation2,
-                                           $address,
-                                           $address2,
-                                           $iva,
-                                           $tel,
-                                           $email,
-                                           $invoiceType,
-                                           $invoiceTypeVat,
-                                           $invoiceTypeText,
-                                           $invoiceTotalDocumentText,
-                                           $changelanguage): string
+    public function compileParallelInvoice( $userAddress,
+                                            $userShipping,
+                                            $order,
+                                            $invoice,
+                                            $productRepo,
+                                            $logo,
+                                            $intestation,
+                                            $intestation2,
+                                            $address,
+                                            $address2,
+                                            $iva,
+                                            $tel,
+                                            $email,
+                                            $invoiceType,
+                                            $invoiceTypeVat,
+                                            $invoiceTypeText,
+                                            $invoiceTotalDocumentText,
+                                            $invoiceHeaderText,
+                                            $changelanguage): string
     {
         $invoiceDate = new DateTime($invoice->invoiceDate);
 
