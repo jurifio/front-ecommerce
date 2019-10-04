@@ -13,6 +13,7 @@ use bamboo\core\db\pandaorm\repositories\ARepo;
 use bamboo\domain\entities\COrderLineStatus;
 use bamboo\domain\entities\CProductSku;
 use bamboo\utils\time\STimeToolbox;
+use DateTime;
 use PDO;
 use PDOException;
 use bamboo\domain\repositories\CInvoiceRepo;
@@ -216,8 +217,8 @@ class COrderLineRepo extends ARepo
                 break;
             case 'ORD_FRND_SNDING':
                 $orderLine = $this->updateFriendOrderSending($orderLine,$newStatusE,$time);
-            break;
-                default:
+                break;
+            default:
                 $orderLine->status = $newStatusE->code;
                 $orderLine->update();
         }
@@ -266,8 +267,8 @@ class COrderLineRepo extends ARepo
         $sentLog = $orderLine->getStatusLog('ORD_FRND_SENT');
         $days = 0;
         if ($sentLog) {
-            $now = new \DateTime();
-            $sentTime = new \DateTime($sentLog->time);
+            $now = new DateTime();
+            $sentTime = new DateTime($sentLog->time);
             $sentTime = STimeToolbox::getNextWorkingTime($sentTime);
             $days = $now->diff($sentTime)->d;
         }
@@ -295,7 +296,7 @@ class COrderLineRepo extends ARepo
      * @throws \Throwable
      */
 
-    private function updateFriendOrderSending($orderLine,$newStatus,$time=null)
+    private function updateFriendOrderSending($orderLine,$newStatus,$time = null)
     {
         $orderLine->status = $newStatus->code;
 
@@ -329,10 +330,10 @@ class COrderLineRepo extends ARepo
                 throw new BambooException('fail to connect');
 
             }
-            if($cartForRemote->hasInvoice==null){
-                $hasInvoice='null';
-            }else{
-                $hasInvoice=$cartForRemote->hasInvoice;
+            if ($cartForRemote->hasInvoice == null) {
+                $hasInvoice = 'null';
+            } else {
+                $hasInvoice = $cartForRemote->hasInvoice;
             }
             try {
                 $insertRemoteCart = $db_con->prepare("INSERT INTO Cart (orderPaymentMethodId,
@@ -379,7 +380,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 ['productId' => $orderLine->productId,
                     'productVariantId' => $orderLine->productVariantId,
                     'productSizeId' => $orderLine->productSizeId]);
-            $friendRevenue=$orderLine->friendRevenue;
+            $friendRevenue = $orderLine->friendRevenue;
             $vat = ($friendRevenue / 100) * 22;
             $revenueTotal = $friendRevenue + $vat;
             if ($orderForRemote->remoteShopSellerId == '44') {
@@ -594,7 +595,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 ' . $orderId . ',
                 null,
                 null,
-                '.$revenueTotal.',
+                ' . $revenueTotal . ',
                 \'' . date("Y-m-d H:i:s") . '\',
                 \'' . date("Y-m-d H:i:s") . '\',
                 1,
@@ -606,7 +607,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
 
                 /*select  shop seller to udpate Wallet */
 
-                $shopFindSeller=\Monkey::app()->repoFactory->create('Shop')->findOneBy(['id'=>$orderLine->shopId]);
+                $shopFindSeller = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->shopId]);
                 $db_hostSeller = $shopFindSeller->dbHost;
                 $db_nameSeller = $shopFindSeller->dbName;
                 $db_userSeller = $shopFindSeller->dbUsername;
@@ -621,17 +622,17 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                     throw new BambooException('fail to connect');
 
                 }
-                $feeSeller=$shopFindSeller->paralellFee;
-                $activePrice=$orderLine->activePrice;
-                $fee=($activePrice/100)*$feeSeller;
-                $amount=$fee-$activePrice;
-                $amountForInvoice=abs($amount);
+                $feeSeller = $shopFindSeller->paralellFee;
+                $activePrice = $orderLine->activePrice;
+                $fee = ($activePrice / 100) * $feeSeller;
+                $amount = $fee - $activePrice;
+                $amountForInvoice = abs($amount);
                 $stmtWalletMovementsSeller = $db_conSeller->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible) 
                 VALUES (
                 ' . $orderLine->remoteOrderSellerId . ',
                 null,
                 null,
-                '.$amount.',
+                ' . $amount . ',
                 \'' . date("Y-m-d H:i:s") . '\',
                 \'' . date("Y-m-d H:i:s") . '\',
                 1,
@@ -646,10 +647,10 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet to Shop ' . $findShopId->id,$e);
             }
             $orderLine->remoteOrderSellerId = $orderId;
-            $remoteShopSellerId=$orderLine->remoteShopSellerId;
+            $remoteShopSellerId = $orderLine->remoteShopSellerId;
             /** @var  CInvoiceRepo $invoiceRepo */
             /** @var  $udpateExternalShop */
-            /** @throws BambooException*/
+            /** @throws BambooException */
             $this->createNewInvoiceToOrderParallel($orderLine,$orderId,$remoteShopSellerId,$amountForInvoice);
         }
 
@@ -814,12 +815,12 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
         }
         return true;
     }
-    public function createNewInvoiceToOrderParallel(COrderLine $orderLine, int $orderId, int $remoteShopSellerId,int $amountForInvoice): bool
+
+    public function createNewInvoiceToOrderParallel(COrderLine $orderLine,int $orderId,int $remoteShopSellerId,int $amountForInvoice): bool
     {
 
         $orderRepo = \Monkey::app()->repoFactory->create('Order');
         $shopRepo = \Monkey::app()->repoFactory->create('Shop');
-        $addressBookRepo = \Monkey::app()->repoFactory->create('AddressBook');
 
         $order = $orderRepo->findOneBy(['id' => $orderLine->orderId]);
 
@@ -835,14 +836,25 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
         $tel = $shopInvoices->tel;
         $email = $shopInvoices->email;
         /***sezionali******/
-        $receipt = $shopInvoices->receipt;
-        $invoiceUe = $shopInvoices->invoiceUe;
-        $invoiceExtraUe = $shopInvoices->invoiceExtraUe;
+        $invoiceParalUe = $shopInvoices->invoiceParalUe;
+        $invoiceParalExtraUe = $shopInvoices->invoiceParalExtraUe;
         $siteInvoiceChar = $shopInvoices->siteInvoiceChar;
 
         /* Dati destinatario Fattura shop Seller */
         $customerDataSeller = $shopRepo->findOneBy(['id' => $remoteShopSellerId]);
-        $userAddress = $addressBookRepo->findOneBy(['id' => $customerDataSeller->billingAddressBookId]);
+        switch ($customerDataSeller->id) {
+            case 1:
+                $filterUserAddress = 2769;
+                break;
+            case 51:
+                $filterUserAddress = 5935;
+                break;
+        }
+
+        //definzione dello shop seller al fine di reperire l'id utente che lo gestisce
+        $userHasAddress = \Monkey::app()->repoFactory->create('UserAddress')->findOneBy(['id' => $filterUserAddress]);
+        $userAddress = $userHasAddress;
+        $userShipping = $userHasAddress;
         $extraUe = $userAddress->countryId;
         $countryRepo = \Monkey::app()->repoFactory->create('Country');
         $findIsExtraUe = $countryRepo->findOneBy(['id' => $extraUe]);
@@ -864,103 +876,57 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
         if ($order->invoice->isEmpty()) {
             try {
                 $invoiceNew->orderId = $orderId;
-                $today = new \DateTime();
+                $today = new DateTime();
                 $invoiceNew->invoiceYear = $today->format('Y-m-d H:i:s');
-                $year = (new \DateTime())->format('Y');
+                $year = (new DateTime())->format('Y');
                 $em = $this->app->entityManagerFactory->create('Invoice');
                 // se è fattura
-                if ($hasInvoice == '1') {
-                    //se è extracee
-                    if ($isExtraUe == '1') {
-                        // se è Pickyshop
-                        if ($remoteShopSellerId == 44) {
-                            // è Pickyshop
-
-                            //è Ecommerce Parallelo
-                            $invoiceType = $invoiceExtraUe;
-                            $invoiceTypeVat = 'newX';
-                            $documentType = '20';
-                        }
-                        //se è non è inglese
-                        if ($changelanguage != "1") {
-                            // è inglese
-                            $invoiceTypeText = "Fattura N. :";
-                            $invoiceHeaderText = "FATTURA";
-                            $invoiceTotalDocumentText = "Totale Fattura";
-                            $documentType = '20';
-                        } else {
-                            //è italiano
-                            $invoiceTypeText = "Invoice N. :";
-                            $invoiceHeaderText = "INVOICE";
-                            $invoiceTotalDocumentText = "Invoice Total";
-
-
-                        }
+                $productRepo = \Monkey::app()->repoFactory->create('ProductNameTranslation');
+                //se è extracee
+                if ($isExtraUe == '1') {
+                    $invoiceType = $invoiceParalExtraUe;
+                    $invoiceTypeVat = 'newX';
+                    $documentType = '20';
+                    //se è non è inglese
+                    if ($changelanguage != "1") {
+                        // è inglese
+                        $invoiceTypeText = "Fattura N. :";
+                        $invoiceHeaderText = "FATTURA";
+                        $invoiceTotalDocumentText = "Totale Fattura";
+                        $documentType = '20';
                     } else {
-                        // è fattura intracomunitario
-                        // se è pickyshop
-                        if ($remoteShopSellerId == '44') {
-                            // è pickyshop
-                            // è fattura Ecommerce Parallelo
-                            $invoiceType = $invoiceUe;
-                            $documentType = '21';
-                            $invoiceTypeVat = 'newP';
-                        }
-                        // se non è inglese
-                        if ($changelanguage != "1") {
-                            // è italiano
-                            $invoiceTypeText = "Fattura N. :";
-                            $invoiceHeaderText = "FATTURA";
-                            $invoiceTotalDocumentText = "Totale Fattura";
-                        } else {
-                            // non è italiano
-                            $invoiceTypeText = "Invoice N. :";
-                            $invoiceHeaderText = "INVOICE";
-                            $invoiceTotalDocumentText = "Invoice Total";
-                        }
+                        //è italiano
+                        $invoiceTypeText = "Invoice N. :";
+                        $invoiceHeaderText = "INVOICE";
+                        $invoiceTotalDocumentText = "Invoice Total";
+
+
                     }
-                    // fine distinzione  tra intracee e extracee
                 } else {
-                    // è ricevuta
+                    // è fattura intracomunitario
                     // se è pickyshop
-                    if ($remoteShopSellerId == '44') {
-                        //è pickyshop
-                        $documentType = '16';
-                        $invoiceType = 'K';
-                        $invoiceTypeVat = 'newK';
-                    } else {
-                        // non è pickyshop
-                        $invoiceType = $receipt;
-                        $documentType = '22';
-                        $invoiceTypeVat = 'newK';
-                    }
+                    // è pickyshop
+                    // è fattura Ecommerce Parallelo
+                    $invoiceType = $invoiceParalUe;
+                    $documentType = '21';
+                    $invoiceTypeVat = 'newP';
                     // se non è inglese
                     if ($changelanguage != "1") {
-
                         // è italiano
-                        $invoiceTypeText = "Ricevuta N. :";
-                        $invoiceHeaderText = "RICEVUTA";
-                        $invoiceTotalDocumentText = "Totale Ricevuta";
+                        $invoiceTypeText = "Fattura N. :";
+                        $invoiceHeaderText = "FATTURA";
+                        $invoiceTotalDocumentText = "Totale Fattura";
                     } else {
-//è inglese
-                        $invoiceTypeText = "Receipt N. :";
-                        $invoiceHeaderText = "RECEIPT";
-                        $invoiceTotalDocumentText = "Receipt Total";
-
+                        // non è italiano
+                        $invoiceTypeText = "Invoice N. :";
+                        $invoiceHeaderText = "INVOICE";
+                        $invoiceTotalDocumentText = "Invoice Total";
                     }
                 }
-                switch($customerDataSeller->id){
-                    case 1:
-                        $filterUserShop=3692;
-                        break;
-                    case 51:
-                        $filterUserShop=5935;
-                        break;
-                }
+                // fine distinzione  tra intracee e extracee
 
-                //definzione dello shop seller al fine di reperire l'id utente che lo gestisce
-                $userHasShop = \Monkey::app()->repoFactory->create('UserHasShop')->findOneBy(['shopId' => $customerDataSeller->id,'id'=>$filterUserShop]);
-                $remoteUserSellerId = $userHasShop->userId;
+
+
 
                 $number = $em->query("SELECT ifnull(MAX(invoiceNumber),0)+1 AS new
                                       FROM Invoice
@@ -977,432 +943,14 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 $invoiceNew->invoiceType = $invoiceType;
                 $invoiceNew->invoiceDate = $today->format('Y-m-d H:i:s');
                 $todayInvoice = $today->format('d/m/Y');
-                $invoiceRepo->insert($invoiceNew);
-                $sectional = $number . '/' . $invoiceType;
+                $invoiceDate = new DateTime($invoiceNew->invoiceDate);
 
-
-                /** ottengo il valore della Vendita per la registrazione del  Documento */
-                $orderLineRepo = \Monkey::app()->repoFactory->create('OrderLine')->findBy(['orderId' => $orderId]);
-                $documentRepo = \Monkey::app()->repoFactory->create('Document');
-                // codice per inserire all'interno della cartella document
-                $checkIfDocumentExist = $documentRepo->findOneBy(['number' => $number,'year' => $year]);
-                if ($checkIfDocumentExist == null) {
-                    $insertDocument = $documentRepo->getEmptyEntity();
-                    $insertDocument->userId = $remoteUserSellerId;
-                    $insertDocument->shopRecipientId = $customerDataSeller->id;
-                    $insertDocument->number = $sectional;
-                    $insertDocument->date = $order->orderDate;
-                    $insertDocument->invoiceTypeId = $documentType;
-                    $insertDocument->paydAmount = $amountForInvoice;
-                    $insertDocument->paymentExpectedDate = $order->paymentDate;
-                    $insertDocument->note = $order->note;
-                    $insertDocument->creationDate = $order->orderDate;
-                    $insertDocument->totalWithVat = $amountForInvoice;
-                    $insertDocument->year = $year;
-                    $insertDocument->insert();
-                }
-                /* definizione dello shop Supplier*/
-                $remoteShopSupplier = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->shopId]);
-                /*** dati db esterno ***/
-                $db_host = $remoteShopSupplier->dbHost;
-                $db_name = $remoteShopSupplier->dbName;
-                $db_user = $remoteShopSupplier->dbUsername;
-                $db_pass = $remoteShopSupplier->dbPassword;
-
-
-
-
-
-            } catch (\Throwable $e) {
-                throw $e;
-                $this->app->router->response()->raiseProcessingError();
-                $this->app->router->response()->sendHeaders();
-            }
-        }
-
-
-        foreach ($order->invoice as $invoice) {
-            if (is_null($invoice->invoiceText)) {
-                $userAddress=\Monkey::app()->repoFactory->create('UserAddress')->findOneBy(['id'=>$filterUserShop]);
-                $userShipping=\Monkey::app()->repoFactory->create('UserAddress')->findOneBy(['id'=>$filterUserShop]);
-
-
-                $productRepo = \Monkey::app()->repoFactory->create('ProductNameTranslation');
-                if ($hasInvoice == '1') {
-                    if ($isExtraUe == '1') {
-                        if ($remoteShopSellerId == '44') {
-                            $invoiceType = 'X';
-                            $invoiceTypeVat = 'newX';
-                        } else {
-                            $invoiceType = $invoiceExtraUe;
-                            $invoiceTypeVat = 'newX';
-                        }
-                        if ($changelanguage != "1") {
-                            $invoiceTypeText = "Fattura N. :";
-                            $invoiceHeaderText = "FATTURA";
-                            $invoiceTotalDocumentText = "Totale Fattura";
-                        } else {
-                            $invoiceTypeText = "Invoice N. :";
-                            $invoiceHeaderText = "INVOICE";
-                            $invoiceTotalDocumentText = "Invoice Total";
-                        }
-                    } else {
-                        if ($remoteShopSellerId == '44') {
-                            $invoiceType = 'P';
-                            $invoiceTypeVat = 'newP';
-                        } else {
-                            $invoiceType = $invoiceUe;
-                            $invoiceTypeVat = 'newP';
-                        }
-                        if ($changelanguage != "1") {
-                            $invoiceTypeText = "Fattura N. :";
-                            $invoiceHeaderText = "FATTURA";
-                            $invoiceTotalDocumentText = "Totale Fattura";
-                        } else {
-                            $invoiceTypeText = "Invoice N. :";
-                            $invoiceHeaderText = "INVOICE";
-                            $invoiceTotalDocumentText = "Invoice Total";
-                        }
-                    }
-                } else {
-                    if ($remoteShopSellerId == '44') {
-                        $invoiceType = 'K';
-                        $invoiceTypeVat = 'newK';
-                    } else {
-                        $invoiceType = $receipt;
-                        $invoiceTypeVat = 'newK';
-                    }
-                    if ($changelanguage != "1") {
-
-                        $invoiceTypeText = "Ricevuta N. :";
-                        $invoiceHeaderText = "RICEVUTA";
-                        $invoiceTotalDocumentText = "Totale Ricevuta";
-                    } else {
-
-                        $invoiceTypeText = "Receipt N. :";
-                        $invoiceHeaderText = "RECEIPT";
-                        $invoiceTotalDocumentText = "Receipt Total";
-
-                    }
-                }
-
-
-
-                /*'logo' => $this->app->cfg()->fetch("miscellaneous", "logo"),
-                    'fiscalData' => $this->app->cfg()->fetch("miscellaneous", "fiscalData"),*/
-                $invoice->invoiceText = compileParallelInvoicecompileParallelInvoice(
-                    $userAddress,
-                    $userShipping,
-                    $order,
-                    $invoice,
-                    $productRepo,
-                    $logo,
-                    $intestation,
-                    $intestation2,
-                    $address,
-                    $address2,
-                    $iva,
-                    $tel,
-                    $email,
-                    $invoiceType,
-                    $invoiceTypeVat,
-                    $invoiceTypeText,
-                    $invoiceTotalDocumentText,
-                    $invoiceHeaderText,
-                    $changelanguage);
-                try {
-                    $invoiceRepo->update($invoice);
-
-                    if ($remoteShopSellerId == '44') {
-                        $api_uid = $this->app->cfg()->fetch('fattureInCloud', 'api_uid');
-                        $api_key = $this->app->cfg()->fetch('fattureInCloud', 'api_key');
-                        if ($hasInvoice == '1' && $isExtraUe == '0') {
-                            $insertJson = '{
-  "api_uid": "' . $api_uid . '",
-  "api_key": "' . $api_key . '",
-  "id_cliente": "0",
-  "id_fornitore": "0",
-  "nome": "' . $userAddress->surname . ' ' . $userAddress->name . ' ' . $userAddress->company . '",
-  "indirizzo_via": "' . $userAddress->address . '",
-  "indirizzo_cap": "' . $userAddress->postcode . '",
-  "indirizzo_citta": "' . $userAddress->city . '",
-  "indirizzo_provincia": "' . $userAddress->province . '",
-  "indirizzo_extra": "",
-  "paese": "Italia",
-  "paese_iso": "' . $userAddress->country->ISO . '",
-  "lingua": "it",
-  "piva": "' . $userAddress->fiscalCode . '",
-  "cf": "' . $userAddress->fiscalCode . '",
-  "autocompila_anagrafica": false,
-  "salva_anagrafica": false,
-  "numero": "' . $sectional . '",
-  "data": "' . $todayInvoice . '",
-  "valuta": "EUR",
-  "valuta_cambio": 1,
-  "prezzi_ivati": true,
-  "rivalsa": 0,
-  "cassa": 0,
-  "rit_acconto": 0,
-  "imponibile_ritenuta": 0,
-  "rit_altra": 0,
-  "marca_bollo": 0,
-  "oggetto_visibile": "",
-  "oggetto_interno": "",
-  "centro_ricavo": "",
-  "centro_costo": "",
-  "note": "",
-  "nascondi_scadenza": false,
-  "ddt": false,
-  "ftacc": false,
-  "id_template": "0",
-  "ddt_id_template": "0",
-  "ftacc_id_template": "0",
-  "mostra_info_pagamento": false,';
-                            $orderPaymentMethodId = $order->orderPaymentMethodId;
-                            $orderPaymentMethodTranslation = \Monkey::app()->repoFactory->create('OrderPaymentMethodTranslation')->findOneBy(['orderPaymentMethodId' => $orderPaymentMethodId, 'langId' => 1]);
-                            $metodo_pagamento = $orderPaymentMethodTranslation->name;
-                            switch ($orderPaymentMethodId) {
-                                case 1:
-                                    $metodo_titoloN = 'Merchant Paypal';
-                                    $metodo_descN = $api_uid = $this->app->cfg()->fetch('payPal', 'business');
-                                    break;
-                                case 2:
-                                    $metodo_titoloN = 'Merchant Nexi';
-                                    $metodo_descN = '';
-                                    break;
-                                case 3:
-                                    $metodo_titoloN = 'IBAN';
-                                    $metodo_descN = 'IT54O0521613400000000002345';
-                                    break;
-                                case 5:
-                                    $metodo_titoloN = '';
-                                    $metodo_descN = '';
-                                    break;
-
-                            }
-
-
-                            $insertJson .= '"metodo_pagamento": "' . $metodo_pagamento . '",
-  "metodo_titoloN": "' . $metodo_titoloN . '",
-  "metodo_descN": "' . $metodo_descN . '",
-  "mostra_totali": "tutti",
-  "mostra_bottone_paypal": false,
-  "mostra_bottone_bonifico": false,
-  "mostra_bottone_notifica": false,';
-                            $insertJson .= '"lista_articoli": ';
-                            $tot = 0;
-                            $i = 0;
-                            $scontotot = 0;
-                            $articoli = [];
-                            $ordinearticolo = 0;
-                            foreach ($order->orderLine as $orderLine) {
-                                $idlineaordine = $i + 1;
-                                $idOrderLine = $orderLine->id;
-                                $ordinearticolo + 1;
-                                $productSku = CProductSku::defrost($orderLine->frozenProduct);
-                                $codice = $orderLine->orderId . "-" . $orderLine->id;
-                                $productNameTranslation = $productRepo->findOneBy(['productId' => $productSku->productId, 'productVariantId' => $productSku->productVariantId, 'langId' => '1']);
-                                $nome = $productSku->productId . "-" . $productSku->productVariantId . "-" . $productSku->productSizeId;
-                                $um = "";
-                                $quantity = $productSku->stockQty;
-                                $descrizione = (($productNameTranslation) ? $productNameTranslation->name : '') . ($orderLine->warehouseShelfPosition ? ' / ' . $orderLine->warehouseShelfPosition->printPosition() : '') . ' ' . $productSku->product->productBrand->name . ' - ' . $productSku->productId . '-' . $productSku->productVariantId . " " . $productSku->getPublicSize()->name;
-                                $categoria = "";
-                                $prezzo_netto = number_format($orderLine->activePrice + $orderLine->couponCharge, 2);
-                                $prezzo_lordo = number_format($orderLine->activePrice, 2);
-                                $scontoCharge = number_format($orderLine->couponCharge, 2);
-                                $sconto = abs($scontoCharge);
-                                $sconto = number_format(100 * $sconto / $orderLine->activePrice, 2);
-                                $cod_iva = "0";
-                                $applica_ra_contributi = "true";
-                                $ordine = $ordinearticolo;
-                                $sconto_rosso = "0";
-                                $in_ddt = false;
-                                $magazzino = true;
-                                $scontotot += abs($scontoCharge);
-                                $tot += $orderLine->activePrice;
-                                /*  $insertLineJSon.='{
-                                         "id": "'.$idlineaordine.'",
-                                        "codice": "'.$codice.'",
-                                        "nome": "'.$descrizione.'",
-                                        "um": "",
-                                        "quantita": '.$quantity.',
-                                        "descrizione": "'.$descrizione.'",
-                                        "categoria": "",
-                                        "prezzo_netto": '.$prezzo_netto.',
-                                        "prezzo_lordo": '.$prezzo_lordo.',
-                                        "cod_iva": 0,
-                                        "tassabile": true,
-                                        "sconto": '.$sconto.',
-                                        "applica_ra_contributi": true,
-                                        "ordine": '.$ordine.',
-                                        "sconto_rosso": 0,
-                                        "in_ddt": false,
-                                        "magazzino": true},
-                                  ';*/
-                                $articoli[] = [
-                                    'id' => $idlineaordine,
-                                    'codice' => $codice,
-                                    'nome' => $nome,
-                                    'um' => $um,
-                                    'quantita' => 1,
-                                    'descrizione' => $descrizione,
-                                    'categoria' => $categoria,
-                                    'prezzo_netto' => $prezzo_netto,
-                                    'prezzo_lordo' => $prezzo_lordo,
-                                    'cod_iva' => $cod_iva,
-                                    'tassabile' => true,
-                                    'sconto' => $sconto,
-                                    'applica_ra_contributi' => $applica_ra_contributi,
-                                    'ordine' => $ordine,
-                                    'sconto_rosso' => $sconto_rosso,
-                                    'in_ddt' => $in_ddt,
-                                    'magazzino' => $magazzino
-                                ];
-                            }
-                            $tot = number_format($tot, 2) - number_format($scontotot, 2);
-                            $today = new \DateTime();
-                            $dateInvoice = $today->format('d/m/Y');
-                            $insertJson .= json_encode($articoli) . ',
-                  
-                "lista_pagamenti": [
-              {
-               "data_scadenza":"' . $dateInvoice . '",
-               "importo": ' . number_format($tot, 2) . ',
-               "metodo": "not",
-               "data_saldo": "' . $dateInvoice . '" 
-              }
-              ],
-              "ddt_numero": "",
-              "ddt_data": "' . $dateInvoice . '",
-              "ddt_colli": "",
-              "ddt_peso": "",
-              "ddt_causale": "",
-              "ddt_luogo": "",
-              "ddt_trasportatore": "",
-              "ddt_annotazioni": "",
-              "PA": false, 
-              "PA_tipo_cliente": "B2B", 
-              "PA_tipo": "nessuno",
-              "PA_numero": "",
-              "PA_data": "' . $dateInvoice . '",
-              "PA_cup": "",
-              "PA_cig": "",
-              "PA_codice": "",
-              "PA_pec": "",
-              "PA_esigibilita": "N",
-              "PA_modalita_pagamento": "MP01",
-              "PA_istituto_credito": "",
-              "PA_iban": "",
-              "PA_beneficiario": "",
-              "extra_anagrafica": {
-                "mail": "",
-                "tel": "",
-                "fax": ""
-              },
-              "split_payment": false
-            }';
-                            \Monkey::app()->applicationLog('InvoiceAjaxController', 'Report', 'jsonfattureincloud', 'Json Fatture in Cloud fattura Numero' . $number . ' data:' . $dateInvoice, $insertJson);
-                            $urlInsert = "https://api.fattureincloud.it/v1/fatture/nuovo";
-                            $options = array(
-                                "http" => array(
-                                    "header" => "Content-type: text/json\r\n",
-                                    "method" => "POST",
-                                    "content" => $insertJson
-                                ),
-                            );
-                            $context = stream_context_create($options);
-                            $result = json_decode(file_get_contents($urlInsert, false, $context), true);
-                            if (array_key_exists('success', $result)) {
-                                $resultApi = "Risultato=" . $result['success'] . " new_id:" . $result['new_id'] . " token:" . $result['token'];
-                            } else {
-                                $resultApi = "Errore=" . $result['error'] . " codice di errore:" . $result['error_code'];
-                            }
-                            \Monkey::app()->applicationLog('InvoiceAjaxController', 'Report', 'ResponseApi fatture in Cloud Numero' . $sectional . ' data:' . $dateInvoice, 'Risposta FatturaincCloud', $resultApi);
-                            if (array_key_exists('new_id', $result)) {
-                                $fattureinCloudId = $result['new_id'];
-                            }
-                            if (array_key_exists('token', $result)) {
-                                $fattureinCloudToken = $result['token'];
-
-                                $updateInvoice = \Monkey::app()->repoFactory->create('Invoice')->findOneBy(['orderId' => $orderId]);
-                                $updateInvoice->fattureInCloudId = $fattureinCloudId;
-                                $updateInvoice->fattureInCloudToken = $fattureinCloudToken;
-                                $updateInvoice->update();
-                            }
-
-
-                        }
-                    }
-
-                } catch (\Throwable $e) {
-                    throw $e;
-                    $this->app->router->response()->raiseProcessingError();
-                    $this->app->router->response()->sendHeaders();
-
-
-                }
-            }
-            $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}", $db_user, $db_pass);
-            $db_con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            $updateRemoteInvoice = $invoiceRepo->findOneBy(['orderId' => $order->id]);
-            $invoiceTextUpdate = $updateRemoteInvoice->invoiceText;
-            $stmtInvoiceUpdate = $db_con->prepare(" UPDATE Invoice SET invoiceText = :invoiceText where orderId = :remoteId");
-
-            $stmtInvoiceUpdate->bindValue(':invoiceText', $invoice->invoiceText, PDO::PARAM_STR);
-            $stmtInvoiceUpdate->bindValue(':remoteId', $order->remoteOrderSellerId, PDO::PARAM_INT);
-            $stmtInvoiceUpdate->execute();
-
-
-
-
-
-            return $invoice->invoiceText;
-        }
-
-
-
-
-
-        return true;
-    }
-
-    /**
-     * @param integer $userAddress
-     * @param integer $userShipping
-     * @param integer $divisionTime ['month', 'week', 'day', 'hour']
-     * @param string $start date, parsed by strtoTime. I dati in uscita hanno ordine cronologico decrescente, perciò start è la data più alta
-     * @param array ['fieldname', 'alias'] i campi del select riportati
-     * @return string $invoiceText;
-     */
-
-    public function compileParallelInvoice( $userAddress,
-                                            $userShipping,
-                                            $order,
-                                            $invoice,
-                                            $productRepo,
-                                            $logo,
-                                            $intestation,
-                                            $intestation2,
-                                            $address,
-                                            $address2,
-                                            $iva,
-                                            $tel,
-                                            $email,
-                                            $invoiceType,
-                                            $invoiceTypeVat,
-                                            $invoiceTypeText,
-                                            $invoiceTotalDocumentText,
-                                            $invoiceHeaderText,
-                                            $changelanguage): string
-    {
-        $invoiceDate = new DateTime($invoice->invoiceDate);
-
-        $invoiceText .= '
+                $invoiceText='';
+                $invoiceText .= '
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>';
-        $invoiceText .= '<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+                $invoiceText .= '<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <link rel="icon" type="image/x-icon" sizes="32x32" href="/assets/img/favicon32.png"/>
@@ -1469,7 +1017,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
     <style type="text/css">';
 
 
-        $invoiceText .= '
+                $invoiceText .= '
         @page {
             size: A4;
             margin: 5mm 0mm 0mm 0mm;
@@ -1758,7 +1306,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                         <br>
                         <div>
                             <div class="pull-left font-montserrat all-caps small">
-                                <strong>' . $invoiceTypeText . '</strong>  ' . $invoice->invoiceNumber . "/" . $invoiceType . '<strong> del </strong>' . $invoiceDate->format('d-m-Y') . '
+                                <strong>' . $invoiceTypeText . '</strong>  ' . $invoiceNew->invoiceNumber . "/" . $invoiceType . '<strong> del </strong>' . $invoiceDate->format('d-m-Y') . '
                             </div>
 
                         </div>
@@ -1766,30 +1314,30 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                         <div>
                             <div class="pull-left font-montserrat small"><strong>';
 
-        if ($changelanguage != 1) {
-            $referOrder = 'Rif. ordine N. ';
-        } else {
-            $referOrder = 'Order Reference N:';
-        }
-        $invoiceText .= $referOrder;
-        $invoiceText .= '</strong>';
-        $date = new DateTime($order->orderDate);
-        if ($changelanguage != 1) {
-            $refertOrderIdandDate = '  ' . $invoice->orderId . ' del ' . $date->format('d-m-Y');
-        } else {
-            $refertOrderIdandDate = '  ' . $invoice->orderId . ' date ' . $date->format('Y-d-m');
-        };
-        $invoiceText .= $refertOrderIdandDate . '</div>
+                if ($changelanguage != 1) {
+                    $referOrder = 'Rif. ordine N. ';
+                } else {
+                    $referOrder = 'Order Reference N:';
+                }
+                $invoiceText .= $referOrder;
+                $invoiceText .= '</strong>';
+                $date = new DateTime($order->orderDate);
+                if ($changelanguage != 1) {
+                    $refertOrderIdandDate = '  ' . $invoiceNew->orderId . ' del ' . $date->format('d-m-Y');
+                } else {
+                    $refertOrderIdandDate = '  ' . $invoiceNew->orderId . ' date ' . $date->format('Y-d-m');
+                };
+                $invoiceText .= $refertOrderIdandDate . '</div>
                         </div>
                         <div><br>
                             <div class="pull-left font-montserrat small"><strong>';
-        if ($changelanguage != 1) {
-            $invoiceText .= 'Metodo di pagamento';
-        } else {
-            $invoiceText .= 'Payment Method';
-        }
-        $invoiceText .= '</strong>';
-        $invoiceText .= ' ' . $order->orderPaymentMethod->name . '</div>
+                if ($changelanguage != 1) {
+                    $invoiceText .= 'Metodo di pagamento';
+                } else {
+                    $invoiceText .= 'Payment Method';
+                }
+                $invoiceText .= '</strong>';
+                $invoiceText .= ' ' . $order->orderPaymentMethod->name . '</div>
 
                         </div>
                     </div>
@@ -1798,127 +1346,128 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
 
                         <div class="col-md-12 col-sm-height sm-padding-20">
                             <p class="small no-margin">';
-        if ($changelanguage != 1) {
-            $invoiceText .= 'Intestata a';
-        } else {
-            $invoiceText .= 'Invoice Address';
-        }
-        $invoiceText .= '</p>';
-        $invoiceText .= '<h5 class="semi-bold m-t-0 no-margin">' . $userAddress->surname . ' ' . $userAddress->name . '</h5>';
-        $invoiceText .= '<address>';
-        $invoiceText .= '<strong>';
-        if (!empty($userAddress->company)) {
-            $invoiceText .= $userAddress->company . '<br>';
-        } else {
-            $invoiceText .= '<br>';
-        }
-        $invoiceText .= $userAddress->address;
-        $invoiceText .= '<br>' . $userAddress->postcode . ' ' . $userAddress->city . ' (' . $userAddress->province . ')';
-        $invoiceText .= '<br>' . $userAddress->country->name;
-        if ($changelanguage != 1) {
-            $transfiscalcode = 'C.FISC. o P.IVA: ';
-        } else {
-            $transfiscalcode = 'VAT';
-        }
-        $invoiceText .= '<br>';
-        if (!is_null($order->user->userDetails->fiscalCode)) {
-            $invoiceText .= $transfiscalcode . $order->user->userDetails->fiscalCode;
-        }
+                if ($changelanguage != 1) {
+                    $invoiceText .= 'Intestata a';
+                } else {
+                    $invoiceText .= 'Invoice Address';
+                }
+                $invoiceText .= '</p>';
+                $invoiceText .= '<h5 class="semi-bold m-t-0 no-margin">' . $userAddress->surname . ' ' . $userAddress->name . '</h5>';
+                $invoiceText .= '<address>';
+                $invoiceText .= '<strong>';
+                if (!empty($userAddress->company)) {
+                    $invoiceText .= $userAddress->company . '<br>';
+                } else {
+                    $invoiceText .= '<br>';
+                }
+                $invoiceText .= $userAddress->address;
+                $invoiceText .= '<br>' . $userAddress->postcode . ' ' . $userAddress->city . ' (' . $userAddress->province . ')';
+                $invoiceText .= '<br>' . $userAddress->country->name;
+                if ($changelanguage != 1) {
+                    $transfiscalcode = 'C.FISC. o P.IVA: ';
+                } else {
+                    $transfiscalcode = 'VAT';
+                }
+                $invoiceText .= '<br>';
+                if (!is_null($order->user->userDetails->fiscalCode)) {
+                    $invoiceText .= $transfiscalcode . $order->user->userDetails->fiscalCode;
+                }
 
-        $invoiceText .= '</strong>';
-        $invoiceText .= '</address>';
-        $invoiceText .= '<div class="clearfix"></div><br><p class="small no-margin">';
-        if ($changelanguage != 1) {
-            $invoiceText .= 'Indirizzo di Spedizione';
-        } else {
-            $invoiceText .= 'Shipping Address';
-        }
+                $invoiceText .= '</strong>';
+                $invoiceText .= '</address>';
+                $invoiceText .= '<div class="clearfix"></div><br><p class="small no-margin">';
+                if ($changelanguage != 1) {
+                    $invoiceText .= 'Indirizzo di Spedizione';
+                } else {
+                    $invoiceText .= 'Shipping Address';
+                }
 
-        $invoiceText .= '</p><address>';
-        $invoiceText .= '<strong>' . $userShipping->surname . ' ' . $userShipping->name;
-        $invoiceText .= (!empty($userShipping->company)) ? '<br>' . $userShipping->company : null;
-        $invoiceText .= '<br>' . $userShipping->address;
-        $invoiceText .= '<br>' . $userShipping->postcode . ' ' . $userShipping->city . ' (' . $userShipping->province . ')';
-        $invoiceText .= '<br>' . $userShipping->country->name . '</strong>';
-        $invoiceText .= '</address>';
-        $invoiceText .= '</div>';
-        $invoiceText .= '</div>';
-        $invoiceText .= '</div>';
-        $invoiceText .= '<table class="table invoice-table m-t-0">';
-        $invoiceText .= '<thead>
+                $invoiceText .= '</p><address>';
+                $invoiceText .= '<strong>' . $userShipping->surname . ' ' . $userShipping->name;
+                $invoiceText .= (!empty($userShipping->company)) ? '<br>' . $userShipping->company : null;
+                $invoiceText .= '<br>' . $userShipping->address;
+                $invoiceText .= '<br>' . $userShipping->postcode . ' ' . $userShipping->city . ' (' . $userShipping->province . ')';
+                $invoiceText .= '<br>' . $userShipping->country->name . '</strong>';
+                $invoiceText .= '</address>';
+                $invoiceText .= '</div>';
+                $invoiceText .= '</div>';
+                $invoiceText .= '</div>';
+                $invoiceText .= '<table class="table invoice-table m-t-0">';
+                $invoiceText .= '<thead>
                     <!--tabella prodotti-->
                     <tr>';
-        $invoiceText .= '<th class="small">';
-        if ($changelanguage != 1) {
-            $invoiceText .= 'Descrizione Prodotto';
-        } else {
-            $invoiceText .= 'Description';
-        }
-        $invoiceText .= '</th>';
-        $invoiceText .= '<th class="text-center small">';
-        if ($changelanguage != 1) {
-            $invoiceText .= 'Taglia';
+                $invoiceText .= '<th class="small">';
+                if ($changelanguage != 1) {
+                    $invoiceText .= 'Descrizione Prodotto';
+                } else {
+                    $invoiceText .= 'Description';
+                }
+                $invoiceText .= '</th>';
+                $invoiceText .= '<th class="text-center small">';
+                if ($changelanguage != 1) {
+                    $invoiceText .= 'Taglia';
 
-        } else {
-            $invoiceText .= 'Size';
-        }
-        $invoiceText .= '</th>';
-        $invoiceText .= '<th></th>';
-        $invoiceText .= '<th class="text-center small">';
-        if ($changelanguage != 1) {
-            $invoiceText .= 'Importo';
-        } else {
-            $invoiceText .= 'Amount';
-        }
-        $invoiceText .= '</th>';
+                } else {
+                    $invoiceText .= 'Size';
+                }
+                $invoiceText .= '</th>';
+                $invoiceText .= '<th></th>';
+                $invoiceText .= '<th class="text-center small">';
+                if ($changelanguage != 1) {
+                    $invoiceText .= 'Importo';
+                } else {
+                    $invoiceText .= 'Amount';
+                }
+                $invoiceText .= '</th>';
 
-        $invoiceText .= '</tr></thead><tbody>';
-        $tot = 0;
-        foreach ($order->orderLine as $orderLine) {
-            $invoiceText .= '<tr>';
-            $invoiceText .= '<td class="">';
+                $invoiceText .= '</tr></thead><tbody>';
+                $tot = 0;
+                foreach ($order->orderLine as $orderLine) {
+                    $invoiceText .= '<tr>';
+                    $invoiceText .= '<td class="">';
 
-            $productSku = \bamboo\domain\entities\CProductSku::defrost($orderLine->frozenProduct);
+                    $productSku = \bamboo\domain\entities\CProductSku::defrost($orderLine->frozenProduct);
 
-            $productNameTranslation = $productRepo->findOneBy(['productId' => $productSku->productId,'productVariantId' => $productSku->productVariantId,'langId' => '1']);
-            $invoiceText .= (($productNameTranslation) ? $productNameTranslation->name : '') . ($orderLine->warehouseShelfPosition ? ' / ' . $orderLine->warehouseShelfPosition->printPosition() : '') . '<br />' . $productSku->product->productBrand->name . ' - ' . $productSku->productId . '-' . $productSku->productVariantId;
-            $invoiceText .= '</td>';
-            $invoiceText .= '<td class="text-center">' . $productSku->getPublicSize()->name;
-            $invoiceText .= '<td></td>';
-            $invoiceText .= '</td>';
-            $invoiceText .= '<td class="text-center">';
-            $tot += $orderLine->activePrice;
-            $invoiceText .= money_format('%.2n',$orderLine->activePrice) . ' &euro;' . '</td></tr>';
+                    $productNameTranslation = $productRepo->findOneBy(['productId' => $productSku->productId,'productVariantId' => $productSku->productVariantId,'langId' => '1']);
+                    $invoiceText .= (($productNameTranslation) ? $productNameTranslation->name : '') . ($orderLine->warehouseShelfPosition ? ' / ' . $orderLine->warehouseShelfPosition->printPosition() : '') . '<br />' . $productSku->product->productBrand->name . ' - ' . $productSku->productId . '-' . $productSku->productVariantId;
+                    $invoiceText .= '</td>';
+                    $productSize=\Monkey::app()->repoFactory->create('ProductSize')->findOneBy(['id'=>$productSku->productSizeId]);
+                    $invoiceText .= '<td class="text-center">' . $productSize->name;
+                    $invoiceText .= '<td></td>';
+                    $invoiceText .= '</td>';
+                    $invoiceText .= '<td class="text-center">';
+                    $tot += $orderLine->activePrice;
+                    $invoiceText .= money_format('%.2n',$orderLine->activePrice) . ' &euro;' . '</td></tr>';
 
-        }
-        $invoiceText .= '</tbody><br><tr class="text-left font-montserrat small">
+                }
+                $invoiceText .= '</tbody><br><tr class="text-left font-montserrat small">
                         <td style="border: 0px"></td>
                         <td style="border: 0px"></td>
                         <td style="border: 0px">
                             <strong>';
-        if ($changelanguage != 1) {
-            $invoiceText .= 'Totale della Merce';
-        } else {
-            $invoiceText .= 'Total Amount ';
-        }
-        $invoiceText .= '</strong></td>
+                if ($changelanguage != 1) {
+                    $invoiceText .= 'Totale della Merce';
+                } else {
+                    $invoiceText .= 'Total Amount ';
+                }
+                $invoiceText .= '</strong></td>
                         <td style="border: 0px"
                             class="text-center">' . money_format('%.2n',$tot) . ' &euro;' . '</td>
                     </tr>';
-        $discount = $order->couponDiscount + $order->userDiscount;
-        ($changelanguage != 1) ? $transdiscount = 'Sconto' : $transdiscount = 'Discount';
-        ($changelanguage != 1) ? $transmethodpayment = 'Modifica di pagamento' : $transmethodpayment = 'Transaction Discount';
-        ($changelanguage != 1) ? $transdeliveryprice = 'Spese di Spedizione' : $transdeliveryprice = 'Shipping Cost';
-        $invoiceText .= ((!is_null($discount)) && ($discount != 0)) ? '<tr class="text-left font-montserrat small">
+                $discount = $order->couponDiscount + $order->userDiscount;
+                ($changelanguage != 1) ? $transdiscount = 'Sconto' : $transdiscount = 'Discount';
+                ($changelanguage != 1) ? $transmethodpayment = 'Modifica di pagamento' : $transmethodpayment = 'Transaction Discount';
+                ($changelanguage != 1) ? $transdeliveryprice = 'Spese di Spedizione' : $transdeliveryprice = 'Shipping Cost';
+                $invoiceText .= ((!is_null($discount)) && ($discount != 0)) ? '<tr class="text-left font-montserrat small">
                             <td style="border: 0px"></td>
                             <td style="border: 0px"></td>
                             <td style="border: 0px">' . $transdiscount . '<strong></strong></td>
                             <td style="border: 0px" class="text-center">' . money_format('%.2n',$discount) . ' &euro; </td></tr>' : null;
-        $invoiceText .= ((!is_null($order->paymentModifier)) && ($order->paymentModifier != 0)) ? '<tr class="text-left font-montserrat small">
+                $invoiceText .= ((!is_null($order->paymentModifier)) && ($order->paymentModifier != 0)) ? '<tr class="text-left font-montserrat small">
                             <td style="border: 0px"></td>
                             <td style="border: 0px"></td><td style="border: 0px"><strong>' . $transmethodpayment . '</strong></td>
                             <td style="border: 0px" class="text-center">' . money_format('%.2n',$order->paymentModifier) . ' &euro; </td></tr>' : null;
-        $invoiceText .= '<tr class="text-left font-montserrat small">
+                $invoiceText .= '<tr class="text-left font-montserrat small">
                         <td style="border: 0px"></td>
                         <td style="border: 0px"></td>
                         <td class="separate"><strong>' . $transdeliveryprice . '</strong></td>
@@ -1927,48 +1476,48 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                     <tr style="border: 0px" class="text-left font-montserrat small hint-text">
                         <td class="text-left" width="30%">';
 
-        if ($invoiceType == 'P') {
-            if ($changelanguage != 1) {
-                $invoiceText .= 'Imponibile<br>';
-            } else {
-                $invoiceText .= 'Net Amount<br>';
-            }
-            $imp = ($order->netTotal * 100) / 122;
-            $invoiceText .= money_format('%.2n',$imp) . ' &euro;';
-        } elseif ($invoiceType == "X") {
+                if ($invoiceType == 'PP') {
+                    if ($changelanguage != 1) {
+                        $invoiceText .= 'Imponibile<br>';
+                    } else {
+                        $invoiceText .= 'Net Amount<br>';
+                    }
+                    $imp = ($order->netTotal * 100) / 122;
+                    $invoiceText .= money_format('%.2n',$imp) . ' &euro;';
+                } elseif ($invoiceType == "PX") {
 
-            $imp = ($order->netTotal * 100) / 122;
+                    $imp = ($order->netTotal * 100) / 122;
 
-            $invoiceText .= '<br>';
-        } else {
-            $imp = ($order->netTotal * 100) / 122;
-            $invoiceText .= '<br>';
-        }
+                    $invoiceText .= '<br>';
+                } else {
+                    $imp = ($order->netTotal * 100) / 122;
+                    $invoiceText .= '<br>';
+                }
 
-        $invoiceText .= '</td>
+                $invoiceText .= '</td>
                         <td class="text-left" width="25%">';
 
-        if ($invoiceTypeVat == 'NewP') {
-            if ($changelanguage != 1) {
-                $invoiceText .= 'IVA 22%<br>';
-            } else {
-                $invoiceText .= 'VAT 22%<br>';
-            }
-            $iva = $order->vat;
-            $invoiceText .= money_format('%.2n',$iva) . ' &euro;';
-        } elseif ($invoiceTypeVat == "NewX") {
-            $invoiceText .= 'non imponibile ex art 8/A  D.P.R. n. 633/72';
-            $iva = "0,00";
-            $invoiceText .= '<br>';
-        } else {
-            $iva = $order->vat;
-            $invoiceText .= '<br>';
-        }
+                if ($invoiceTypeVat == 'NewP') {
+                    if ($changelanguage != 1) {
+                        $invoiceText .= 'IVA 22%<br>';
+                    } else {
+                        $invoiceText .= 'VAT 22%<br>';
+                    }
+                    $iva = $order->vat;
+                    $invoiceText .= money_format('%.2n',$iva) . ' &euro;';
+                } elseif ($invoiceTypeVat == "NewX") {
+                    $invoiceText .= 'non imponibile ex art 8/A  D.P.R. n. 633/72';
+                    $iva = "0,00";
+                    $invoiceText .= '<br>';
+                } else {
+                    $iva = $order->vat;
+                    $invoiceText .= '<br>';
+                }
 
 
-        $invoiceText .= '<br></td>';
-        $invoiceText .= '<td class="semi-bold"><h4>' . $invoiceTotalDocumentText . '</h4></td>';
-        $invoiceText .= '<td class="semi-bold text-center">
+                $invoiceText .= '<br></td>';
+                $invoiceText .= '<td class="semi-bold"><h4>' . $invoiceTotalDocumentText . '</h4></td>';
+                $invoiceText .= '<td class="semi-bold text-center">
                             <h2>' . money_format('%.2n',$order->netTotal) . ' &euro; </h2></td>
                     </tr>
 
@@ -1990,7 +1539,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
     </div>
 </div><!--end-->';
 
-        $invoiceText .= '<script type="application/javascript">
+                $invoiceText .= '<script type="application/javascript">
     $(document).ready(function () {
 
         Pace.on(\'done\', function () {
@@ -2009,7 +1558,295 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
 </script>
 </body>
 </html>';
-        return $invoiceText;
 
+
+
+
+
+                $invoiceNew->invoiceText=$invoiceText;
+                $invoiceRepo->insert($invoiceNew);
+                $sectional = $number . '/' . $invoiceType;
+
+                // fatture in cloud*/
+
+                $api_uid = $this->app->cfg()->fetch('fattureInCloud','api_uid');
+                $api_key = $this->app->cfg()->fetch('fattureInCloud','api_key');
+                if ($hasInvoice == '1' && $isExtraUe == '0') {
+                    $insertJson = '{
+  "api_uid": "' . $api_uid . '",
+  "api_key": "' . $api_key . '",
+  "id_cliente": "0",
+  "id_fornitore": "0",
+  "nome": "' . $userAddress->surname . ' ' . $userAddress->name . ' ' . $userAddress->company . '",
+  "indirizzo_via": "' . $userAddress->address . '",
+  "indirizzo_cap": "' . $userAddress->postcode . '",
+  "indirizzo_citta": "' . $userAddress->city . '",
+  "indirizzo_provincia": "' . $userAddress->province . '",
+  "indirizzo_extra": "",
+  "paese": "Italia",
+  "paese_iso": "' . $userAddress->country->ISO . '",
+  "lingua": "it",
+  "piva": "' . $userAddress->fiscalCode . '",
+  "cf": "' . $userAddress->fiscalCode . '",
+  "autocompila_anagrafica": false,
+  "salva_anagrafica": false,
+  "numero": "' . $sectional . '",
+  "data": "' . $todayInvoice . '",
+  "valuta": "EUR",
+  "valuta_cambio": 1,
+  "prezzi_ivati": true,
+  "rivalsa": 0,
+  "cassa": 0,
+  "rit_acconto": 0,
+  "imponibile_ritenuta": 0,
+  "rit_altra": 0,
+  "marca_bollo": 0,
+  "oggetto_visibile": "",
+  "oggetto_interno": "",
+  "centro_ricavo": "",
+  "centro_costo": "",
+  "note": "",
+  "nascondi_scadenza": false,
+  "ddt": false,
+  "ftacc": false,
+  "id_template": "0",
+  "ddt_id_template": "0",
+  "ftacc_id_template": "0",
+  "mostra_info_pagamento": false,';
+                    $orderPaymentMethodId = $order->orderPaymentMethodId;
+                    $orderPaymentMethodTranslation = \Monkey::app()->repoFactory->create('OrderPaymentMethodTranslation')->findOneBy(['orderPaymentMethodId' => $orderPaymentMethodId,'langId' => 1]);
+                    $metodo_pagamento = $orderPaymentMethodTranslation->name;
+                    switch ($orderPaymentMethodId) {
+                        case 1:
+                            $metodo_titoloN = 'Merchant Paypal';
+                            $metodo_descN = $api_uid = $this->app->cfg()->fetch('payPal','business');
+                            break;
+                        case 2:
+                            $metodo_titoloN = 'Merchant Nexi';
+                            $metodo_descN = '';
+                            break;
+                        case 3:
+                            $metodo_titoloN = 'IBAN';
+                            $metodo_descN = 'IT54O0521613400000000002345';
+                            break;
+                        case 5:
+                            $metodo_titoloN = '';
+                            $metodo_descN = '';
+                            break;
+
+                    }
+
+
+                    $insertJson .= '"metodo_pagamento": "' . $metodo_pagamento . '",
+  "metodo_titoloN": "' . $metodo_titoloN . '",
+  "metodo_descN": "' . $metodo_descN . '",
+  "mostra_totali": "tutti",
+  "mostra_bottone_paypal": false,
+  "mostra_bottone_bonifico": false,
+  "mostra_bottone_notifica": false,';
+                    $insertJson .= '"lista_articoli": ';
+                    $tot = 0;
+                    $i = 0;
+                    $scontotot = 0;
+                    $articoli = [];
+                    $ordinearticolo = 0;
+                    foreach ($order->orderLine as $orderLine) {
+                        $idlineaordine = $i + 1;
+                        $idOrderLine = $orderLine->id;
+                        $ordinearticolo + 1;
+                        $productSku = CProductSku::defrost($orderLine->frozenProduct);
+                        $codice = $orderLine->orderId . "-" . $orderLine->id;
+                        $productNameTranslation = $productRepo->findOneBy(['productId' => $productSku->productId,'productVariantId' => $productSku->productVariantId,'langId' => '1']);
+                        $nome = $productSku->productId . "-" . $productSku->productVariantId . "-" . $productSku->productSizeId;
+                        $um = "";
+                        $quantity = $productSku->stockQty;
+                        $productSize=\Monkey::app()->repoFactory->create('ProductSize')->findOneBy(['id'=>$productSku->productSizeId]);
+
+                        $descrizione = (($productNameTranslation) ? $productNameTranslation->name : '') . ($orderLine->warehouseShelfPosition ? ' / ' . $orderLine->warehouseShelfPosition->printPosition() : '') . ' ' . $productSku->product->productBrand->name . ' - ' . $productSku->productId . '-' . $productSku->productVariantId . " " . $productSize->name;
+                        $categoria = "";
+                        $prezzo_netto = number_format($orderLine->activePrice + $orderLine->couponCharge,2);
+                        $prezzo_lordo = number_format($orderLine->activePrice,2);
+                        $scontoCharge = number_format($orderLine->couponCharge,2);
+                        $sconto = abs($scontoCharge);
+                        $sconto = number_format(100 * $sconto / $orderLine->activePrice,2);
+                        $cod_iva = "0";
+                        $applica_ra_contributi = "true";
+                        $ordine = $ordinearticolo;
+                        $sconto_rosso = "0";
+                        $in_ddt = false;
+                        $magazzino = true;
+                        $scontotot += abs($scontoCharge);
+                        $tot += $orderLine->activePrice;
+                        /*  $insertLineJSon.='{
+                                 "id": "'.$idlineaordine.'",
+                                "codice": "'.$codice.'",
+                                "nome": "'.$descrizione.'",
+                                "um": "",
+                                "quantita": '.$quantity.',
+                                "descrizione": "'.$descrizione.'",
+                                "categoria": "",
+                                "prezzo_netto": '.$prezzo_netto.',
+                                "prezzo_lordo": '.$prezzo_lordo.',
+                                "cod_iva": 0,
+                                "tassabile": true,
+                                "sconto": '.$sconto.',
+                                "applica_ra_contributi": true,
+                                "ordine": '.$ordine.',
+                                "sconto_rosso": 0,
+                                "in_ddt": false,
+                                "magazzino": true},
+                          ';*/
+                        $articoli[] = [
+                            'id' => $idlineaordine,
+                            'codice' => $codice,
+                            'nome' => $nome,
+                            'um' => $um,
+                            'quantita' => 1,
+                            'descrizione' => $descrizione,
+                            'categoria' => $categoria,
+                            'prezzo_netto' => $prezzo_netto,
+                            'prezzo_lordo' => $prezzo_lordo,
+                            'cod_iva' => $cod_iva,
+                            'tassabile' => true,
+                            'sconto' => $sconto,
+                            'applica_ra_contributi' => $applica_ra_contributi,
+                            'ordine' => $ordine,
+                            'sconto_rosso' => $sconto_rosso,
+                            'in_ddt' => $in_ddt,
+                            'magazzino' => $magazzino
+                        ];
+                    }
+                    $tot = number_format($tot,2) - number_format($scontotot,2);
+                    $today = new DateTime();
+                    $dateInvoice = $today->format('d/m/Y');
+                    $insertJson .= json_encode($articoli) . ',
+                  
+                "lista_pagamenti": [
+              {
+               "data_scadenza":"' . $dateInvoice . '",
+               "importo": ' . number_format($tot,2) . ',
+               "metodo": "not",
+               "data_saldo": "' . $dateInvoice . '" 
+              }
+              ],
+              "ddt_numero": "",
+              "ddt_data": "' . $dateInvoice . '",
+              "ddt_colli": "",
+              "ddt_peso": "",
+              "ddt_causale": "",
+              "ddt_luogo": "",
+              "ddt_trasportatore": "",
+              "ddt_annotazioni": "",
+              "PA": false, 
+              "PA_tipo_cliente": "B2B", 
+              "PA_tipo": "nessuno",
+              "PA_numero": "",
+              "PA_data": "' . $dateInvoice . '",
+              "PA_cup": "",
+              "PA_cig": "",
+              "PA_codice": "",
+              "PA_pec": "",
+              "PA_esigibilita": "N",
+              "PA_modalita_pagamento": "MP01",
+              "PA_istituto_credito": "",
+              "PA_iban": "",
+              "PA_beneficiario": "",
+              "extra_anagrafica": {
+                "mail": "",
+                "tel": "",
+                "fax": ""
+              },
+              "split_payment": false
+            }';
+                    \Monkey::app()->applicationLog('InvoiceAjaxController','Report','jsonfattureincloud','Json Fatture in Cloud fattura Numero' . $number . ' data:' . $dateInvoice,$insertJson);
+                    $urlInsert = "https://api.fattureincloud.it/v1/fatture/nuovo";
+                    $options = array(
+                        "http" => array(
+                            "header" => "Content-type: text/json\r\n",
+                            "method" => "POST",
+                            "content" => $insertJson
+                        ),
+                    );
+                    $context = stream_context_create($options);
+                    $result = json_decode(file_get_contents($urlInsert,false,$context),true);
+                    if (array_key_exists('success',$result)) {
+                        $resultApi = "Risultato=" . $result['success'] . " new_id:" . $result['new_id'] . " token:" . $result['token'];
+                    } else {
+                        $resultApi = "Errore=" . $result['error'] . " codice di errore:" . $result['error_code'];
+                    }
+                    \Monkey::app()->applicationLog('InvoiceAjaxController','Report','ResponseApi fatture in Cloud Numero' . $sectional . ' data:' . $dateInvoice,'Risposta FatturaincCloud',$resultApi);
+                    if (array_key_exists('new_id',$result)) {
+                        $fattureinCloudId = $result['new_id'];
+                    }
+                    if (array_key_exists('token',$result)) {
+                        $fattureinCloudToken = $result['token'];
+
+                        $updateInvoice = \Monkey::app()->repoFactory->create('Invoice')->findOneBy(['orderId' => $orderId]);
+                        $updateInvoice->fattureInCloudId = $fattureinCloudId;
+                        $updateInvoice->fattureInCloudToken = $fattureinCloudToken;
+                        $updateInvoice->update();
+                    }
+
+                    /*fine fatture in cloud*/
+                    $sectional = $number . '/' . $invoiceType;
+
+
+                    /** ottengo il valore della Vendita per la registrazione del  Documento */
+                    $orderLineRepo = \Monkey::app()->repoFactory->create('OrderLine')->findBy(['orderId' => $orderId]);
+                    $documentRepo = \Monkey::app()->repoFactory->create('Document');
+                    // codice per inserire all'interno della cartella document
+                    $checkIfDocumentExist = $documentRepo->findOneBy(['number' => $number,'year' => $year]);
+                    if ($checkIfDocumentExist == null) {
+                        $insertDocument = $documentRepo->getEmptyEntity();
+                        $insertDocument->userId = $remoteUserSellerId;
+                        $insertDocument->shopRecipientId = $customerDataSeller->id;
+                        $insertDocument->number = $sectional;
+                        $insertDocument->date = $order->orderDate;
+                        $insertDocument->invoiceTypeId = $documentType;
+                        $insertDocument->paydAmount = $amountForInvoice;
+                        $insertDocument->paymentExpectedDate = $order->paymentDate;
+                        $insertDocument->note = $order->note;
+                        $insertDocument->creationDate = $order->orderDate;
+                        $insertDocument->totalWithVat = $amountForInvoice;
+                        $insertDocument->year = $year;
+                        $insertDocument->insert();
+                    }
+
+
+                    /* definizione dello shop Supplier*/
+                    $remoteShopSupplier = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->shopId]);
+                    /*** dati db esterno ***/
+                    $db_host = $remoteShopSupplier->dbHost;
+                    $db_name = $remoteShopSupplier->dbName;
+                    $db_user = $remoteShopSupplier->dbUsername;
+                    $db_pass = $remoteShopSupplier->dbPassword;
+
+
+                }
+
+            } catch
+            (\Throwable $e) {
+                throw $e;
+                $this->app->router->response()->raiseProcessingError();
+                $this->app->router->response()->sendHeaders();
+            }
+
+
+        }
+
+
+        return true;
     }
+
+    /**
+     * @param integer $userAddress
+     * @param integer $userShipping
+     * @param integer $divisionTime ['month', 'week', 'day', 'hour']
+     * @param string $start date, parsed by strtoTime. I dati in uscita hanno ordine cronologico decrescente, perciò start è la data più alta
+     * @param array ['fieldname', 'alias'] i campi del select riportati
+     * @return string $invoiceText;
+     * @throws \Exception
+     */
+
+
 }
