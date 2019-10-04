@@ -606,6 +606,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 $stmtWalletMovements->execute();
 
                 /*select  shop seller to udpate Wallet */
+                $remoteOrderSupplierId=$orderId;
 
                 $shopFindSeller = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->shopId]);
                 $db_hostSeller = $shopFindSeller->dbHost;
@@ -648,10 +649,11 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
             }
             $orderLine->remoteOrderSellerId = $orderId;
             $remoteShopSellerId = $orderLine->remoteShopSellerId;
+            $orderLine->remoteOrderSupplierId=$remoteOrderSupplierId;
             /** @var  CInvoiceRepo $invoiceRepo */
             /** @var  $udpateExternalShop */
             /** @throws BambooException */
-            $this->createNewInvoiceToOrderParallel($orderLine,$orderId,$remoteShopSellerId,$amountForInvoice);
+            $this->createNewInvoiceToOrderParallel($orderLine,$orderLine->orderId,$remoteOrderSupplierId,$remoteShopSellerId,$amountForInvoice);
         }
 
         $orderLine->update();
@@ -816,7 +818,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
         return true;
     }
 
-    public function createNewInvoiceToOrderParallel(COrderLine $orderLine,int $orderId,int $remoteShopSellerId,int $amountForInvoice): bool
+    public function createNewInvoiceToOrderParallel(COrderLine $orderLine,int $orderId, int $remoteOrderSupplierId,int $remoteShopSellerId, float $amountForInvoice): bool
     {
 
         $orderRepo = \Monkey::app()->repoFactory->create('Order');
@@ -1323,9 +1325,9 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 $invoiceText .= '</strong>';
                 $date = new DateTime($order->orderDate);
                 if ($changelanguage != 1) {
-                    $refertOrderIdandDate = '  ' . $invoiceNew->orderId . ' del ' . $date->format('d-m-Y');
+                    $refertOrderIdandDate = '  ' . $orderLine->orderId.'-'.$orderLine->remoteOrderSellerId.  ' del ' . $date->format('d-m-Y');
                 } else {
-                    $refertOrderIdandDate = '  ' . $invoiceNew->orderId . ' date ' . $date->format('Y-d-m');
+                    $refertOrderIdandDate = '  ' . $orderLine->orderId.'-'.$orderLine->remoteOrderSellerId . ' date ' . $date->format('Y-d-m');
                 };
                 $invoiceText .= $refertOrderIdandDate . '</div>
                         </div>
@@ -1792,21 +1794,19 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
 
 
                     /** ottengo il valore della Vendita per la registrazione del  Documento */
-                    $orderLineRepo = \Monkey::app()->repoFactory->create('OrderLine')->findBy(['orderId' => $orderId]);
                     $documentRepo = \Monkey::app()->repoFactory->create('Document');
                     // codice per inserire all'interno della cartella document
-                    $checkIfDocumentExist = $documentRepo->findOneBy(['number' => $number,'year' => $year]);
+                    $checkIfDocumentExist = $documentRepo->findOneBy(['number' => $sectional,'year' => $year]);
                     if ($checkIfDocumentExist == null) {
                         $insertDocument = $documentRepo->getEmptyEntity();
-                        $insertDocument->userId = $remoteUserSellerId;
+                        $insertDocument->userId = $userAddress->userId;
+                        $insertDocument->userAddressRecipientId=$filterUserAddress;
                         $insertDocument->shopRecipientId = $customerDataSeller->id;
                         $insertDocument->number = $sectional;
-                        $insertDocument->date = $order->orderDate;
                         $insertDocument->invoiceTypeId = $documentType;
                         $insertDocument->paydAmount = $amountForInvoice;
                         $insertDocument->paymentExpectedDate = $order->paymentDate;
                         $insertDocument->note = $order->note;
-                        $insertDocument->creationDate = $order->orderDate;
                         $insertDocument->totalWithVat = $amountForInvoice;
                         $insertDocument->year = $year;
                         $insertDocument->insert();
@@ -1838,15 +1838,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
         return true;
     }
 
-    /**
-     * @param integer $userAddress
-     * @param integer $userShipping
-     * @param integer $divisionTime ['month', 'week', 'day', 'hour']
-     * @param string $start date, parsed by strtoTime. I dati in uscita hanno ordine cronologico decrescente, perciò start è la data più alta
-     * @param array ['fieldname', 'alias'] i campi del select riportati
-     * @return string $invoiceText;
-     * @throws \Exception
-     */
+
 
 
 }
