@@ -344,7 +344,8 @@ class COrderLineRepo extends ARepo
                                                                           shipmentAddressId,
                                                                           lastUpdate,
                                                                           creationDate,
-                                                                          hasInvoice )
+                                                                          hasInvoice,
+                                                                          isParallel)
                                                                            VALUES (
                                                                           " . $orderForRemote->orderPaymentMethodId . ",
                                                                           null,
@@ -354,7 +355,9 @@ class COrderLineRepo extends ARepo
                                                                           " . $shipmentAddressId . ",
                                                                           '" . $cartForRemote->lastUpdate . "',
                                                                           '" . $cartForRemote->creationDate . "',
-                                                                          " . $hasInvoice . ")");
+                                                                          " . $hasInvoice . "
+                                                                          ,1
+                                                                          )");
                 $insertRemoteCart->execute();
             } catch (\Throwable $e) {
                 \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' . $findShopId->id,$e);
@@ -497,7 +500,8 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                        `creationDate`, 
                        `lastUpdate`,
                        `note`,
-                       `remoteId` 
+                       `remoteId`,
+                       `isParallel`
                        VALUES (
                           ' . $orderId . ',
                           ' . $orderLine->productId . ',
@@ -524,7 +528,8 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                           \'' . $orderLine->creationDate . '\',
                           \'' . $orderLine->lastUpdate . '\',
                           \'' . $orderLine->note . '\',
-                          null)');
+                          null,
+                          1)');
 
                 } else {
 
@@ -554,7 +559,8 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                        `lastUpdate`,
                        `note`,
                        `warehouseShelfPositionId`,
-                       `remoteId` 
+                       `remoteId`,
+                       `isParallel`
                       ) VALUES (
                           ' . $orderId . ',
                           ' . $orderLine->productId . ',
@@ -581,7 +587,8 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                           \'' . $orderLine->lastUpdate . '\',
                           \'' . $orderLine->note . '\',
                           null,
-                          null)');
+                          null,
+                          1)');
 
                 }
                 $insertRemoteOrderLine->execute();
@@ -647,9 +654,8 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
             } catch (\Throwable $e) {
                 \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet to Shop ' . $findShopId->id,$e);
             }
-            $orderLine->remoteOrderSellerId = $orderId;
             $remoteShopSellerId = $orderLine->remoteShopSellerId;
-            $orderLine->remoteOrderSupplierId=$remoteOrderSupplierId;
+            $orderLine->remoteOrderSupplierId=$orderId;
             /** @var  CInvoiceRepo $invoiceRepo */
             /** @var  $udpateExternalShop */
             /** @throws BambooException */
@@ -849,12 +855,12 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 $filterUserAddress = 2769;
                 break;
             case 51:
-                $filterUserAddress = 5935;
+                $filterUserAddress = 17668;
                 break;
         }
 
         //definzione dello shop seller al fine di reperire l'id utente che lo gestisce
-        $userHasAddress = \Monkey::app()->repoFactory->create('UserAddress')->findOneBy(['id' => $filterUserAddress]);
+        $userHasAddress = \Monkey::app()->repoFactory->create('AddressBook')->findOneBy(['id' => $customerDataSeller->billingAddressBookId]);
         $userAddress = $userHasAddress;
         $userShipping = $userHasAddress;
         $extraUe = $userAddress->countryId;
@@ -1354,14 +1360,9 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                     $invoiceText .= 'Invoice Address';
                 }
                 $invoiceText .= '</p>';
-                $invoiceText .= '<h5 class="semi-bold m-t-0 no-margin">' . $userAddress->surname . ' ' . $userAddress->name . '</h5>';
+                $invoiceText .= '<h5 class="semi-bold m-t-0 no-margin">' . $userAddress->subject . '</h5>';
                 $invoiceText .= '<address>';
                 $invoiceText .= '<strong>';
-                if (!empty($userAddress->company)) {
-                    $invoiceText .= $userAddress->company . '<br>';
-                } else {
-                    $invoiceText .= '<br>';
-                }
                 $invoiceText .= $userAddress->address;
                 $invoiceText .= '<br>' . $userAddress->postcode . ' ' . $userAddress->city . ' (' . $userAddress->province . ')';
                 $invoiceText .= '<br>' . $userAddress->country->name;
@@ -1371,9 +1372,9 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                     $transfiscalcode = 'VAT';
                 }
                 $invoiceText .= '<br>';
-                if (!is_null($order->user->userDetails->fiscalCode)) {
-                    $invoiceText .= $transfiscalcode . $order->user->userDetails->fiscalCode;
-                }
+
+                    $invoiceText .= $transfiscalcode . $userAddress->vatNumber;
+
 
                 $invoiceText .= '</strong>';
                 $invoiceText .= '</address>';
@@ -1385,8 +1386,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 }
 
                 $invoiceText .= '</p><address>';
-                $invoiceText .= '<strong>' . $userShipping->surname . ' ' . $userShipping->name;
-                $invoiceText .= (!empty($userShipping->company)) ? '<br>' . $userShipping->company : null;
+                $invoiceText .= '<strong>' . $userShipping->subject;
                 $invoiceText .= '<br>' . $userShipping->address;
                 $invoiceText .= '<br>' . $userShipping->postcode . ' ' . $userShipping->city . ' (' . $userShipping->province . ')';
                 $invoiceText .= '<br>' . $userShipping->country->name . '</strong>';
@@ -1579,7 +1579,7 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
   "api_key": "' . $api_key . '",
   "id_cliente": "0",
   "id_fornitore": "0",
-  "nome": "' . $userAddress->surname . ' ' . $userAddress->name . ' ' . $userAddress->company . '",
+  "nome": "' . $userAddress->subject . '",
   "indirizzo_via": "' . $userAddress->address . '",
   "indirizzo_cap": "' . $userAddress->postcode . '",
   "indirizzo_citta": "' . $userAddress->city . '",
@@ -1588,8 +1588,8 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
   "paese": "Italia",
   "paese_iso": "' . $userAddress->country->ISO . '",
   "lingua": "it",
-  "piva": "' . $userAddress->fiscalCode . '",
-  "cf": "' . $userAddress->fiscalCode . '",
+  "piva": "' . $userAddress->vatNumber . '",
+  "cf": "' . $userAddress->vatNumber . '",
   "autocompila_anagrafica": false,
   "salva_anagrafica": false,
   "numero": "' . $sectional . '",
@@ -1799,9 +1799,9 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                     $checkIfDocumentExist = $documentRepo->findOneBy(['number' => $sectional,'year' => $year]);
                     if ($checkIfDocumentExist == null) {
                         $insertDocument = $documentRepo->getEmptyEntity();
-                        $insertDocument->userId = $userAddress->userId;
-                        $insertDocument->userAddressRecipientId=$filterUserAddress;
-                        $insertDocument->shopRecipientId = $customerDataSeller->id;
+                        $insertDocument->userId = $filterUserAddress ;
+                        $insertDocument->userAddressRecipientId=$userAddress->id;
+                        $insertDocument->shopRecipientId = $userAddress->id;
                         $insertDocument->number = $sectional;
                         $insertDocument->invoiceTypeId = $documentType;
                         $insertDocument->paydAmount = $amountForInvoice;
