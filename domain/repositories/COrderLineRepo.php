@@ -298,45 +298,47 @@ class COrderLineRepo extends ARepo
 
     private function updateFriendOrderSending($orderLine,$newStatus,$time = null)
     {
-        $orderLine->status = $newStatus->code;
 
-        $findShopId = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->shopId]);
-        if ($findShopId->hasEcommerce == '1' && $findShopId->id != '44') {
-            /* find  orderId*/
-            $orderForRemote = \Monkey::app()->repoFactory->create('Order')->findOneBy(['id' => $orderLine->orderId]);
-            $cartForRemote = \Monkey::app()->repoFactory->create('Cart')->findOneBy(['id' => $orderForRemote->cartId]);
-            $db_host = $findShopId->dbHost;
-            $db_name = $findShopId->dbName;
-            $db_user = $findShopId->dbUsername;
-            $db_pass = $findShopId->dbPassword;
-            switch ($orderLine->shopId) {
-                case '1':
-                    $userRemoteId = 5;
-                    $billingAddressId = 2;
-                    $shipmentAddressId = 2;
-                    break;
-                case '51':
-                    $userRemoteId = 52;
-                    $billingAddressId = 105;
-                    $shipmentAddressId = 105;
-                    break;
-            }
-            try {
+        try {
+            $orderLine->status = $newStatus->code;
 
-                $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}",$db_user,$db_pass);
-                $db_con->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-                $res = " connessione ok <br>";
-            } catch (PDOException $e) {
-                throw new BambooException('fail to connect');
+            $findShopId = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->shopId]);
+            if ($findShopId->hasEcommerce == '1' && $findShopId->id != '44') {
+                /* find  orderId*/
+                $orderForRemote = \Monkey::app()->repoFactory->create('Order')->findOneBy(['id' => $orderLine->orderId]);
+                $cartForRemote = \Monkey::app()->repoFactory->create('Cart')->findOneBy(['id' => $orderForRemote->cartId]);
+                $db_host = $findShopId->dbHost;
+                $db_name = $findShopId->dbName;
+                $db_user = $findShopId->dbUsername;
+                $db_pass = $findShopId->dbPassword;
+                switch ($orderLine->shopId) {
+                    case '1':
+                        $userRemoteId = 5;
+                        $billingAddressId = 2;
+                        $shipmentAddressId = 2;
+                        break;
+                    case '51':
+                        $userRemoteId = 52;
+                        $billingAddressId = 105;
+                        $shipmentAddressId = 105;
+                        break;
+                }
+                try {
 
-            }
-            if ($cartForRemote->hasInvoice == null) {
-                $hasInvoice = 'null';
-            } else {
-                $hasInvoice = $cartForRemote->hasInvoice;
-            }
-            try {
-                $insertRemoteCart = $db_con->prepare("INSERT INTO Cart (orderPaymentMethodId,
+                    $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}",$db_user,$db_pass);
+                    $db_con->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+                    $res = " connessione ok <br>";
+                } catch (PDOException $e) {
+                    throw new BambooException('fail to connect');
+
+                }
+                if ($cartForRemote->hasInvoice == null) {
+                    $hasInvoice = 'null';
+                } else {
+                    $hasInvoice = $cartForRemote->hasInvoice;
+                }
+                try {
+                    $insertRemoteCart = $db_con->prepare("INSERT INTO Cart (orderPaymentMethodId,
                                                                           couponId,
                                                                           userId,
                                                                           cartTypeId,  
@@ -358,41 +360,41 @@ class COrderLineRepo extends ARepo
                                                                           " . $hasInvoice . "
                                                                           ,1
                                                                           )");
-                $insertRemoteCart->execute();
-            } catch (\Throwable $e) {
-                \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' . $findShopId->id,$e);
-            }
+                    $insertRemoteCart->execute();
+                } catch (\Throwable $e) {
+                    \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' . $findShopId->id,$e);
+                }
 
-            $findLastRemoteCart = $db_con->prepare("select MAX(id) as cartId from Cart ");
-            $findLastRemoteCart->execute();
-            $rowFindLastRemoteCart = $findLastRemoteCart->fetch(PDO::FETCH_ASSOC);
-            $cartId = $rowFindLastRemoteCart['cartId'];
-            /* caricare i prodotti sul carrello
-            try {
-                $insertRemoteCartLine = $db_con->prepare(sprintf('INSERT INTO CartLine (cartId, productId,productVariantId,productSizeId)
-VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,$orderLine->productSizeId));
-                $insertRemoteCartLine->execute();
-            } catch (\Throwable $e) {
-                \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote CartLine to Shop ' . $findShopId->id,$e);
-            }
-            */
+                $findLastRemoteCart = $db_con->prepare("select MAX(id) as cartId from Cart ");
+                $findLastRemoteCart->execute();
+                $rowFindLastRemoteCart = $findLastRemoteCart->fetch(PDO::FETCH_ASSOC);
+                $cartId = $rowFindLastRemoteCart['cartId'];
+                /* caricare i prodotti sul carrello
+                try {
+                    $insertRemoteCartLine = $db_con->prepare(sprintf('INSERT INTO CartLine (cartId, productId,productVariantId,productSizeId)
+    VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,$orderLine->productSizeId));
+                    $insertRemoteCartLine->execute();
+                } catch (\Throwable $e) {
+                    \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote CartLine to Shop ' . $findShopId->id,$e);
+                }
+                */
 
-            $productSku = \Monkey::app()->repoFactory->
-            create('ProductSku')->
-            findOneBy(
-                ['productId' => $orderLine->productId,
-                    'productVariantId' => $orderLine->productVariantId,
-                    'productSizeId' => $orderLine->productSizeId]);
-            $friendRevenue = $orderLine->friendRevenue;
-            $vat = ($friendRevenue / 100) * 22;
-            $revenueTotal = $friendRevenue + $vat;
-            if ($orderForRemote->remoteShopSellerId == '44') {
-                $isOrdermarketplace = '1';
-            } else {
-                $isOrderMarketplace = '0';
-            }
-            try {
-                $insertRemoteOrder = $db_con->prepare("INSERT INTO `Order` (
+                $productSku = \Monkey::app()->repoFactory->
+                create('ProductSku')->
+                findOneBy(
+                    ['productId' => $orderLine->productId,
+                        'productVariantId' => $orderLine->productVariantId,
+                        'productSizeId' => $orderLine->productSizeId]);
+                $friendRevenue = $orderLine->friendRevenue;
+                $vat = ($friendRevenue / 100) * 22;
+                $revenueTotal = $friendRevenue + $vat;
+                if ($orderForRemote->remoteShopSellerId == '44') {
+                    $isOrdermarketplace = '1';
+                } else {
+                    $isOrderMarketplace = '0';
+                }
+                try {
+                    $insertRemoteOrder = $db_con->prepare(sprintf("INSERT INTO `Order` (
             orderPaymentMethodId,
             orderShippingMethodId,
             couponId,
@@ -432,49 +434,123 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
             6,
             null,
             null,
-            " . $userRemoteId . ",
-            " . $cartId . ",
-            '" . $orderForRemote->status . "',
-            '" . $orderForRemote->frozenBillingAddress . "',
-            '" . $orderForRemote->frozenShippingAddress . "',
-            " . $billingAddressId . ",
-            " . $shipmentAddressId . ",
+            %d,
+            %s,
+            '%s',
+            '%s',
+            '%s',
+            %d,
+            %d,
             0,
             0,
             0,
             0,
-            " . $revenueTotal . ",
-            " . $revenueTotal . ",
-            " . $vat . ",
+            %d,
+            %d,
+            %d,
             0,
             0,
-            '" . $orderForRemote->orderDate . "',
-            '" . $orderForRemote->note . "',
-            '" . $orderForRemote->shipmentNote . "',
-            '" . $orderForRemote->transactionNumber . "',
-            '" . $orderForRemote->transactionMac . "',
-            " . $revenueTotal . ",
-             '" . date("Y-m-d H:i:s") . "',
-            '" . date("Y-m-d H:i:s") . "',
-            '" . date("Y-m-d H:i:s") . "',
+            '%s',
+            '%s',
+            '%s',
+            '%s',
+            '%s',
+            %d,
+             '%s',
+            '%s',
+            '%s',
             1,
-            " . $orderLine->orderId . ",
+            %s,
             1,
-             '" . $orderForRemote->remoteShopSellerId . "',
-             '" . $isOrderMarketplace . "',
-             0,           
-             " . $orderLine->orderId . ")");
-                $insertRemoteOrder->execute();
-            } catch (\Throwable $e) {
-                \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote order to Shop ' . $findShopId->id,$e);
-            }
-            $findLastRemoteOrder = $db_con->prepare("select MAX(id) as orderId from `Order` ");
-            $findLastRemoteOrder->execute();
-            $rowFindLastRemoteOrder = $findLastRemoteOrder->fetch(PDO::FETCH_ASSOC);
-            $orderId = $rowFindLastRemoteOrder['orderId'];
-            try {
-                if ($findShopId->id != '1') {
-                    $insertRemoteOrderLine = $db_con->prepare('INSERT INTO OrderLine (
+             '%s',
+             '%s',
+             null,           
+             %s)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($orderForRemote->frozenBillingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId));
+                   $logsql = sprintf("INSERT INTO `Order` (
+            orderPaymentMethodId,
+            orderShippingMethodId,
+            couponId,
+            userId,
+            cartId,
+          `status`,
+           frozenBillingAddress,
+           frozenShippingAddress,
+           billingAddressId,
+           shipmentAddressId,
+           shippingPrice,
+           userDiscount,
+           couponDiscount,
+           paymentModifier,
+           grossTotal,
+           netTotal,
+           `vat`,
+           sellingFee,
+           customModifier,
+           orderDate,
+           `note`,
+           shipmentNote,  
+           transactionNumber,          
+           transactionMac,
+           paidAmount,
+           paymentDate,
+           lastUpdate,
+           creationDate,
+           hasInvoice,
+           remoteIwesOrderId,          
+           isParallel,
+           remoteSellerId,
+           isOrderMarketplace,
+           marketplaceId,
+           marketplaceOrderId          
+           ) VALUES (
+            6,
+            null,
+            null,
+            %d,
+            %s,
+            '%s',
+            '%s',
+            '%s',
+            %d,
+            %d,
+            0,
+            0,
+            0,
+            0,
+            %d,
+            %d,
+            %d,
+            0,
+            0,
+            '%s',
+            '%s',
+            '%s',
+            '%s',
+            '%s',
+            %d,
+             '%s',
+            '%s',
+            '%s',
+            1,
+            %s,
+            1,
+             '%s',
+             '%s',
+             null,           
+             %s)",$userRemoteId,$cartId,$orderForRemote->status,$orderForRemote->frozenBillingAddress,$orderForRemote->frozenShippingAddress,$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId);
+
+                    $insertRemoteOrder->execute();
+
+                } catch (\Throwable $e) {
+                    \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' ,$logsql,'');
+                }
+                $findLastRemoteOrder = $db_con->prepare("select MAX(id) as orderId from `Order` ");
+                $findLastRemoteOrder->execute();
+                $rowFindLastRemoteOrder = $findLastRemoteOrder->fetch(PDO::FETCH_ASSOC);
+                $orderId = $rowFindLastRemoteOrder['orderId'];
+                try {
+                    if ($findShopId->id != '1') {
+                        $insertRemoteOrderLine = $db_con->prepare(sprintf("INSERT INTO OrderLine (
                       `orderId`,
                       `productId`,
                       `productVariantId`,
@@ -502,38 +578,38 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                        `note`,
                        `remoteId`,
                        `isParallel`
-                       VALUES (
-                          ' . $orderId . ',
-                          ' . $orderLine->productId . ',
-                          ' . $orderLine->productVariantId . ',
-                          ' . $orderLine->productSizeId . ',
-                          ' . $orderLine->shopId . ',
-                          \'' . $newStatus->code . '\',
+                      ) VALUES (
+                          %s,
+                          %s,
+                          %s,
+                          %s,
+                          %s,
+                          '%s',
                           null,
                           null,
                           null,
-                          \'' . $orderLine->frozenProduct . '\',
-                          ' . $revenueTotal . ',
-                          ' . $revenueTotal . ',
-                          ' . $vat . ',
-                          ' . $orderLine->cost . ',
+                          '%s',
+                          %d,
+                          %d,
+                          %d,
+                          %s,
                           0,
                           0,
                           0,
                           0,
                           0,
                           0,
-                          ' . $friendRevenue . ',
-                          ' . $friendRevenue . ',
-                          \'' . $orderLine->creationDate . '\',
-                          \'' . $orderLine->lastUpdate . '\',
-                          \'' . $orderLine->note . '\',
+                          %s,
+                          %s,
+                          '%s',
+                          '%s',
+                          '%s',
                           null,
-                          1)');
+                          1)",$orderId,$orderLine->productId,$orderLine->productVariantId,$orderLine->productSizeId,$orderLine->shopId,$newStatus->code,$orderLine->frozenProduct,$revenueTotal,$revenueTotal,$vat,$orderLine->cost,$friendRevenue,$friendRevenue,$orderLine->creationDate,$orderLine->lastUpdate,$orderLine->note));
 
-                } else {
+                    } else {
 
-                    $insertRemoteOrderLine = $db_con->prepare('INSERT INTO OrderLine (
+                        $insertRemoteOrderLine = $db_con->prepare(sprintf("INSERT INTO OrderLine (
                       `orderId`,
                       `productId`,
                       `productVariantId`,
@@ -562,80 +638,80 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                        `remoteId`,
                        `isParallel`
                       ) VALUES (
-                          ' . $orderId . ',
-                          ' . $orderLine->productId . ',
-                          ' . $orderLine->productVariantId . ',
-                          ' . $orderLine->productSizeId . ',
-                          ' . $orderLine->shopId . ',
-                          \'' . $newStatus->code . '\',
+                          %s,
+                          %s,
+                          %s,
+                          %s,
+                          %s,
+                          '%s',
                           null,
                           null,
-                          \'' . $orderLine->frozenProduct . '\',
-                          ' . $revenueTotal . ',
-                          ' . $revenueTotal . ',
-                          ' . $vat . ',
-                          ' . $orderLine->cost . ',
+                          '%s',
+                          %d,
+                          %d,
+                          %d,
+                          %s,
                           0,
                           0,
                           0,
                           0,
                           0,
                           0,
-                          ' . $friendRevenue . ',
-                          ' . $friendRevenue . ',
-                          \'' . $orderLine->creationDate . '\',
-                          \'' . $orderLine->lastUpdate . '\',
-                          \'' . $orderLine->note . '\',
+                          %s,
+                          %s,
+                          '%s',
+                          '%s',
+                          '%s',
                           null,
                           null,
-                          1)');
+                          1)",$orderId,$orderLine->productId,$orderLine->productVariantId,$orderLine->productSizeId,$orderLine->shopId,$newStatus->code,$orderLine->frozenProduct,$revenueTotal,$revenueTotal,$vat,$orderLine->cost,$friendRevenue,$friendRevenue,$orderLine->creationDate,$orderLine->lastUpdate,$orderLine->note));
 
+                    }
+                    $insertRemoteOrderLine->execute();
+                } catch (\Throwable $e) {
+                    \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' ,'','');
                 }
-                $insertRemoteOrderLine->execute();
-            } catch (\Throwable $e) {
-                \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' . $findShopId->id,$e);
-            }
 
-            try {
-                $stmtWalletMovements = $db_con->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible) 
+                try {
+                    $stmtWalletMovements = $db_con->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible) 
                 VALUES (
                 ' . $orderId . ',
                 null,
                 null,
                 ' . $revenueTotal . ',
-                \'' . date("Y-m-d H:i:s") . '\',
-                \'' . date("Y-m-d H:i:s") . '\',
+                \'' . date('Y-m-d H:i:s') . '\',
+                \'' . date('Y-m-d H:i:s') . '\',
                 1,
                 1,
                 \'Ordine Parallelo\',
                 1
                 )');
-                $stmtWalletMovements->execute();
+                    $stmtWalletMovements->execute();
 
-                /*select  shop seller to udpate Wallet */
-                $remoteOrderSupplierId=$orderId;
+                    /*select  shop seller to udpate Wallet */
+                    $remoteOrderSupplierId = $orderId;
 
-                $shopFindSeller = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->shopId]);
-                $db_hostSeller = $shopFindSeller->dbHost;
-                $db_nameSeller = $shopFindSeller->dbName;
-                $db_userSeller = $shopFindSeller->dbUsername;
-                $db_passSeller = $shopFindSeller->dbPassword;
+                    $shopFindSeller = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->shopId]);
+                    $db_hostSeller = $shopFindSeller->dbHost;
+                    $db_nameSeller = $shopFindSeller->dbName;
+                    $db_userSeller = $shopFindSeller->dbUsername;
+                    $db_passSeller = $shopFindSeller->dbPassword;
 
-                try {
+                    try {
 
-                    $db_conSeller = new PDO("mysql:host={$db_hostSeller};dbname={$db_nameSeller}",$db_userSeller,$db_passSeller);
-                    $db_conSeller->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-                    $res = " connessione ok <br>";
-                } catch (PDOException $e) {
-                    throw new BambooException('fail to connect');
+                        $db_conSeller = new PDO("mysql:host={$db_hostSeller};dbname={$db_nameSeller}",$db_userSeller,$db_passSeller);
+                        $db_conSeller->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+                        $res = " connessione ok <br>";
+                    } catch (PDOException $e) {
+                        throw new BambooException('fail to connect');
 
-                }
-                $feeSeller = $shopFindSeller->paralellFee;
-                $activePrice = $orderLine->activePrice;
-                $fee = ($activePrice / 100) * $feeSeller;
-                $amount = $fee - $activePrice;
-                $amountForInvoice = abs($amount);
-                $stmtWalletMovementsSeller = $db_conSeller->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible) 
+                    }
+                    $feeSeller = $shopFindSeller->paralellFee;
+                    $activePrice = $orderLine->activePrice;
+                    $fee = ($activePrice / 100) * $feeSeller;
+                    $amount = $fee - $activePrice;
+                    $amountForInvoice = abs($amount);
+                    $stmtWalletMovementsSeller = $db_conSeller->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible) 
                 VALUES (
                 ' . $orderLine->remoteOrderSellerId . ',
                 null,
@@ -648,18 +724,22 @@ VALUES(%s,%s,%s,%s)',$cartId,$orderLine->productId,$orderLine->productVariantId,
                 \'Ordine Parallelo Acquisto Prodotto \',
                 1
                 )');
-                $stmtWalletMovementsSeller->execute();
+                    $stmtWalletMovementsSeller->execute();
 
 
-            } catch (\Throwable $e) {
-                \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet to Shop ' . $findShopId->id,$e);
+                } catch (\Throwable $e) {
+                    \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet to Shop ' , $findShopId->id,$e);
+                }
+                $remoteShopSellerId = $orderLine->remoteShopSellerId;
+                $orderLine->remoteOrderSupplierId = $orderId;
+                /** @var  CInvoiceRepo $invoiceRepo */
+                /** @var  $udpateExternalShop */
+                /** @throws BambooException */
+                $this->createNewInvoiceToOrderParallel($orderLine,$orderLine->orderId,$remoteOrderSupplierId,$remoteShopSellerId,$amountForInvoice);
             }
-            $remoteShopSellerId = $orderLine->remoteShopSellerId;
-            $orderLine->remoteOrderSupplierId=$orderId;
-            /** @var  CInvoiceRepo $invoiceRepo */
-            /** @var  $udpateExternalShop */
-            /** @throws BambooException */
-            $this->createNewInvoiceToOrderParallel($orderLine,$orderLine->orderId,$remoteOrderSupplierId,$remoteShopSellerId,$amountForInvoice);
+
+        }catch (\Throwable $e) {
+          \Monkey::app()->applicationLog('COrderLineRepo','Error','cannot work remote insert ',$e,'');
         }
 
         $orderLine->update();
