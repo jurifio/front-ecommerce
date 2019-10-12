@@ -12,6 +12,7 @@ use bamboo\domain\entities\COrderLine;
 use bamboo\core\db\pandaorm\repositories\ARepo;
 use bamboo\domain\entities\COrderLineStatus;
 use bamboo\domain\entities\CProductSku;
+use bamboo\domain\entities\CUserAddress;
 use bamboo\utils\time\STimeToolbox;
 use DateTime;
 use PDO;
@@ -311,18 +312,6 @@ class COrderLineRepo extends ARepo
                 $db_name = $findShopId->dbName;
                 $db_user = $findShopId->dbUsername;
                 $db_pass = $findShopId->dbPassword;
-                switch ($orderLine->shopId) {
-                    case '1':
-                        $userRemoteId = 5;
-                        $billingAddressId = 2;
-                        $shipmentAddressId = 2;
-                        break;
-                    case '51':
-                        $userRemoteId = 52;
-                        $billingAddressId = 105;
-                        $shipmentAddressId = 105;
-                        break;
-                }
                 try {
 
                     $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}",$db_user,$db_pass);
@@ -332,6 +321,22 @@ class COrderLineRepo extends ARepo
                     throw new BambooException('fail to connect');
 
                 }
+                switch ($orderLine->shopId) {
+                    case '1':
+                        $userRemoteId = 5;
+                        $billingAddressId = 2;
+                        $shipmentAddressId = 2;
+
+                        break;
+                    case '51':
+                        $userRemoteId = 52;
+                        $billingAddressId = 105;
+                        $shipmentAddressId = 105;
+                        break;
+                }
+                $billingAddressFind= \Monkey::app()->repoFactory->create('UserAddress')->findOneBy(['id'=>'5843']);
+                $billingAddress=$billingAddressFind->froze();
+
                 if ($cartForRemote->hasInvoice == null) {
                     $hasInvoice = 'null';
                 } else {
@@ -393,6 +398,7 @@ class COrderLineRepo extends ARepo
                 } else {
                     $isOrderMarketplace = '0';
                 }
+
                 try {
                     $insertRemoteOrder = $db_con->prepare(sprintf("INSERT INTO `Order` (
             orderPaymentMethodId,
@@ -465,7 +471,7 @@ class COrderLineRepo extends ARepo
              '%s',
              '%s',
              null,           
-             %s)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($orderForRemote->frozenBillingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId));
+             %s)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId));
                    $logsql = sprintf("INSERT INTO `Order` (
             orderPaymentMethodId,
             orderShippingMethodId,
@@ -537,7 +543,7 @@ class COrderLineRepo extends ARepo
              '%s',
              '%s',
              null,           
-             %s)",$userRemoteId,$cartId,$orderForRemote->status,$orderForRemote->frozenBillingAddress,$orderForRemote->frozenShippingAddress,$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId);
+             %s)",$userRemoteId,$cartId,$orderForRemote->status,$billingAddress,$orderForRemote->frozenShippingAddress,$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId);
 
                     $insertRemoteOrder->execute();
 
@@ -775,6 +781,7 @@ class COrderLineRepo extends ARepo
         if (!$o) throw new BambooException('the passed order doesn\'t exists');
         return $o;
     }
+
 
     /**
      *
