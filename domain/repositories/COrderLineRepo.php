@@ -435,7 +435,8 @@ class COrderLineRepo extends ARepo
            remoteSellerId,
            isOrderMarketplace,
            marketplaceId,
-           marketplaceOrderId          
+           marketplaceOrderId,
+           isShippingToIwes           
            ) VALUES (
             6,
             null,
@@ -471,7 +472,8 @@ class COrderLineRepo extends ARepo
              '%s',
              '%s',
              null,           
-             %s)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId));
+             %s,
+             %s)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$orderForRemote->isShippingToIwes));
                    $logsql = sprintf("INSERT INTO `Order` (
             orderPaymentMethodId,
             orderShippingMethodId,
@@ -507,7 +509,8 @@ class COrderLineRepo extends ARepo
            remoteSellerId,
            isOrderMarketplace,
            marketplaceId,
-           marketplaceOrderId          
+           marketplaceOrderId ,
+           isShippingToIwes
            ) VALUES (
             6,
             null,
@@ -543,7 +546,8 @@ class COrderLineRepo extends ARepo
              '%s',
              '%s',
              null,           
-             %s)",$userRemoteId,$cartId,$orderForRemote->status,$billingAddress,$orderForRemote->frozenShippingAddress,$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId);
+             %s,
+             %s)",$userRemoteId,$cartId,$orderForRemote->status,$billingAddress,$orderForRemote->frozenShippingAddress,$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$orderForRemote->isShippingToIwes);
 
                     $insertRemoteOrder->execute();
 
