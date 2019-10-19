@@ -686,9 +686,9 @@ class COrderLineRepo extends ARepo
                 } catch (\Throwable $e) {
                     \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' ,'','');
                 }
-
+                /* vecchio inserimento seller
                 try {
-                    $stmtWalletMovements = $db_con->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible) 
+                    $stmtWalletMovements = $db_con->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible)
                 VALUES (
                 ' . $orderId . ',
                 null,
@@ -724,8 +724,8 @@ class COrderLineRepo extends ARepo
                     $feeSeller = $shopFindSeller->paralellFee;
                     $activePrice = $orderLine->activePrice;
                     $fee = ($activePrice / 100) * $feeSeller;
-                    $amount = $fee - $activePrice;
-                    $amountForInvoice = abs($amount);
+                    $amount =  $activePrice - $fee ;
+                    $amountForInvoice = -abs($amount);/*
                     $stmtWalletMovementsSeller = $db_conSeller->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible) 
                 VALUES (
                 ' . $orderLine->remoteOrderSellerId . ',
@@ -745,6 +745,7 @@ class COrderLineRepo extends ARepo
                 } catch (\Throwable $e) {
                     \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet to Shop ' , $findShopId->id,$e);
                 }
+ */
                 $remoteShopSellerId = $orderLine->remoteShopSellerId;
                 $orderLine->remoteOrderSupplierId = $orderId;
                 /** @var  CInvoiceRepo $invoiceRepo */
