@@ -352,7 +352,8 @@ class COrderLineRepo extends ARepo
                                                                           lastUpdate,
                                                                           creationDate,
                                                                           hasInvoice,
-                                                                          isParallel)
+                                                                          isParallel,
+                                                                          isImport)
                                                                            VALUES (
                                                                           " . $orderForRemote->orderPaymentMethodId . ",
                                                                           null,
@@ -363,6 +364,7 @@ class COrderLineRepo extends ARepo
                                                                           '" . $cartForRemote->lastUpdate . "',
                                                                           '" . $cartForRemote->creationDate . "',
                                                                           " . $hasInvoice . "
+                                                                          ,1
                                                                           ,1
                                                                           )");
                     $insertRemoteCart->execute();
@@ -441,7 +443,8 @@ class COrderLineRepo extends ARepo
            isOrderMarketplace,
            marketplaceId,
            marketplaceOrderId,
-           isShippingToIwes           
+           isShippingToIwes ,
+           isImport          
            ) VALUES (
             6,
             null,
@@ -478,7 +481,8 @@ class COrderLineRepo extends ARepo
              '%s',
              null,           
              %s,
-             %s)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto));
+             %s,
+             1)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto));
                    $logsql = sprintf("INSERT INTO `Order` (
             orderPaymentMethodId,
             orderShippingMethodId,
@@ -515,7 +519,8 @@ class COrderLineRepo extends ARepo
            isOrderMarketplace,
            marketplaceId,
            marketplaceOrderId ,
-           isShippingToIwes
+           isShippingToIwes,
+           isImport          
            ) VALUES (
             6,
             null,
@@ -552,7 +557,8 @@ class COrderLineRepo extends ARepo
              '%s',
              null,           
              %s,
-             %s)",$userRemoteId,$cartId,$orderForRemote->status,$billingAddress,$orderForRemote->frozenShippingAddress,$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto);
+             %s,
+             1)",$userRemoteId,$cartId,$orderForRemote->status,$billingAddress,$orderForRemote->frozenShippingAddress,$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto);
 
                     $insertRemoteOrder->execute();
 
@@ -592,7 +598,8 @@ class COrderLineRepo extends ARepo
                        `lastUpdate`,
                        `note`,
                        `remoteId`,
-                       `isParallel`
+                       `isParallel`,
+                       `isImport`
                       ) VALUES (
                           %s,
                           %s,
@@ -620,6 +627,7 @@ class COrderLineRepo extends ARepo
                           '%s',
                           '%s',
                           null,
+                          1,
                           1)",$orderId,$orderLine->productId,$orderLine->productVariantId,$orderLine->productSizeId,$orderLine->shopId,$newStatus->code,$orderLine->frozenProduct,$revenueTotal,$revenueTotal,$vat,$orderLine->cost,$friendRevenue,$friendRevenue,$orderLine->creationDate,$orderLine->lastUpdate,$orderLine->note));
 
                     } else {
