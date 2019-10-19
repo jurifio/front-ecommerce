@@ -659,7 +659,8 @@ class COrderLineRepo extends ARepo
                        `note`,
                        `warehouseShelfPositionId`,
                        `remoteId`,
-                       `isParallel`
+                       `isParallel`,
+                       `isImport`
                       ) VALUES (
                           %s,
                           %s,
@@ -687,7 +688,8 @@ class COrderLineRepo extends ARepo
                           '%s',
                           null,
                           null,
-                          1)",$orderId,$orderLine->productId,$orderLine->productVariantId,$orderLine->productSizeId,$orderLine->shopId,$newStatus->code,$orderLine->frozenProduct,$revenueTotal,$revenueTotal,$vat,$orderLine->cost,$friendRevenue,$friendRevenue,$orderLine->creationDate,$orderLine->lastUpdate,$orderLine->note));
+                          1,
+                          1     )",$orderId,$orderLine->productId,$orderLine->productVariantId,$orderLine->productSizeId,$orderLine->shopId,$newStatus->code,$orderLine->frozenProduct,$revenueTotal,$revenueTotal,$vat,$orderLine->cost,$friendRevenue,$friendRevenue,$orderLine->creationDate,$orderLine->lastUpdate,$orderLine->note));
 
                     }
                     $insertRemoteOrderLine->execute();
