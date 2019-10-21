@@ -696,9 +696,9 @@ class COrderLineRepo extends ARepo
                 } catch (\Throwable $e) {
                     \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' ,'','');
                 }
-                /* vecchio inserimento seller
-                try {
-                    $stmtWalletMovements = $db_con->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible)
+                // vecchio inserimento seller
+              try {
+                  $stmtWalletMovements = $db_con->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible)
                 VALUES (
                 ' . $orderId . ',
                 null,
@@ -711,8 +711,10 @@ class COrderLineRepo extends ARepo
                 \'Ordine Parallelo\',
                 1
                 )');
-                    $stmtWalletMovements->execute();
-
+                  $stmtWalletMovements->execute();
+              }catch(\Throwable $e){
+                  \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet Supplier Shop ' ,'','');
+              }
                     /*select  shop seller to udpate Wallet */
                     $remoteOrderSupplierId = $orderId;
 
