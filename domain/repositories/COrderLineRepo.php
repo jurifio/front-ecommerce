@@ -323,13 +323,13 @@ class COrderLineRepo extends ARepo
                 }
                 switch ($orderLine->shopId) {
                     case '1':
-                        $userRemoteId = 5;
+                        $userRemoteId = 6699;
                         $billingAddressId = 2;
                         $shipmentAddressId = 2;
 
                         break;
                     case '51':
-                        $userRemoteId = 52;
+                        $userRemoteId = 255;
                         $billingAddressId = 105;
                         $shipmentAddressId = 105;
                         break;
