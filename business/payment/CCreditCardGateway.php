@@ -24,7 +24,7 @@ class CCreditCardGateway extends APaymentGateway {
 
     protected function elaborateLinkUrl()
     {
-        $base = 'https://ecommerce.keyclient.it/ecomm/ecomm/DispatcherServlet';
+        $base = 'https://ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet';
         //$TEST= [];
         //$TEST['url'] = 'https://coll-ecommerce.keyclient.it/ecomm/ecomm/DispatcherServlet';
         //$TEST['alias'] = 'payment_3444153';
