@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "Product",
+        "keys": ["productId", "productVariantId","productPhotoId"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": ["productId"],
+                "childKeys": ["id"],
+                "type": "ManyToOne"
+            },{
+              "name": "productPhoto",
+              "entity": "ProductPhoto",
+              "parentKeys": ["productPhotoId"],
+              "childKeys": ["id"],
+              "type": "OneToOne"
+            }
+        ]
+    }
+}
