@@ -885,7 +885,14 @@ class COrderRepo extends ARepo
         $php = $phpRepo->findOneBy(['productId' => $productId,'productVariantId' => $productVariantId]);
 
         if ($php != null) {
-            $prestashopShopIds = $php->getShopsForProduct();
+            $prestashopHasProductHasMarketplaceHasShopRepo=\Monkey::app()->repoFactory->create('PrestashopHasProductHasMarketplaceHasShop')->findBy(['productId'=>$php->productId,'productVariantId'=>$php->productVariantId]);
+            $prestashopShopIds = [];
+            if($prestashopHasProductHasMarketplaceHasShopRepo!=null){
+                foreach ($prestashopHasProductHasMarketplaceHasShopRepo as $collections){
+                    $prestashopShopIds[] =$collections->marketplaceHasShopId;
+                }
+
+            }
             if ($prestashopIds != null) {
                 $prestashopProduct = new CPrestashopProduct();
                 $prestashopProduct->updateProductQuantity($php->prestaId,$productSizeId,$newQty,$differential,$prestashopShopIds);
