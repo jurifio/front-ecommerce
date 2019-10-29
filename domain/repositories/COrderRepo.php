@@ -885,118 +885,118 @@ class COrderRepo extends ARepo
         $php = $phpRepo->findOneBy(['productId' => $productId,'productVariantId' => $productVariantId]);
 
         if ($php != null) {
-            $prestashopHasProductHasMarketplaceHasShopRepo=\Monkey::app()->repoFactory->create('PrestashopHasProductHasMarketplaceHasShop')->findBy(['productId'=>$php->productId,'productVariantId'=>$php->productVariantId]);
+            $prestashopHasProductHasMarketplaceHasShopRepo = \Monkey::app()->repoFactory->create('PrestashopHasProductHasMarketplaceHasShop')->findBy(['productId' => $php->productId,'productVariantId' => $php->productVariantId]);
             $prestashopShopIds = [];
-            if($prestashopHasProductHasMarketplaceHasShopRepo!=null){
-                foreach ($prestashopHasProductHasMarketplaceHasShopRepo as $collections){
-                    $prestashopShopIds[] =$collections->marketplaceHasShopId;
-                }
-
+            foreach ($prestashopHasProductHasMarketplaceHasShopRepo as $collections) {
+                $prestashopShopIds[] = $collections->marketplaceHasShopId;
             }
-            if ($prestashopIds != null) {
+
+            if ($prestashopShopIds != null) {
                 $prestashopProduct = new CPrestashopProduct();
                 $prestashopProduct->updateProductQuantity($php->prestaId,$productSizeId,$newQty,$differential,$prestashopShopIds);
-                return true;
             }
-        } else {
-            return false;
+            return true;
+
         }
     }
 
-    /**
-     * @param COrderLine $orderLine
-     * @param CCartLine $cartLine
-     * @return bool
-     */
-    protected function fillOrderLineValuesByCartLine(COrderLine $orderLine,CCartLine $cartLine)
-    {
-        $orderLine->fullPrice = $cartLine->getLineFullPrice();
-        $orderLine->activePrice = (float)$cartLine->getLineGrossTotal();
-        if ($orderLine->activePrice == 0) {
-            \Monkey::app()->applicationWarning(
-                'OrderRepo',
-                'Active price set at 0 in fillOrderLineValuesByCartLine',
-                'active price found at 0 while calculating weight for cartLine: ' . $orderLine->printId() . 'and orderLine: ' . $orderLine->printId());
+        /**
+         * @param COrderLine $orderLine
+         * @param CCartLine $cartLine
+         * @return bool
+         */
+        protected
+        function fillOrderLineValuesByCartLine(COrderLine $orderLine,CCartLine $cartLine)
+        {
+            $orderLine->fullPrice = $cartLine->getLineFullPrice();
+            $orderLine->activePrice = (float)$cartLine->getLineGrossTotal();
+            if ($orderLine->activePrice == 0) {
+                \Monkey::app()->applicationWarning(
+                    'OrderRepo',
+                    'Active price set at 0 in fillOrderLineValuesByCartLine',
+                    'active price found at 0 while calculating weight for cartLine: ' . $orderLine->printId() . 'and orderLine: ' . $orderLine->printId());
+            }
+
+            $weight = $orderLine->order->grossTotal / $orderLine->activePrice;
+
+            $orderLine->vat = $orderLine->order->vat / $weight;
+            $orderLine->shippingCharge = $orderLine->order->shippingPrice / $weight;
+            $orderLine->couponCharge = $cartLine->getCouponDiscount();
+            $orderLine->userCharge = $orderLine->order->userDiscount / $weight;
+            $orderLine->paymentCharge = $orderLine->order->paymentModifier / $weight;
+            $orderLine->sellingFeeCharge = $orderLine->order->sellingFee / $weight;
+            $orderLine->customModifierCharge = $orderLine->order->customModifier / $weight;
+
+            $orderLine->netPrice = $orderLine->activePrice +
+                $orderLine->shippingCharge +
+                $orderLine->couponCharge +
+                $orderLine->userCharge +
+                $orderLine->paymentCharge +
+                $orderLine->sellingFeeCharge +
+                $orderLine->customModifierCharge;
+
+            $orderLine->update();
+            return true;
         }
 
-        $weight = $orderLine->order->grossTotal / $orderLine->activePrice;
+        /**
+         * Adds a line to order starting for a sku of a product and a quantity
+         * does not check values!!
+         * @param COrder $order
+         * @param CProductSku $productSku
+         * @param int $qty
+         * @return int
+         */
+        public
+        function addSku(COrder $order,CProductSku $productSku,$qty = 1)
+        {
+            $lines = $order->cartLine->findByKeys(['productId' => $productSku->productId,
+                'productVariantId' => $productSku->productVariantId,
+                'productSizeId' => $productSku->productSizeId]);
+            if ($productSku->stockQty < (count($lines) + $qty)) return -502;
 
-        $orderLine->vat = $orderLine->order->vat / $weight;
-        $orderLine->shippingCharge = $orderLine->order->shippingPrice / $weight;
-        $orderLine->couponCharge = $cartLine->getCouponDiscount();
-        $orderLine->userCharge = $orderLine->order->userDiscount / $weight;
-        $orderLine->paymentCharge = $orderLine->order->paymentModifier / $weight;
-        $orderLine->sellingFeeCharge = $orderLine->order->sellingFee / $weight;
-        $orderLine->customModifierCharge = $orderLine->order->customModifier / $weight;
+            $count = 0;
+            try {
+                $orderLine = \Monkey::app()->repoFactory->create('OrderLine')->getEmptyEntity();
 
-        $orderLine->netPrice = $orderLine->activePrice +
-            $orderLine->shippingCharge +
-            $orderLine->couponCharge +
-            $orderLine->userCharge +
-            $orderLine->paymentCharge +
-            $orderLine->sellingFeeCharge +
-            $orderLine->customModifierCharge;
+                $orderLine->cartId = $order->id;
+                $orderLine->productId = $productSku->productId;
+                $orderLine->productVariantId = $productSku->productVariantId;
+                $orderLine->shopId = $productSku->shopId;
+                $orderLine->productSizeId = $productSku->productSizeId;
 
-        $orderLine->update();
-        return true;
-    }
-
-    /**
-     * Adds a line to order starting for a sku of a product and a quantity
-     * does not check values!!
-     * @param COrder $order
-     * @param CProductSku $productSku
-     * @param int $qty
-     * @return int
-     */
-    public function addSku(COrder $order,CProductSku $productSku,$qty = 1)
-    {
-        $lines = $order->cartLine->findByKeys(['productId' => $productSku->productId,
-            'productVariantId' => $productSku->productVariantId,
-            'productSizeId' => $productSku->productSizeId]);
-        if ($productSku->stockQty < (count($lines) + $qty)) return -502;
-
-        $count = 0;
-        try {
-            $orderLine = \Monkey::app()->repoFactory->create('OrderLine')->getEmptyEntity();
-
-            $orderLine->cartId = $order->id;
-            $orderLine->productId = $productSku->productId;
-            $orderLine->productVariantId = $productSku->productVariantId;
-            $orderLine->shopId = $productSku->shopId;
-            $orderLine->productSizeId = $productSku->productSizeId;
-
-            while ($qty > 0) {
-                $qty--;
-                if (($orderLine->id = $orderLine->insert()) > 0) {
-                    $count++;
-                    $description = 'Cart: ' . $order->id . ',' . implode(',',$orderLine->toArray()) . ' for user: ' . $this->app->getUser()->getId() . ' in session: ' . $this->app->getSession()->getSid();
-                    $this->registerEvent($order->id,'Item added to Cart',$description,$order->status);
+                while ($qty > 0) {
+                    $qty--;
+                    if (($orderLine->id = $orderLine->insert()) > 0) {
+                        $count++;
+                        $description = 'Cart: ' . $order->id . ',' . implode(',',$orderLine->toArray()) . ' for user: ' . $this->app->getUser()->getId() . ' in session: ' . $this->app->getSession()->getSid();
+                        $this->registerEvent($order->id,'Item added to Cart',$description,$order->status);
+                    }
                 }
+
+                return $count;
+            } catch (\Throwable $e) {
+                return $count > 0 ? -1 * 5000 + $count : 5000;
+            }
+        }
+
+        /**
+         * @param COrder $order
+         * @return bool
+         * @throws BambooLogicException
+         */
+        public
+        function finalizeNewOrder(COrder $order)
+        {
+            if ($order->coupon) {
+                $order->coupon->valid = 0;
+                $order->coupon->update();
             }
 
-            return $count;
-        } catch (\Throwable $e) {
-            return $count > 0 ? -1 * 5000 + $count : 5000;
+            if ($order->status != self::ORDER_PREPARATION_STATUS) throw new BambooLogicException('Order not in preparation while finalizing ' . $order->id);
+            $order->status = self::ORDER_INIT_STATUS;
+            $order->orderDate = STimeToolbox::DbFormattedDateTime();
+            $order->update();
+            return true;
         }
     }
-
-    /**
-     * @param COrder $order
-     * @return bool
-     * @throws BambooLogicException
-     */
-    public function finalizeNewOrder(COrder $order)
-    {
-        if ($order->coupon) {
-            $order->coupon->valid = 0;
-            $order->coupon->update();
-        }
-
-        if ($order->status != self::ORDER_PREPARATION_STATUS) throw new BambooLogicException('Order not in preparation while finalizing ' . $order->id);
-        $order->status = self::ORDER_INIT_STATUS;
-        $order->orderDate = STimeToolbox::DbFormattedDateTime();
-        $order->update();
-        return true;
-    }
-}
