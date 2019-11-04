@@ -84,6 +84,7 @@ class COrderExport
 		$row['productVariantId'] = $line->productVariantId;
 		$row['productSizeId'] = $line->productSizeId;
 		$row['shopId'] = $line->shopId;
+		$row['remoteShopSellerId']=$line->remoteShopSellerId;
 
 		try {
 		    $dirtySku = $line->productSku->findRightDirtySku();
