@@ -394,7 +394,7 @@ class COrderLineRepo extends ARepo
                         'productSizeId' => $orderLine->productSizeId]);
                 $friendRevenue = $orderLine->friendRevenue;
                 $vat = ($friendRevenue / 100) * 22;
-                $revenueTotal = $friendRevenue + $vat;
+                $revenueTotal = round($friendRevenue + $vat,2);
                 if ($orderForRemote->remoteShopSellerId == '44') {
                     $isOrdermarketplace = '1';
                 } else {
