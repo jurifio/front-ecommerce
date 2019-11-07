@@ -895,9 +895,10 @@ class COrderRepo extends ARepo
                 $prestashopProduct = new CPrestashopProduct();
                 $prestashopProduct->updateProductQuantity($php->prestaId,$productSizeId,$newQty,$differential,$prestashopShopIds);
             }
-            return true;
+
 
         }
+        return true;
     }
 
         /**
