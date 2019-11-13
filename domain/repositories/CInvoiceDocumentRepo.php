@@ -97,7 +97,7 @@ class CInvoiceDocumentRepo extends ARepo
                             }
 
                             try {
-                                $stmtInsertSupplierInvoiceDocument = $db_con->prepare('INSERT INTO Invoice (orderId, bin, date,fileName,type) 
+                                $stmtInsertSupplierInvoiceDocument = $db_con1->prepare('INSERT INTO Invoice (orderId, bin, date,fileName,type) 
                                                                                     VALUES(
                                                                                          \'' . $orderLine->remoteOrderSupplierId . '\',
                                                                                          \'' . file_get_contents($file["tmp_name"]) . '\',
