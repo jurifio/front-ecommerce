@@ -342,10 +342,10 @@ class COrderLineRepo extends ARepo
                 } else {
                     $hasInvoice = $cartForRemote->hasInvoice;
                 }
-                $findIfExistOrder=$sb_con->prepare('SELECT count(*) as countOrder, cartId as cartId, id as remoteOrderId from `Order` where remoteIwesOrderId='.$orderLine->orderId);
+                $findIfExistOrder=$db_con->prepare('SELECT count(*) as countOrder, cartId as cartId, id as remoteOrderId from `Order` where remoteIwesOrderId='.$orderLine->orderId);
                 $findIfExistOrder->execute();
                 $rowFindIfExistOrder=$findIfExistOrder->fetch(PDO::FETCH_ASSOC);
-                if($rowFindIfExistOrder['countOrder']==null) {
+                if($rowFindIfExistOrder['countOrder']==0) {
 
                     try {
                         $insertRemoteCart = $db_con->prepare("INSERT INTO Cart (orderPaymentMethodId,
@@ -706,7 +706,7 @@ class COrderLineRepo extends ARepo
                         \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ','','');
                     }
                 }else{
-                    $orderId=$rowFindIfExistOrder['id'];
+                    $orderId=$rowFindIfExistOrder['remoteOrderId'];
                     $productSku = \Monkey::app()->repoFactory->
                     create('ProductSku')->
                     findOneBy(
