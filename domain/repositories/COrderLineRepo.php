@@ -184,26 +184,28 @@ class COrderLineRepo extends ARepo
         $oldStatus = $orderLine->orderLineStatus;
         $shopRepo = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->remoteShopSellerId]);
         $orderRepo = \Monkey::app()->repoFactory->create('Order')->findOneBy(['id' => $orderLine->orderId,'remoteShopSellerId' => $orderLine->remoteShopSellerId]);
-        if ($orderLine->remoteOrderSellerId != null) {
-            $db_host = $shopRepo->dbHost;
-            $db_name = $shopRepo->dbName;
-            $db_user = $shopRepo->dbUsername;
-            $db_pass = $shopRepo->dbPassword;
-            $shop = $shopRepo->id;
-            try {
+      if(ENV=="prod") {
+          if ($orderLine->remoteOrderSellerId != null) {
+              $db_host = $shopRepo->dbHost;
+              $db_name = $shopRepo->dbName;
+              $db_user = $shopRepo->dbUsername;
+              $db_pass = $shopRepo->dbPassword;
+              $shop = $shopRepo->id;
+              try {
 
-                $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}",$db_user,$db_pass);
-                $db_con->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-                $res = ' connessione ok <br>';
-            } catch (PDOException $e) {
-                $res = $e->getMessage();
-            }
+                  $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}",$db_user,$db_pass);
+                  $db_con->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+                  $res = ' connessione ok <br>';
+              } catch (PDOException $e) {
+                  $res = $e->getMessage();
+              }
 
-            $stmtOrder = $db_con->prepare("UPDATE `Order` SET `status`='" . $orderRepo->status . "' WHERE id=" . $orderRepo->remoteOrderSellerId);
-            $stmtOrder->execute();
-            $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteOrderLineSellerId . " and orderId=" . $orderLine->remoteOrderSellerId);
-            $stmtOrderLine->execute();
-        }
+              $stmtOrder = $db_con->prepare("UPDATE `Order` SET `status`='" . $orderRepo->status . "' WHERE id=" . $orderRepo->remoteOrderSellerId);
+              $stmtOrder->execute();
+              $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteOrderLineSellerId . " and orderId=" . $orderLine->remoteOrderSellerId);
+              $stmtOrderLine->execute();
+          }
+      }
 
 
         switch ($code) {
