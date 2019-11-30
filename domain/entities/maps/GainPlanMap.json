@@ -1,0 +1,24 @@
+{
+    "entity": {
+        "name": "GainPlan",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "gainPlanPassiveMovement",
+                "entity": "GainPlanPassiveMovement",
+                "parentKeys": ["id"],
+                "childKeys": ["gainPlanId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "invoice",
+                "entity": "Invoice",
+                "parentKeys": ["invoiceId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+
+            }
+        ]
+    }
+}
