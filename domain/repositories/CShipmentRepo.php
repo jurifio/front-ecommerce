@@ -334,17 +334,18 @@ class CShipmentRepo extends ARepo
 
     /**
      * @param CShipment $shipment
+     * @param $orderId
      * @return CShipment
      * @throws BambooException
      */
-    public function sendShipmentToCarrier(CShipment $shipment)
+    public function sendShipmentToCarrier(CShipment $shipment, $orderId=null)
     {
         $class = $shipment->carrier->implementation;
         if (!class_exists($class)) throw new BambooException("Could not send handle $shipment->carrier->name shipment");
 
         /** @var ACarrierHandler $handler */
         $handler = new $class([]);
-        return $handler->addDelivery($shipment);
+        return $handler->addDelivery($shipment, $orderId);
     }
 
     /**
