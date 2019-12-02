@@ -76,6 +76,7 @@ class CShipmentRepo extends ARepo
      * @param $carrierId
      * @param $bookingNumber
      * @param $time
+     * @param $orderLines
      * @param COrder $order
      * @return CShipment
      * @throws BambooException
