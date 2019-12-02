@@ -119,7 +119,7 @@ class CShipmentRepo extends ARepo
             $shipment->id = $shipment->insert();
             $shipment = $this->findOne(['id' => $shipment->id]);
 
-            $this->addPickUp($shipment);
+            $this->addPickUp($shipment,$orderId);
 
         } else {
             $shipment = $shipment->getFirst();
@@ -249,12 +249,13 @@ class CShipmentRepo extends ARepo
 
     /**
      * @param CShipment $shipment
+     * @param $orderId
      * @return bool
      */
-    public function addPickUp(CShipment $shipment)
+    public function addPickUp(CShipment $shipment,$orderId=null)
     {
         if ($shipment->carrier->getHandler() && $shipment->carrier->getHandler() instanceof IImplementedPickUpHandler) {
-            return $shipment->carrier->getHandler()->addPickUp($shipment);
+            return $shipment->carrier->getHandler()->addPickUp($shipment, $orderId);
         }
         return true;
     }
