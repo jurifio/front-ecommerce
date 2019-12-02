@@ -203,7 +203,7 @@ class CShipmentRepo extends ARepo
         /** @var CAddressBookRepo $addressBookRepo */
         $addressBookRepo = \Monkey::app()->repoFactory->create('AddressBook');
         $toAddressBook = $addressBookRepo->getMainHubAddressBook();
-
+        $orderId=$orderLines->orderId;
         $shipment = \Monkey::app()->repoFactory->create('Shipment')->findBySql("SELECT id,date(predictedShipmentDate)
                                                                             FROM Shipment
                                                                             WHERE date(predictedShipmentDate) = DATE(?) AND
@@ -229,7 +229,7 @@ class CShipmentRepo extends ARepo
             $shipment->id = $shipment->insert();
             $shipment = $this->findOne(['id' => $shipment->id]);
 
-            $this->addPickUp($shipment);
+            $this->addPickUp($shipment,$orderId);
 
         } else {
             $shipment = $shipment->getFirst();
