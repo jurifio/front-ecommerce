@@ -76,7 +76,6 @@ class CShipmentRepo extends ARepo
      * @param $carrierId
      * @param $bookingNumber
      * @param $time
-     * @param $orderLines
      * @param COrder $order
      * @return CShipment
      * @throws BambooException
@@ -84,7 +83,7 @@ class CShipmentRepo extends ARepo
     public function newOrderShipmentFromSupplierToClient($carrierId, $fromId, $bookingNumber, $time, $orderLines)
     {
         foreach ($orderLines as $ol){
-           $orderId=$ol->orderId;
+            $orderId=$ol->orderId;
         }
         $orderRepo=\Monkey::app()->repoFactory->create('Order')->findOneBy(['id'=>$orderId]);
         if($orderRepo!=null){
@@ -92,8 +91,8 @@ class CShipmentRepo extends ARepo
         }
         /** @var CShipment $shipment */
         /** @var CAddressBookRepo $addressBookRepo */
-            $addressBookRepo = \Monkey::app()->repoFactory->create('AddressBook');
-            $toAddressBook = $addressBookRepo->findOrInsertUserAddress(CUserAddress::defrost($shipmentAddress));
+        $addressBookRepo = \Monkey::app()->repoFactory->create('AddressBook');
+        $toAddressBook = $addressBookRepo->findOrInsertUserAddress(CUserAddress::defrost($shipmentAddress));
 
         $shipment = \Monkey::app()->repoFactory->create('Shipment')->findBySql("SELECT id,date(predictedShipmentDate)
                                                                             FROM Shipment
@@ -120,7 +119,7 @@ class CShipmentRepo extends ARepo
             $shipment->id = $shipment->insert();
             $shipment = $this->findOne(['id' => $shipment->id]);
 
-            $this->addPickUp($shipment,$orderId);
+            $this->addPickUp($shipment);
 
         } else {
             $shipment = $shipment->getFirst();
@@ -203,7 +202,7 @@ class CShipmentRepo extends ARepo
         /** @var CAddressBookRepo $addressBookRepo */
         $addressBookRepo = \Monkey::app()->repoFactory->create('AddressBook');
         $toAddressBook = $addressBookRepo->getMainHubAddressBook();
-        $orderId=$orderLines->orderId;
+
         $shipment = \Monkey::app()->repoFactory->create('Shipment')->findBySql("SELECT id,date(predictedShipmentDate)
                                                                             FROM Shipment
                                                                             WHERE date(predictedShipmentDate) = DATE(?) AND
@@ -229,7 +228,7 @@ class CShipmentRepo extends ARepo
             $shipment->id = $shipment->insert();
             $shipment = $this->findOne(['id' => $shipment->id]);
 
-            $this->addPickUp($shipment,$orderId);
+            $this->addPickUp($shipment);
 
         } else {
             $shipment = $shipment->getFirst();
@@ -250,13 +249,12 @@ class CShipmentRepo extends ARepo
 
     /**
      * @param CShipment $shipment
-     * @param $orderId
      * @return bool
      */
-    public function addPickUp(CShipment $shipment,$orderId=null)
+    public function addPickUp(CShipment $shipment)
     {
         if ($shipment->carrier->getHandler() && $shipment->carrier->getHandler() instanceof IImplementedPickUpHandler) {
-            return $shipment->carrier->getHandler()->addPickUp($shipment, $orderId);
+            return $shipment->carrier->getHandler()->addPickUp($shipment);
         }
         return true;
     }
@@ -334,18 +332,17 @@ class CShipmentRepo extends ARepo
 
     /**
      * @param CShipment $shipment
-     * @param $orderId
      * @return CShipment
      * @throws BambooException
      */
-    public function sendShipmentToCarrier(CShipment $shipment, $orderId=null)
+    public function sendShipmentToCarrier(CShipment $shipment)
     {
         $class = $shipment->carrier->implementation;
         if (!class_exists($class)) throw new BambooException("Could not send handle $shipment->carrier->name shipment");
 
         /** @var ACarrierHandler $handler */
         $handler = new $class([]);
-        return $handler->addDelivery($shipment, $orderId);
+        return $handler->addDelivery($shipment);
     }
 
     /**
