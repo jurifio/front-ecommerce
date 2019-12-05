@@ -10,6 +10,13 @@
                 "parentKeys": ["orderId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["invoiceShopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
             }
         ]
     }
