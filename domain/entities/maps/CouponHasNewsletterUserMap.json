@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "CouponHasNewsletterUser",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "newsletterUser",
+                "entity": "NewsletterUser",
+                "parentKeys": ["newsletterUserId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "coupon",
+                "entity": "Coupon",
+                "parentKeys": ["couponId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}
