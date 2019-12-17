@@ -20,6 +20,7 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  * @since 1.0
  */
 
+
 class CShopHasCounter extends AEntity
 {
 
