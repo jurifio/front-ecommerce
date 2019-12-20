@@ -137,9 +137,6 @@ class CShipmentRepo extends ARepo
         $shipment->update();
         if ($shipment->carrier->implementation != null) {
             $shipment->sendToCarrier();
-        } else {
-            if (!$trackingNumber) throw new BambooException('Per una spedizione Manuale è necessario fornire il Tracking Number');
-            $shipment->trackingNumber = trim($trackingNumber);
         }
         return $shipment;
     }
