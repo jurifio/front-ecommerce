@@ -142,7 +142,7 @@ class COrderExport
 
         /** @var CEmailRepo $emailRepo */
         $emailRepo = \Monkey::app()->repoFactory->create('Email');
-        $emailRepo->newPackagedMail('friendconfirmationmail', 'no-reply@iwes.pro', $to, [], [], ['lines' => $lines]);
+        $emailRepo->newPackagedTemplateMail('friendconfirmationmail', 'no-reply@iwes.pro', $to, [], [], ['lines' => $lines]);
 	}
 
 	/**
@@ -192,7 +192,7 @@ class COrderExport
 
 		/** @var CEmailRepo $emailRepo */
         $emailRepo = \Monkey::app()->repoFactory->create('Email');
-        $emailRepo->newPackagedMail('friendordernotificationmail', 'no-reply@iwes.pro', $to, [], [], ['lines' => $lines, 'total' => $total]);
+        $emailRepo->newPackagedTemplateMail('friendordernotificationmail', 'no-reply@iwes.pro', $to, [], [], ['lines' => $lines, 'total' => $total]);
 	}
 
 

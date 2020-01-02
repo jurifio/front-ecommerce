@@ -32,9 +32,9 @@ class CMailCoupon extends AEventListener
         /** @var CEmailRepo $emailRepo */
         $emailRepo = \Monkey::app()->repoFactory->create('Email');
         if ($user->isEmailChanged()) {
-            $emailRepo->newPackagedMail('onActivate','no-reply@pickyshop.com', $to);
+            $emailRepo->newPackagedTemplateMail('onActivate','no-reply@pickyshop.com', $to);
         } else {
-            $emailRepo->newPackagedMail('onActivateCoupon','no-reply@pickyshop.com', $to);
+            $emailRepo->newPackagedTemplateMail('onActivateCoupon','no-reply@pickyshop.com', $to);
         }
     }
 }
