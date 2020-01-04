@@ -35,8 +35,8 @@ class CMailOrderBack extends AEventListener
 
         /** @var CEmailRepo $emailRepo */
         $emailRepo = \Monkey::app()->repoFactory->create('Email');
-        $emailRepo->newPackagedTemplateMail('neworderback','no-reply@pickyshop.com', $to,[],[],['order'=>$order,'orderId'=>$event->getEventData('orderId')]);
-        $emailRepo->newPackagedTemplateMail('neworderback','no-reply@pickyshop.com', $toIwes,[],[],['order'=>$order,'orderId'=>$event->getEventData('orderId')]);
-        $emailRepo->newPackagedTemplateMail('neworderback','no-reply@pickyshop.com', $toIt,[],[],['order'=>$order,'orderId'=>$event->getEventData('orderId')]);
+        $emailRepo->newPackagedMail('neworderback','no-reply@pickyshop.com', $to,[],[],['order'=>$order,'orderId'=>$event->getEventData('orderId')]);
+        $emailRepo->newPackagedMail('neworderback','no-reply@pickyshop.com', $toIwes,[],[],['order'=>$order,'orderId'=>$event->getEventData('orderId')]);
+        $emailRepo->newPackagedMail('neworderback','no-reply@pickyshop.com', $toIt,[],[],['order'=>$order,'orderId'=>$event->getEventData('orderId')]);
     }
 }
