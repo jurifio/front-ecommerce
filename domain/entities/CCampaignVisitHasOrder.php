@@ -20,5 +20,5 @@ use bamboo\core\db\pandaorm\entities\AEntity;
 class CCampaignVisitHasOrder extends AEntity
 {
     protected $entityTable = 'CampaignVisitHasOrder';
-    protected $primaryKeys = ['campaignVisitId','campaignId','orderId'];
+    protected $primaryKeys = ['campaignVisitId','campaignId','orderId','remoteShopId'];
 }
