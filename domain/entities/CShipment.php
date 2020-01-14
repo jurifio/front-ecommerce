@@ -37,11 +37,13 @@ class CShipment extends AEntity
 
     /**
      * @return CShipment
+     * $orderId
+     * @throws \bamboo\core\exceptions\BambooException
      */
-    public function sendToCarrier() {
+    public function sendToCarrier($orderId) {
         /** @var CShipmentRepo $repo */
         $repo = \Monkey::app()->repoFactory->create('Shipment');
-        return $repo->sendShipmentToCarrier($this);
+        return $repo->sendShipmentToCarrier($this,$orderId);
     }
 
     /**

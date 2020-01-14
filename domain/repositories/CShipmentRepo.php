@@ -119,7 +119,7 @@ class CShipmentRepo extends ARepo
             $shipment->id = $shipment->insert();
             $shipment = $this->findOne(['id' => $shipment->id]);
 
-            $this->addPickUp($shipment);
+            $this->addPickUp($shipment,$orderId);
 
         } else {
             $shipment = $shipment->getFirst();
@@ -136,7 +136,7 @@ class CShipmentRepo extends ARepo
         }
         $shipment->update();
         if ($shipment->carrier->implementation != null) {
-            $shipment->sendToCarrier();
+            $shipment->sendToCarrier($orderLine->orderId);
         }
         return $shipment;
     }
@@ -211,6 +211,7 @@ class CShipmentRepo extends ARepo
             $carrierId,
             $fromId,
             $toAddressBook->id]);
+        $orderId=$orderLines->orderId;
 
         if ($shipment->isEmpty()) {
             $shipment = \Monkey::app()->repoFactory->create('Shipment')->getEmptyEntity();
@@ -225,7 +226,7 @@ class CShipmentRepo extends ARepo
             $shipment->id = $shipment->insert();
             $shipment = $this->findOne(['id' => $shipment->id]);
 
-            $this->addPickUp($shipment);
+            $this->addPickUp($shipment,$orderId);
 
         } else {
             $shipment = $shipment->getFirst();
@@ -246,12 +247,15 @@ class CShipmentRepo extends ARepo
 
     /**
      * @param CShipment $shipment
+     * $orderId int
+     * @param $orderId
      * @return bool
+     * @throws BambooException
      */
-    public function addPickUp(CShipment $shipment)
+    public function addPickUp(CShipment $shipment, $orderId )
     {
         if ($shipment->carrier->getHandler() && $shipment->carrier->getHandler() instanceof IImplementedPickUpHandler) {
-            return $shipment->carrier->getHandler()->addPickUp($shipment);
+            return $shipment->carrier->getHandler()->addPickUp($shipment,$orderId);
         }
         return true;
     }
@@ -329,17 +333,19 @@ class CShipmentRepo extends ARepo
 
     /**
      * @param CShipment $shipment
+     * $orderId int
+     * @param $orderId
      * @return CShipment
      * @throws BambooException
      */
-    public function sendShipmentToCarrier(CShipment $shipment)
+    public function sendShipmentToCarrier(CShipment $shipment,$orderId)
     {
         $class = $shipment->carrier->implementation;
         if (!class_exists($class)) throw new BambooException("Could not send handle $shipment->carrier->name shipment");
 
         /** @var ACarrierHandler $handler */
         $handler = new $class([]);
-        return $handler->addDelivery($shipment);
+        return $handler->addDelivery($shipment,$orderId);
     }
 
     /**
