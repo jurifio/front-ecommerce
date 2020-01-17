@@ -50,7 +50,8 @@ class CMarketplaceAccountHasProductRepo extends ARepo
 
                 $marketplaceAccountHasProduct -> priceModifier = $config['priceModifier'];
                 if ($marketplaceAccount -> marketplace -> type == 'cpc') {
-                    $marketplaceAccountHasProduct -> fee = $config['cpc'];
+                    $marketplaceAccountHasProduct -> fee = $config['defaultCpc'];
+                    $marketplaceAccountHasProduct->feeMobile=$config['defaultCpcM'];
                 }
 
                 if ($marketplaceAccountHasProduct -> isDeleted) {
@@ -83,19 +84,34 @@ class CMarketplaceAccountHasProductRepo extends ARepo
             $priceRange2=explode('-',$config['priceModifierRange2']);
             $priceRange3=explode('-',$config['priceModifierRange3']);
             $priceRange4=explode('-',$config['priceModifierRange4']);
+            $priceRange5=explode('-',$config['priceModifierRange5']);
 
             switch(true){
                 case $activePrice>=$priceRange1[0] && $activePrice<=$priceRange1[1]:
-                    $priceModifier=$config['range1Cpc'];
+                    $fee=$config['range1Cpc'];
+                    $feeMobile=$config['range1CpcM'];
+                    $priceModifier=$config['valueexcept1'];
+
                     break;
                 case $activePrice>=$priceRange2[0] && $activePrice<=$priceRange2[1]:
-                    $priceModifier=$config['range2Cpc'];
+                    $fee=$config['range2Cpc'];
+                    $feeMobile=$config['range2CpcM'];
+                    $priceModifier=$config['valueexcept2'];
                     break;
                 case $activePrice>=$priceRange3[0] && $activePrice<=$priceRange3[1]:
-                    $priceModifier=$config['range3Cpc'];
+                    $fee=$config['range3Cpc'];
+                    $feeMobile=$config['range3CpcM'];
+                    $priceModifier=$config['valueexcept3'];
                     break;
                 case $activePrice>=$priceRange4[0] && $activePrice<=$priceRange4[1]:
-                    $priceModifier=$config['range4Cpc'];
+                    $fee=$config['range4Cpc'];
+                    $feeMobile=$config['range4CpcM'];
+                    $priceModifier=$config['valueexcept4'];
+                    break;
+                case $activePrice>=$priceRange5[0] && $activePrice<=$priceRange5[1]:
+                    $fee=$config['range5Cpc'];
+                    $feeMobile=$config['range5CpcM'];
+                    $priceModifier=$config['valueexcept5'];
                     break;
             }
             $marketplaceAccountHasProduct = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> getEmptyEntity();
@@ -109,7 +125,127 @@ class CMarketplaceAccountHasProductRepo extends ARepo
 
                 $marketplaceAccountHasProduct -> priceModifier = $priceModifier;
                 if ($marketplaceAccount -> marketplace -> type == 'cpc') {
+                    $marketplaceAccountHasProduct -> fee = $fee;
+                    $marketplaceAccountHasProduct->feeMobile=$feeMobile;
+                }
+
+                if ($marketplaceAccountHasProduct -> isDeleted) {
+                    $marketplaceAccountHasProduct -> isDeleted = 0;
+                    $marketplaceAccountHasProduct -> isToWork = 1;
+                    $marketplaceAccountHasProduct -> update();
+                    //reinsert
+                    $this -> app -> eventManager -> triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
+
+                } else {
+                    $this -> app -> eventManager -> triggerEvent('product.marketplace.change', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
+                }
+            } else {
+                //insert
+                $marketplaceAccountHasProduct -> insert();
+                $this -> app -> eventManager -> triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
+            }
+
+        }
+    }
+    public function addProductToMarketplaceAccountJob(CProduct $product, CMarketplaceAccount $marketplaceAccount, $activeAutomatic = null)
+    {
+        $config = $marketplaceAccount -> config;
+
+
+
+
+
+        if ($activeAutomatic == '0') {
+
+            $marketplaceAccountHasProduct = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> getEmptyEntity();
+            $marketplaceAccountHasProduct -> productId = $product -> id;
+            $marketplaceAccountHasProduct -> productVariantId = $product -> productVariantId;
+            $marketplaceAccountHasProduct -> marketplaceAccountId = $marketplaceAccount -> id;
+            $marketplaceAccountHasProduct -> marketplaceId = $marketplaceAccount -> marketplaceId;
+
+            if ($marketplaceAccountHasProduct2 = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> findOneBy($marketplaceAccountHasProduct -> getIds())) {
+                $marketplaceAccountHasProduct = $marketplaceAccountHasProduct2;
+
+
+                if ($marketplaceAccount -> marketplace -> type == 'cpc') {
                     $marketplaceAccountHasProduct -> fee = $config['defaultCpc'];
+                    $marketplaceAccountHasProduct->feeMobile=$config['defaultCpcM'];
+                }
+
+                if ($marketplaceAccountHasProduct -> isDeleted) {
+                    $marketplaceAccountHasProduct -> isDeleted = 0;
+                    $marketplaceAccountHasProduct -> isToWork = 1;
+                    $marketplaceAccountHasProduct -> update();
+                    //reinsert
+                    $this -> app -> eventManager -> triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
+
+                } else {
+                    $this -> app -> eventManager -> triggerEvent('product.marketplace.change', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
+                }
+            } else {
+                //insert
+                $marketplaceAccountHasProduct -> insert();
+                $this -> app -> eventManager -> triggerEvent('marketplace.product.add', ['marketplaceAccountHasProductId' => $marketplaceAccountHasProduct -> printId()]);
+            }
+        } else {
+            $isOnSale = $product -> isOnSale;
+            $productSku = \Monkey ::app() -> repoFactory -> create('ProductSku') -> findOneBy(['productId' => $product -> id, 'productVariantId' => $product -> productVariantId]);
+            $price = $productSku -> price;
+            $salePrice = $productSku -> salePrice;
+            if ($isOnSale == 1) {
+                $activePrice = $salePrice;
+            } else {
+                $activePrice = $price;
+            }
+
+            $priceRange1=explode('-',$config['priceModifierRange1']);
+            $priceRange2=explode('-',$config['priceModifierRange2']);
+            $priceRange3=explode('-',$config['priceModifierRange3']);
+            $priceRange4=explode('-',$config['priceModifierRange4']);
+            $priceRange5=explode('-',$config['priceModifierRange5']);
+
+
+            switch(true){
+                case $activePrice>=$priceRange1[0] && $activePrice<=$priceRange1[1]:
+                    $fee=$config['range1Cpc'];
+                    $feeMobile=$config['range1CpcM'];
+                    $priceModifier=$config['valueexcept1'];
+
+                    break;
+                case $activePrice>=$priceRange2[0] && $activePrice<=$priceRange2[1]:
+                    $fee=$config['range2Cpc'];
+                    $feeMobile=$config['range2CpcM'];
+                    $priceModifier=$config['valueexcept2'];
+                    break;
+                case $activePrice>=$priceRange3[0] && $activePrice<=$priceRange3[1]:
+                    $fee=$config['range3Cpc'];
+                    $feeMobile=$config['range3CpcM'];
+                    $priceModifier=$config['valueexcept3'];
+                    break;
+                case $activePrice>=$priceRange4[0] && $activePrice<=$priceRange4[1]:
+                    $fee=$config['range4Cpc'];
+                    $feeMobile=$config['range4CpcM'];
+                    $priceModifier=$config['valueexcept4'];
+                    break;
+                case $activePrice>=$priceRange5[0] && $activePrice<=$priceRange5[1]:
+                    $fee=$config['range5Cpc'];
+                    $feeMobile=$config['range5CpcM'];
+                    $priceModifier=$config['valueexcept5'];
+                    break;
+            }
+            $marketplaceAccountHasProduct = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> getEmptyEntity();
+            $marketplaceAccountHasProduct -> productId = $product -> id;
+            $marketplaceAccountHasProduct -> productVariantId = $product -> productVariantId;
+            $marketplaceAccountHasProduct -> marketplaceAccountId = $marketplaceAccount -> id;
+            $marketplaceAccountHasProduct -> marketplaceId = $marketplaceAccount -> marketplaceId;
+
+            if ($marketplaceAccountHasProduct2 = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> findOneBy($marketplaceAccountHasProduct -> getIds())) {
+                $marketplaceAccountHasProduct = $marketplaceAccountHasProduct2;
+
+
+                if ($marketplaceAccount -> marketplace -> type == 'cpc') {
+                    $marketplaceAccountHasProduct -> fee = $fee;
+                    $marketplaceAccountHasProduct -> feeMobile = $feeMobile;
                 }
 
                 if ($marketplaceAccountHasProduct -> isDeleted) {
