@@ -79,7 +79,13 @@ class CUpdateCampaignStatistics extends ACronJob
                 $campaignVisit->id = $campaignVisit->insert();
 
                 if ($row->routeName == 'Pagina Prodotto') {
-                    $campaignVisitHasProduct = $campaignVisitHasProductRepo->getEmptyEntity();
+                    if(preg_match("/\bMobile\b/i", $row->userAgent)){
+                        $typeVisit='Mobile';
+                    }else{
+                        $typeVisit='Desktop';
+                    }
+
+                        $campaignVisitHasProduct = $campaignVisitHasProductRepo->getEmptyEntity();
                     $campaignVisitHasProduct->campaignId = $campaign->id;
                     $campaignVisitHasProduct->campaignVisitId = $campaignVisit->id;
                     $campaignVisitHasProduct->productId = $row->actionArgs['item'];
@@ -88,7 +94,7 @@ class CUpdateCampaignStatistics extends ACronJob
                     $k++;
                 }
 
-                $campaignVisitRepo->setCampaignVisitCost($campaignVisit->printId());
+                $campaignVisitRepo->setCampaignVisitCost($campaignVisit->printId(),$typeVisit);
 
                 $i++;
                 if ($i % 100 == 0) {
