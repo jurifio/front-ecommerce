@@ -19,6 +19,6 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  */
 class CAggregatorPublishLog extends AEntity
 {
-    protected $entityTable = 'CAggregatorPublishLog';
+    protected $entityTable = 'AggregatorPublishLog';
     protected $primaryKeys = ['id'];
 }
