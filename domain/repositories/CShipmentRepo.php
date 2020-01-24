@@ -119,7 +119,7 @@ class CShipmentRepo extends ARepo
             $shipment->id = $shipment->insert();
             $shipment = $this->findOne(['id' => $shipment->id]);
 
-            $this->addPickUp($shipment,$orderId);
+                $this->addPickUp($shipment,$orderId);
 
         } else {
             $shipment = $shipment->getFirst();
