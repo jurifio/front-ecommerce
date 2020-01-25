@@ -77,8 +77,9 @@ class CShipmentRepo extends ARepo
      * @param $bookingNumber
      * @param $time
      * @param COrder $order
-     * @return CShipment
+     * @param $orderLines
      * @throws BambooException
+
      */
     public function newOrderShipmentFromSupplierToClient($carrierId, $fromId, $bookingNumber, $time, $orderLines)
     {
@@ -117,8 +118,9 @@ class CShipmentRepo extends ARepo
             $shipment->fromAddressBookId = $fromId;
             $shipment->toAddressBookId = $toAddressBook->id;
             $shipment->id = $shipment->insert();
+            sleep(2);
             $shipment = $this->findOne(['id' => $shipment->id]);
-
+            sleep(2);
                 $this->addPickUp($shipment,$orderId);
 
         } else {
