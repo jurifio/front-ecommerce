@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "BillRegistryContractRow",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryContract",
+                "entity": "BillRegistryContract",
+                "parentKeys": ["billRegistryContractId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryProduct",
+                "entity": "BillRegistryProduct",
+                "parentKeys": ["billRegistryProductId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

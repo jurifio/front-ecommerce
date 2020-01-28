@@ -1,0 +1,24 @@
+{
+    "entity": {
+        "name": "BillRegistryTypeTaxes",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryClientBillingInfo",
+                "entity": "BillRegistryClientBillingInfo",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryTypeTaxesId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryProduct",
+                "entity": "BillRegistryProduct",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryTypeTaxesId"],
+                "type": "OneToOne"
+            }
+
+        ]
+    }
+}

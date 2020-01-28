@@ -1,0 +1,32 @@
+{
+    "entity": {
+        "name": "BillRegistryProduct",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryCategoryProduct",
+                "entity": "BillRegistryCategoryProduct",
+                "parentKeys": ["billRegistryCategoryProductId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRow",
+                "entity": "BillRegistryContractRow",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryProductId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryClientAccountHasProduct",
+                "entity": "BillRegistryClientAccountHasProduct",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryProductId"],
+                "type": "OneToOne"
+            }
+
+
+        ]
+    }
+}

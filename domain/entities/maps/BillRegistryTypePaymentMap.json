@@ -1,0 +1,52 @@
+{
+    "entity": {
+        "name": "BillRegistryTypePayment",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryContractRowMailMonk",
+                "entity": "BillRegistryContractRowMailMonk",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryTypePaymentId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowMonkAir",
+                "entity": "BillRegistryContractRowMonkAir",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryTypePaymentId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowMonkEntrySocial",
+                "entity": "BillRegistryContractRowMonkEntrySocial",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryTypePaymentId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowMonkEntryTraffic",
+                "entity": "BillRegistryContractRowMonkEntryTraffic",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryTypePaymentId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowMonkSource",
+                "entity": "BillRegistryContractRowMonkSource",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryTypePaymentId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowSocialMonk",
+                "entity": "BillRegistryContractRowSocialMonk",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryTypePaymentId"],
+                "type": "OneToOne"
+            }
+
+        ]
+    }
+}

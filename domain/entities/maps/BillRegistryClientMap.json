@@ -1,0 +1,44 @@
+{
+    "entity": {
+        "name": "BillRegistryClient",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryClientAccount",
+                "entity": "BillRegistryClientAccount",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryClientId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "billRegistryClientBillingInfo",
+                "entity": "BillRegistryClientBillingInfo",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryClientId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "billRegistryClientLocation",
+                "entity": "BillRegistryClientLocation",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryClientId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "billRegistryContract",
+                "entity": "BillRegistryContract",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryClientId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "billRegistryContact",
+                "entity": "BillRegistryContact",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryClientId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

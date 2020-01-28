@@ -1,0 +1,24 @@
+{
+    "entity": {
+        "name": "BillRegistryContractRowMonkSource",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryContractRow",
+                "entity": "BillRegistryContractRow",
+                "parentKeys": ["billRegistryContractRowId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryTypePayment",
+                "entity": "billRegistryTypePayment",
+                "parentKeys": ["billRegistryTypePaymentId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+
+        ]
+    }
+}

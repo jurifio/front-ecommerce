@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "BillRegistryClientLocation",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryClient",
+                "entity": "BillRegistryClient",
+                "parentKeys": ["billRegistryClientId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "country",
+                "entity": "Country",
+                "parentKeys": ["countryId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}
