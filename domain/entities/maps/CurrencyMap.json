@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "Currency",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryClientBillingInfo",
+                "entity": "BillRegistryClientBillingInfo",
+                "parentKeys": ["id"],
+                "childKeys": ["currencyId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

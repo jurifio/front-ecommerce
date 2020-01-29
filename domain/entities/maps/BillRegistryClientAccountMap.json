@@ -24,6 +24,13 @@
                 "parentKeys": ["id"],
                 "childKeys": ["billRegistryClientAccountId"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "typeFriend",
+                "entity": "TypeFriend",
+                "parentKeys": ["typeFriendId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
             }
         ]
     }

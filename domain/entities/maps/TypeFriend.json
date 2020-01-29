@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "TypeFriend",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryClientAccount",
+                "entity": "BillRegistryClientAccount",
+                "parentKeys": ["id"],
+                "childKeys": ["typeFriendId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}
