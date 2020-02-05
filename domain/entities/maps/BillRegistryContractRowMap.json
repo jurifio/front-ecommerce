@@ -17,7 +17,57 @@
                 "parentKeys": ["billRegistryProductId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryRowMailMonk",
+                "entity": "BillRegistryRowMailMonk",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryContractRowId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowFriends",
+                "entity": "BillRegistryContractRowfriends",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryContractRowId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowMonkAir",
+                "entity": "BillRegistryContractRowMonkAir",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryContractRowId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowMonkEntrySocial",
+                "entity": "BillRegistryContractRowMonkEntrySocial",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryContractRowId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowMonkEntryTraffic",
+                "entity": "BillRegistryContractRowMonkEntryTraffic",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryContractRowId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowMonkSource",
+                "entity": "BillRegistryContractRowMonkSource",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryContractRowId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowSocialMonk",
+                "entity": "BillRegistryContractRowSocialMonk",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryContractRowId"],
+                "type": "OneToOne"
             }
+
         ]
     }
 }
