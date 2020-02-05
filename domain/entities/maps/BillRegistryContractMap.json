@@ -23,7 +23,7 @@
                 "entity": "BillRegistryContractRow",
                 "parentKeys": ["id"],
                 "childKeys": ["billRegistryContractId"],
-                "type": "OneToMany"
+                "type": "OneToOne"
             }
 
         ]
