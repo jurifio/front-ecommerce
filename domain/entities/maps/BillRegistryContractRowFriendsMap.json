@@ -10,6 +10,13 @@
                 "parentKeys": ["billRegistryContractRowId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowFriendsSalePeriod",
+                "entity": "BillRegistryContractRowFriendsSalePeriod",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryContractRowFriendsId"],
+                "type": "OneToMany"
             }
         ]
     }

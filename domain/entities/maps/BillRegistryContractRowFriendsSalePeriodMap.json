@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "BillRegistryContractRowFriendsSalePeriod",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryContractRowFriends",
+                "entity": "billRegistryContractRowFriends",
+                "parentKeys": ["billRegistryContractRowFriendsId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shop",
+                "entity": "ShopId",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}
