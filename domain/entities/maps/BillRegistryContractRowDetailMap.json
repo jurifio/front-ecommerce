@@ -1,0 +1,38 @@
+{
+    "entity": {
+        "name": "BillRegistryContractRowDetail",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryRow",
+                "entity": "BillRegistryContractRow",
+                "parentKeys": ["billRegistryContractRowId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryProduct",
+                "entity": "BillRegistryProduct",
+                "parentKeys": ["billRegistryProductId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryPriceList",
+                "entity": "BillRegistryPriceList",
+                "parentKeys": ["billRegistryPriceListId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryTypeTaxes",
+                "entity": "BillRegistryTypeTaxes",
+                "parentKeys": ["billRegistryTypeTaxesId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+
+        ]
+    }
+}

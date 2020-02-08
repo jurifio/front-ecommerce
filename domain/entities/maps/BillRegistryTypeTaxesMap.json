@@ -12,6 +12,13 @@
                 "type": "OneToOne"
             },
             {
+                "name": "billRegistryGroupProduct",
+                "entity": "BillRegistryGroupProduct",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryTypeTaxesId"],
+                "type": "OneToOne"
+            },
+            {
                 "name": "billRegistryProduct",
                 "entity": "BillRegistryProduct",
                 "parentKeys": ["id"],

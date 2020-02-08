@@ -5,8 +5,8 @@
         "cacheable" : "true",
         "children": [
             {
-                "name": "billRegistryProduct",
-                "entity": "BillRegistryProduct",
+                "name": "billRegistryGroupProduct",
+                "entity": "BillRegistryGroupProduct",
                 "parentKeys": ["id"],
                 "childKeys": ["billRegistryCategoryProductId"],
                 "type": "OneToOne"

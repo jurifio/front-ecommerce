@@ -5,7 +5,7 @@ namespace bamboo\domain\entities;
 use bamboo\core\db\pandaorm\entities\AEntity;
 
 /**
- * Class CBillRegistryProduct
+ * Class CBillRegistryPriceList
  * @package bamboo\domain\entities
  *
  * @author Iwes Team <it@iwes.it>
@@ -14,13 +14,13 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  *
- * @date 27/01/2020
+ * @date 08/02/2020
  * @since 1.0
  */
 
-class CBillRegistryProduct extends AEntity
+class CBillRegistryPriceList extends AEntity
 {
 
-    protected $entityTable = 'BillRegistryProduct';
+    protected $entityTable = 'BillRegistryPriceList';
     protected $primaryKeys = ['id'];
 }

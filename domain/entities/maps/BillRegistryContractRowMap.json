@@ -12,9 +12,9 @@
                 "type": "OneToOne"
             },
             {
-                "name": "billRegistryProduct",
-                "entity": "BillRegistryProduct",
-                "parentKeys": ["billRegistryProductId"],
+                "name": "billRegistryGroupProduct",
+                "entity": "BillRegistryGroupProduct",
+                "parentKeys": ["billRegistryGroupProductId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"
             },
@@ -63,6 +63,13 @@
             {
                 "name": "billRegistryContractRowSocialMonk",
                 "entity": "BillRegistryContractRowSocialMonk",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryContractRowId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowPaymentBill",
+                "entity": "BillRegistryContractRowPaymentBill",
                 "parentKeys": ["id"],
                 "childKeys": ["billRegistryContractRowId"],
                 "type": "OneToOne"

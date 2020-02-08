@@ -5,7 +5,7 @@ namespace bamboo\domain\entities;
 use bamboo\core\db\pandaorm\entities\AEntity;
 
 /**
- * Class CBillRegistryProduct
+ * Class CBillRegistryContract
  * @package bamboo\domain\entities
  *
  * @author Iwes Team <it@iwes.it>
@@ -17,10 +17,9 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  * @date 27/01/2020
  * @since 1.0
  */
-
-class CBillRegistryProduct extends AEntity
+class CBillRegistryContractRowPaymentBill extends AEntity
 {
 
-    protected $entityTable = 'BillRegistryProduct';
+    protected $entityTable = 'BillRegistryContractRowPaymentBill';
     protected $primaryKeys = ['id'];
 }

@@ -1,0 +1,31 @@
+{
+    "entity": {
+        "name": "BillRegistryContractRowPaymentBill",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryContractRow",
+                "entity": "BillRegistryContractRow",
+                "parentKeys": ["BillRegistryContractRowId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistrySocial",
+                "entity": "BillRegistrySocial",
+                "parentKeys": ["socialId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "marketplaceAccount",
+                "entity": "MarketplaceAccount",
+                "parentKeys": ["marketplaceAccountId","marketplaceId"],
+                "childKeys": ["id","marketplaceId"],
+                "type": "OneToOne"
+            }
+
+        ]
+    }
+}

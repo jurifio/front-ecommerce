@@ -5,25 +5,20 @@
         "cacheable" : "true",
         "children": [
             {
-                "name": "billRegistryCategoryProduct",
-                "entity": "BillRegistryCategoryProduct",
-                "parentKeys": ["billRegistryCategoryProductId"],
+                "name": "billRegistryGroupProduct",
+                "entity": "BillRegistryGroupProduct",
+                "parentKeys": ["billRegistryGroupProductId"],
                 "childKeys": ["id"],
-                "type": "OneToOne"
+                "type": "OneToMany"
+
             },
             {
-                "name": "billRegistryContractRow",
-                "entity": "BillRegistryContractRow",
-                "parentKeys": ["id"],
-                "childKeys": ["billRegistryProductId"],
-                "type": "OneToOne"
-            },
-            {
-                "name": "billRegistryClientAccountHasProduct",
-                "entity": "BillRegistryClientAccountHasProduct",
-                "parentKeys": ["id"],
-                "childKeys": ["billRegistryProductId"],
-                "type": "OneToOne"
+                "name": "billRegistryTypeTaxes",
+                "entity": "BillRegistryTypeTaxes",
+                "parentKeys": ["billRegistryTypeTaxesId"],
+                "childKeys": ["id"],
+                "type": "OneToMany"
+
             }
 
 
