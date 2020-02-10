@@ -18,6 +18,13 @@
                 "parentKeys": ["billRegistryTypeTaxesId"],
                 "childKeys": ["id"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "billRegistryProductDetail",
+                "entity": "BillRegistryProductDetail",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryProductId"],
+                "type": "OneToMany"
 
             }
 
