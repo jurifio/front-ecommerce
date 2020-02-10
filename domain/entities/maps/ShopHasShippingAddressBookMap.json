@@ -1,0 +1,27 @@
+{
+    "entity": {
+        "name": "ShopHasShippingAddressBook",
+        "keys": ["shopId","addressBookId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+
+            },
+            {
+                "name": "addressBook",
+                "entity": "AddressBook",
+                "parentKeys": ["addressBookId"],
+                "childKeys": ["id"],
+                "type": "OneToMany"
+
+            }
+
+
+        ]
+    }
+}
