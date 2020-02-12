@@ -10,6 +10,13 @@
                 "parentKeys": ["marketplaceId","marketplaceAccountId"],
                 "childKeys": ["marketplaceId","id"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryContractRowPaymentBill",
+                "entity": "BillRegistryContractRowPaymentBill",
+                "parentKeys": ["id"],
+                "childKeys": ["campaignId"],
+                "type": "OneToMany"
             }
         ]
     }

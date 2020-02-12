@@ -19,10 +19,10 @@
                 "type": "OneToOne"
             },
             {
-                "name": "marketplaceAccount",
-                "entity": "MarketplaceAccount",
-                "parentKeys": ["marketplaceAccountId","marketplaceId"],
-                "childKeys": ["id","marketplaceId"],
+                "name": "campaign",
+                "entity": "Campaign",
+                "parentKeys": ["campaignId"],
+                "childKeys": ["id"],
                 "type": "OneToOne"
             }
 
