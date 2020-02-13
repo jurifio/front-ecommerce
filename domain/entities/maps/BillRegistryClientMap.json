@@ -38,6 +38,13 @@
                 "parentKeys": ["id"],
                 "childKeys": ["billRegistryClientId"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "billRegistryInvoice",
+                "entity": "BillRegistryInvoice",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryClientId"],
+                "type": "OneToMany"
             }
         ]
     }
