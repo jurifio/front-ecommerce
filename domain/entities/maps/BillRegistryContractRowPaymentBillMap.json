@@ -24,6 +24,13 @@
                 "parentKeys": ["campaignId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryTimeTable",
+                "entity": "BillRegistryTimeTable",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryContractRowPaymentBillId"],
+                "type": "OneToOne"
             }
 
         ]
