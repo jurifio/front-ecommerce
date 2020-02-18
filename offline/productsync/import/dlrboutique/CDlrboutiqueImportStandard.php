@@ -246,6 +246,6 @@ class CDlrboutiqueImportStandard extends ABluesealProductImporter
             default: $percentile = 2.6;
         }
 
-        return round($price / ( $percentile + 1 ));
+        return round($price / ( $percentile ));
     }
 }
