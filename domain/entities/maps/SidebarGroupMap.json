@@ -10,7 +10,15 @@
                 "childKeys": ["sidebarGroupId"],
                 "type": "OneToMany",
                 "lang": true
+            },{
+                "name": "sidebarSection",
+                "entity": "SidebarSection",
+                "parentKeys": ["sidebarSectionId"],
+                "childKeys": ["id"],
+                "type": "OneToOne",
+                "lang": true
             },
+
             {
                 "name" : "page",
                 "entity" : "Page",
