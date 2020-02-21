@@ -12,12 +12,12 @@
                 "lang": true
             },
             {
-            "name": "sidebarGroup",
-            "entity": "SidebarGroup",
-            "parentKeys": ["id"],
-            "childKeys": ["sidebarSectionId"],
-            "type": "OneToMany",
-            "lang": true
+                "name": "sidebarGroup",
+                "entity": "SidebarGroup",
+                "parentKeys": ["id"],
+                "childKeys": ["sidebarSectionId"],
+                "type": "OneToMany",
+                "lang": true
             }
         ]
     }
