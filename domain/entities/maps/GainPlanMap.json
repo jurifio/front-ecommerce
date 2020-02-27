@@ -10,14 +10,6 @@
                 "parentKeys": ["id"],
                 "childKeys": ["gainPlanId"],
                 "type": "OneToMany"
-            },
-            {
-                "name": "invoice",
-                "entity": "Invoice",
-                "parentKeys": ["invoiceId"],
-                "childKeys": ["id"],
-                "type": "OneToOne"
-
             }
         ]
     }
