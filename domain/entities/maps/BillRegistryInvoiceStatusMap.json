@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "BillRegistryInvoiceStatus",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryInvoice",
+                "entity": "BillRegistryInvoice",
+                "parentKeys": ["id"],
+                "childKeys": ["statusId"],
+                "type": "OneToOne"
+            }
+
+        ]
+    }
+}
