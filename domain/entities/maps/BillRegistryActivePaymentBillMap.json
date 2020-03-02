@@ -1,0 +1,25 @@
+{
+    "entity": {
+        "name": "BillRegistryActivePaymentSlip",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryTimeTable",
+                "entity": "BillRegistryTimeTable",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryActivePaymentSlipId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "billRegistryPaymentStatus",
+                "entity": "BillRegistryPaymentStatus",
+                "parentKeys": ["statusId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+
+
+        ]
+    }
+}

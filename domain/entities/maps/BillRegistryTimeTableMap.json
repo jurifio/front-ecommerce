@@ -17,6 +17,13 @@
                 "parentKeys": ["billRegistryContractRowPaymentBillId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryActivePaymentSlip",
+                "entity": "BillRegistryActivePaymentSlip",
+                "parentKeys": ["billRegistryActivePaymentSlipId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
             }
 
         ]

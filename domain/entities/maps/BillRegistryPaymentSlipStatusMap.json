@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "BillRegistryPaymentSlipStatus",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "billRegistryActivePaymentSlip",
+                "entity": "BillActivePaymentSlip",
+                "parentKeys": ["id"],
+                "childKeys": ["statusId"],
+                "type": "OneToOne"
+            }
+
+        ]
+    }
+}
