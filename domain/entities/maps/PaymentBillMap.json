@@ -23,6 +23,12 @@
                     "parentKeys" : ["paymentBillId"]
                 },
                 "type" : "ManyToMany"
+            },{
+                "name": "billRegistryActivePaymentSlip",
+                "entity": "BillRegistryActivePaymentSlip",
+                "parentKeys": ["id"],
+                "childKeys": ["paymentBillId"],
+                "type": "OneToMany"
             }
         ]
     }

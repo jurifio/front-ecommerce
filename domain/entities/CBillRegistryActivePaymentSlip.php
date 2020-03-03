@@ -24,7 +24,7 @@ use bamboo\utils\time\STimeToolbox;
 class CBillRegistryActivePaymentSlip extends AEntity
 {
 
-    protected $entityTable = 'BillRegistryPaymentSlip';
+    protected $entityTable = 'BillRegistryActivePaymentSlip';
     protected $primaryKeys = ['id'];
     CONST Cd = 'SUPP';
     CONST SvcLvl_Cd = 'SEPA';

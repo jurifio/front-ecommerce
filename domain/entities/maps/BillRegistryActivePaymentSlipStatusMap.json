@@ -1,6 +1,6 @@
 {
     "entity": {
-        "name": "BillRegistryPaymentSlipStatus",
+        "name": "BillRegistryActivePaymentSlipStatus",
         "keys": ["id"],
         "cacheable" : "true",
         "children": [

@@ -12,9 +12,16 @@
                 "type": "OneToMany"
             },
             {
-                "name": "billRegistryPaymentStatus",
-                "entity": "BillRegistryPaymentStatus",
+                "name": "billRegistryActivePaymentSlipStatus",
+                "entity": "BillRegistryActivePaymentSlipStatus",
                 "parentKeys": ["statusId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "paymentBill",
+                "entity": "PaymentBill",
+                "parentKeys": ["paymentBillId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"
             }
