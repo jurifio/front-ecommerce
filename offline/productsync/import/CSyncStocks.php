@@ -77,20 +77,22 @@ class CSyncStocks extends ACronJob
         $this->loadDictionaries();
 
         $min = 0;
+
+        // trovo tutti i prodoti da matchare
         $res = $this->app->dbAdapter->query("SELECT DISTINCT dp.* 
                                               FROM DirtyProduct dp
                                                  JOIN DirtySku ds ON ds.dirtyProductId = dp.id AND ds.shopId = dp.shopId
                                                  JOIN ShopHasProduct shp ON dp.productId = shp.productId AND dp.productVariantId = shp.productVariantId AND dp.shopId = shp.shopId  
                                                  JOIN Product p ON  shp.productId = p.id AND shp.productVariantId = p.productVariantId 
                                                  JOIN Shop s ON shp.shopId = s.id
-                                              WHERE
+                                              WHERE 
                                               s.isActive = 1 AND
                                               ds.productSizeId IS NULL AND
                                               shp.productSizeGroupId IS NOT NULL AND 
                                               p.productStatusId IS NOT NULL AND
                                               p.productStatusId NOT IN (7,8,13) AND 
                                               dp.dirtyStatus NOT IN ('N','C') AND
-                                              dp.productVariantId IS NOT NULL GROUP BY dp.id HAVING sum(ds.qty) > 0 LIMIT 5000", [])->fetchAll();
+                                              dp.productVariantId IS NOT NULL GROUP BY dp.id HAVING sum(ds.qty) > 0 LIMIT 50000", [])->fetchAll();
         if ($res < 1) {
             //error
             //log
@@ -106,6 +108,7 @@ class CSyncStocks extends ACronJob
             if ($z % 100 == 0) {
                 $this->report("Linking Skus", "Product done: " . $z . ' todo =' . (count($res) - $z), []);
             }
+            //per ogni prodotto trovo il gruppo fuck taglie e le relative taglie
             $goodSizes = $this->app->dbAdapter->query("   SELECT shp.productSizeGroupId,ps.*
                                                           FROM ProductSizeGroupHasProductSize psg 
                                                             JOIN ShopHasProduct shp ON psg.productSizeGroupId = shp.productSizeGroupId
@@ -113,12 +116,14 @@ class CSyncStocks extends ACronJob
                                                           WHERE shp.productId = ? AND
                                                                 shp.productVariantId = ? AND
                                                                 shp.shopId = ?",
-                                        [$dirtyProduct['productId'], $dirtyProduct['productVariantId'], $dirtyProduct['shopId']])->fetchAll();
+                                      [$dirtyProduct['productId'], $dirtyProduct['productVariantId'], $dirtyProduct['shopId']])->fetchAll();
+
             $skus = $this->app->dbAdapter->query("SELECT * FROM DirtySku WHERE dirtyProductId = ?", [$dirtyProduct['id']])->fetchAll();
 
             $ids_slugs = [];
             $ids_names = [];
             $groupSize = $goodSizes[0]['productSizeGroupId'];
+            // inserisco in due array le i rispettivi nomi taglia e slug
             foreach ($goodSizes as $size) {
                 $ids_names[$size['id']] = $size['name'];
                 $ids_slugs[$size['id']] = $size['slug'];
@@ -127,6 +132,7 @@ class CSyncStocks extends ACronJob
             $error = null;
             \Monkey::app()->repoFactory->beginTransaction();
             try {
+                // inizio lavorazione match
                 foreach ($skus as $sku) {
                     $sizeMatch = null;
                     $sizeId = null;
@@ -138,7 +144,7 @@ class CSyncStocks extends ACronJob
                         if (!is_int($res)) {
                             $error = $sku;
                             throw new BambooOutOfBoundException('Size not found in Dictionary Tables: ' . $sku['size']);
-                        } elseif (!array_key_exists($res, $ids_names)) {
+                       } elseif (!array_key_exists($res, $ids_names)) {
                             throw new BambooOutOfBoundException('Size out of Size Group: size:' . $sku['size'] . ', id:' . $res . ' Group ' . $groupSize . ':' . implode(',', $ids_names));
                         } else {
                             $up = $this->app->dbAdapter->update("DirtySku", ["productSizeId" => $res, "status" => 'ok'], ["id" => $sku['id']]);
