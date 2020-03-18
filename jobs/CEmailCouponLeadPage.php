@@ -109,7 +109,7 @@ class CEmailCouponLeadPage extends ACronJob
                                             'couponCode' => $fixedPagePopup->couponEvent->name,
                                             'name' => $name,
                                             'remindNumber' => 1
-                                        ]
+                                        ],'MailGun',null
                                     );
                                     break;
                                 case SDateToolbox::removeOrAddDaysFromDate($subscriptionDate, 5, '+'):
@@ -123,7 +123,7 @@ class CEmailCouponLeadPage extends ACronJob
                                             'couponCode' => $fixedPagePopup->couponEvent->name,
                                             'name' => $name,
                                             'remindNumber' => 2
-                                        ]
+                                        ],'MailGun',null
                                     );
                                     break;
                                 case SDateToolbox::removeOrAddDaysFromDate($subscriptionDate, 7, '+'):
@@ -137,7 +137,7 @@ class CEmailCouponLeadPage extends ACronJob
                                             'couponCode' => $fixedPagePopup->couponEvent->name,
                                             'name' => $name,
                                             'remindNumber' => 3
-                                        ]
+                                        ],'MailGun',null
                                     );
                                     break;
                             }

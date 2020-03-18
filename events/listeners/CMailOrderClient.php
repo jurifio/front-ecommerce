@@ -40,7 +40,7 @@ class CMailOrderClient extends AEventListener
                     $findLang=$langRepo->findOneBy(['lang'=>$lang]);
                     $langId=$findLang->id;
                     $translationTag=\Monkey::app()->repoFactory->create('EmailTemplateTag')->findBy(['templateId'=>13]);
-                    $templateTranslation=$emailTemplateTranslationRepo->finOneBy(['templateEmailId'=>$templateEmailId,'langId'=>$langId]);
+                    $templateTranslation=$emailTemplateTranslationRepo->findOneBy(['templateEmailId'=>$templateEmailId,'langId'=>$langId]);
 
                     $arrayVar=[];
                     foreach($translationTag as $tag){
@@ -68,9 +68,9 @@ class CMailOrderClient extends AEventListener
 
             /** @var CEmailRepo $emailRepo */
             $emailRepo = \Monkey::app()->repoFactory->create('Email');
-            $emailRepo->newPackagedTemplateMail('neworderclient','no-reply@pickyshop.com', $to,[],[],['order'=>$order,'orderId'=>$order->id]);
-            $emailRepo->newPackagedTemplateMail('neworderclient','no-reply@pickyshop.com', $toIwes,[],[],['order'=>$order,'orderId'=>$order->id]);
-            $emailRepo->newPackagedTemplateMail('neworderclient','no-reply@pickyshop.com', $toIt,[],[],['order'=>$order,'orderId'=>$order->id]);
+            $emailRepo->newPackagedTemplateMail('neworderclient','no-reply@pickyshop.com', $to,[],[],['order'=>$order,'orderId'=>$order->id],'MailGun',null);
+            $emailRepo->newPackagedTemplateMail('neworderclient','no-reply@pickyshop.com', $toIwes,[],[],['order'=>$order,'orderId'=>$order->id],'MailGun',null);
+            $emailRepo->newPackagedTemplateMail('neworderclient','no-reply@pickyshop.com', $toIt,[],[],['order'=>$order,'orderId'=>$order->id],'MailGun',null);
 
 
         } catch (\Throwable $e) {

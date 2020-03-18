@@ -64,7 +64,7 @@ class CNewsletterboxController extends CGenericWidgetController
 
                 /** @var CEmailRepo $mailRepo */
                 $mailRepo = \Monkey::app()->repoFactory->create('Email');
-                $mailRepo->newPackagedTemplateMail('onNewsletterSendCoupon', 'no-reply@pickyshop.com', [$data], [], [], ['couponCode' => $couponCode]);
+                $mailRepo->newPackagedTemplateMail('onNewsletterSendCoupon', 'no-reply@pickyshop.com', [$data], [], [], ['couponCode' => $couponCode],'MailGun',null);
 
             }
 
