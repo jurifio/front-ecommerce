@@ -38,6 +38,13 @@
                 "parentKeys": ["statusId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "bankRegistry",
+                "entity": "BankRegistry",
+                "parentKeys": ["bankRegistryId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
             }
         ]
     }
