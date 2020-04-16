@@ -5,7 +5,7 @@ namespace bamboo\domain\entities;
 use bamboo\core\db\pandaorm\entities\AEntity;
 
 /**
- * Class CBillRegistryClient
+ * Class CCrmCompanyLikerHasInterest
  * @package bamboo\domain\entities
  *
  * @author Iwes Team <it@iwes.it>
@@ -14,12 +14,12 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  *
- * @date 27/01/2020
+ * @date 15/04/2020
  * @since 1.0
  */
-class CCompanyLiker extends AEntity
+class CCrmCompanyLikerHasInterest extends AEntity
 {
 
-    protected $entityTable = 'CompanyLiker';
+    protected $entityTable = 'CrmCompanyLikerHasInterest';
     protected $primaryKeys = ['id'];
 }

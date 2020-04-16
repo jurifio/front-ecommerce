@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "CrmInterest",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "crmCompanyLikerHasInterest",
+                "entity": "CrmCompanyLikerHasInterest",
+                "parentKeys": ["id"],
+                "childKeys": ["crmInterestId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

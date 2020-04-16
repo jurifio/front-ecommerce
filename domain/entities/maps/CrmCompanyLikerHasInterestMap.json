@@ -1,0 +1,39 @@
+{
+    "entity": {
+        "name": "CrmCompanyLikerHasInterest",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "crmCompanyLiker",
+                "entity": "CrmCompanyLiker",
+                "parentKeys": ["crmCompanyLikerId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "crmInterest",
+                "entity": "CrmInterest",
+                "parentKeys": ["crmInterestId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "crmSource",
+                "entity": "CrmSource",
+                "parentKeys": ["crmSourceId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "crmStatusInterest",
+                "entity": "CrmStatusInterest",
+                "parentKeys": ["crmStatusInterestId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+
+        ]
+    }
+}
