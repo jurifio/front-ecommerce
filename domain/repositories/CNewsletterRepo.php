@@ -168,8 +168,8 @@ class CNewsletterRepo extends ARepo
 
             $body = "Son State inviate per questo ciclo della newsletter numero".$verificafineciclo;
 
-            $emailRepo->newMail('gianluca@iwes.it', ['gianluca@iwes.it'], [], [], $subject, $body);
-            $emailRepo->newMail('lorella@iwes.it', ['lorella@iwes.it'], [], [], $subject, $body);
+            $emailRepo->newMail('gianluca@iwes.it', ['gianluca@iwes.it'], [], [], $subject, $body, null, null, null, 'mailGun', false,null);
+            $emailRepo->newMail('lorella@iwes.it', ['lorella@iwes.it'], [], [], $subject, $body, null, null, null, 'mailGun', false,null);
             return $res;
         } else return 'errore, numero email sbagliato';
 
