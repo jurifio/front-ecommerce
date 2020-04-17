@@ -5,7 +5,7 @@ namespace bamboo\domain\entities;
 use bamboo\core\db\pandaorm\entities\AEntity;
 
 /**
- * Class CCrmInterest
+ * Class CCrmMessage
  * @package bamboo\domain\entities
  *
  * @author Iwes Team <it@iwes.it>
@@ -17,9 +17,9 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  * @date 15/04/2020
  * @since 1.0
  */
-class CCrmInterest extends AEntity
+class CCrmMessage extends AEntity
 {
 
-    protected $entityTable = 'CrmInterest';
+    protected $entityTable = 'CrmMessage';
     protected $primaryKeys = ['id'];
 }

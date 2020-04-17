@@ -1,0 +1,25 @@
+{
+    "entity": {
+        "name": "CrmMessage",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "crmCompanyLikerHasInterest",
+                "entity": "CrmCompanyLikerHasInterest",
+                "parentKeys": ["id"],
+                "childKeys": ["crmCompanyLikeHasInterestId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "crmSource",
+                "entity": "CrmSource",
+                "parentKeys": ["crmSourceId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+
+        ]
+    }
+}

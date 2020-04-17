@@ -13,18 +13,11 @@
                 "type": "OneToOne"
             },
             {
-                "name": "crmInterest",
-                "entity": "CrmInterest",
-                "parentKeys": ["crmInterestId"],
+                "name": "crmMessage",
+                "entity": "CrmMessage",
+                "parentKeys": ["crmCompanyLikeHasInterestId"],
                 "childKeys": ["id"],
-                "type": "OneToOne"
-            },
-            {
-                "name": "crmSource",
-                "entity": "CrmSource",
-                "parentKeys": ["crmSourceId"],
-                "childKeys": ["id"],
-                "type": "OneToOne"
+                "type": "OneToMany"
             },
             {
                 "name": "crmStatusInterest",
