@@ -10,6 +10,7 @@ use bamboo\domain\entities\CMarketplaceAccount;
 use bamboo\domain\entities\CMarketplaceHasShop;
 use bamboo\domain\entities\CMarketplaceHasProductAssociate;
 use bamboo\domain\entities\CProduct;
+use bamboo\domain\repositories\BambooException;
 
 /**
  * Class CMarketplaceAccountHasProductRepo
@@ -87,7 +88,7 @@ $price=0;
             $marketplaceHasProductAssociate->insert();
             $productEanParent=\Monkey::app()->repoFactory->create('ProductEan')->findOneBy(['productId'=>$product->id,'productVariantId'=>$product->productVariantId,'productSizeId'=>0,'usedForParent'=>1,'used'=>1]);
             if ($productEanParent!=null){
-                throw new BambooException('Il prodotto ha già un codice Ean assegnato');
+
 
             }else{
                 /* @var  $productEanAssign CRepo*/
