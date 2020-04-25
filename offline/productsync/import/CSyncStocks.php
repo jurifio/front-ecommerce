@@ -106,10 +106,11 @@ class CSyncStocks extends ACronJob
             $z++;
             $min++;
             if ($z % 100 == 0) {
-                $this->report("Linking Skus", "Product done: " . $z . ' todo =' . (count($res) - $z), []);
+                /*$this->report("Linking Skus", "Product done: " . $z . ' todo =' . (count($res) - $z), []);*/
+                $this->report("Linking Skus", "Product done: " . $z ,'');
             }
             //per ogni prodotto trovo il gruppo fuck taglie e le relative taglie
-            $goodSizes = $this->app->dbAdapter->query("   SELECT shp.productSizeGroupId,ps.*
+            $goodSizes = $this->app->dbAdapter->query("SELECT shp.productSizeGroupId,ps.*
                                                           FROM ProductSizeGroupHasProductSize psg 
                                                             JOIN ShopHasProduct shp ON psg.productSizeGroupId = shp.productSizeGroupId
                                                             JOIN ProductSize ps ON psg.productSizeId = ps.id 
