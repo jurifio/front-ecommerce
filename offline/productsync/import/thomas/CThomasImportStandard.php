@@ -1,6 +1,6 @@
 <?php
 
-namespace bamboo\offline\productsync\import\dlrboutique;
+namespace bamboo\offline\productsync\import\thomas;
 
 use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooLogicException;
@@ -53,7 +53,7 @@ class CThomasImportStandard extends ABluesealProductImporter
         $productCount = 0;
         $skuCount = 0;
         $seenSkus = [];
-        while (($values = fgetcsv($f, 0, ";")) !== false) {
+        while (($values = fgetcsv($f, 100000, ";")) !== false) {
             $assoc = $this->mapValues($values, $fileMapping);
 
             try {

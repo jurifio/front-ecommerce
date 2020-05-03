@@ -2,7 +2,7 @@
     "filesConfig": {
         "type": "CSV",
         "columns": 51,
-        "separator": ",",
+        "separator": ";",
         "delimiter": "\"",
         "location": "local",
         "istructions": {
