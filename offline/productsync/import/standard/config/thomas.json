@@ -10,37 +10,96 @@
             "folder": "",
             "glob": "*.csv"
         },
-        "extension": ".csv"
-    },
-    "mapping": {
-        "extSkuId": 3,
-        "itemno": 18,
-        "brand": 2,
-        "extId": 18,
-        "barcode": 18,
-        "name": 6,
-        "season": 1,
-        "var": 10,
-        "colorDescription": 10,
-        "generalColor": 10,
-        "sizeGroup": 11,
-        "size": 17,
-        "value": 41,
-        "price": 39,
-        "salePrice": 40,
-        "qty": 30,
-        "cat1": 7,
-        "cat2": 8,
-        "cat3": 9,
-        "det1": 12,
-        "det2": 13,
-        "det3": 14,
-        "det4": 15,
-        "det5": 16
+        "mapping": {
+            "extSkuId": 3,
+            "itemno": 18,
+            "brand": 2,
+            "extId": 18,
+            "barcode": 18,
+            "name": 6,
+            "season": 1,
+            "var": 10,
+            "colorDescription": 10,
+            "generalColor": 10,
+            "sizeGroup": 11,
+            "size": 17,
+            "value": 41,
+            "price": 39,
+            "salePrice": 40,
+            "qty": 30,
+            "cat1": 7,
+            "cat2": 8,
+            "cat3": 9,
+            "det1": 12,
+            "det2": 13,
+            "det3": 14,
+            "det4": 15,
+            "det5": 16
+        },
+        "control": {
+            "numeric": [
+                "value",
+                "price",
+                "salePrice",
+                "qty"
+            ],
+            "productNotEmpty": [
+                "extSkuId",
+                "itemno",
+                "brand",
+                "var"
+            ],
+            "emptyToFullProduct": [],
+            "skuNotEmpty": [
+                "extSkuId",
+                "size",
+                "qty",
+                "value",
+                "price"
+            ]
+        },
+        "relationship": [
+            "extSkuId"
+        ],
+        "product": [
+            "itemno",
+            "brand",
+            "extId",
+            "var"
+        ],
+        "productExtend": [
+            "name",
+            "season",
+            "cat1",
+            "cat2",
+            "cat3",
+            "generalColor",
+            "colorDescription",
+            "sizeGroup"
+        ],
+        "details": [
+            "det1",
+            "det2",
+            "det3",
+            "det4",
+            "det5"
+        ],
+
+        "sku": [
+            "extSkuId",
+            "barcode",
+            "size",
+            "value",
+            "price",
+            "salePrice",
+            "qty"
+        ]
     },
     "keys": {
         "product": [
-            "itemno"
+            "brand",
+            "itemno",
+            "var"
         ],
         "sku": [
             "extSkuId"

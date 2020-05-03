@@ -7,19 +7,19 @@ use bamboo\core\exceptions\BambooLogicException;
 use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
- * Class CDellaMartiraImport
- * @package bamboo\import\productsync\dellamartira
+ * Class CThomasImportStandard
+ * @package bamboo\offline\productsync\import\dlrboutique
  *
- * @author Bambooshoot Team <emanuele@bambooshoot.agency>
+ * @author Iwes Team <it@iwes.it>
  *
- * @copyright (c) Bambooshoot snc - All rights reserved
+ * @copyright (c) Iwes  snc - All rights reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  *
- * @date 28/05/2015
+ * @date 03/05/2020
  * @since 1.0
  */
-class CDlrboutiqueImportStandard extends ABluesealProductImporter
+class CThomasImportStandard extends ABluesealProductImporter
 {
 
     public function readFile($file)
@@ -73,14 +73,13 @@ class CDlrboutiqueImportStandard extends ABluesealProductImporter
                 } else {
                     $dirtyProduct['brand'] = $assoc['brand'];
                     $dirtyProduct['itemno'] = $assoc['itemno'];
-                    $dirtyProduct['var'] = '';
+                    $dirtyProduct['var'] = $assoc['var'];
                     $dirtyProduct['extId'] = $assoc['extId'];
+
 
                     $dirtyProduct['keysChecksum'] = json_encode($dirtyProduct);
                     $dirtyProduct['checksum'] = $checksum;
-
                     $dirtyProductExtend['name'] = $assoc['name'];
-                    $dirtyProductExtend['description'] = $assoc['description'];
                     $dirtyProductExtend['audience'] = 'DONNA';
                     $dirtyProductExtend['generalColor'] = $assoc['generalColor'];
                     $dirtyProductExtend['cat1'] = $assoc['cat1'];
@@ -121,7 +120,12 @@ class CDlrboutiqueImportStandard extends ABluesealProductImporter
                     ];*/
 
                     $details = [
-                        'materiale' => $assoc['det1']
+                        'dettaglio1' => $assoc['det1'],
+                        'dettaglio2' => $assoc['det2'],
+                        'dettaglio3' => $assoc['det3'],
+                        'dettaglio4' => $assoc['det4'],
+                        'dettaglio5' => $assoc['det5'],
+
                     ];
 
                     $this->debug('Cycle', 'product checking details', $details);
