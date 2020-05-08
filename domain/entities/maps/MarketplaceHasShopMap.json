@@ -46,6 +46,13 @@
                 "parentKeys": ["marketplaceId"],
                 "childKeys": ["marketplaceId"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "marketplaceHasShopBrandRights",
+                "entity": "MarketplaceHasShopBrandRights",
+                "parentKeys": ["id"],
+                "childKeys": ["marketplaceHasShopId"],
+                "type": "OneToMany"
             }
 
 
