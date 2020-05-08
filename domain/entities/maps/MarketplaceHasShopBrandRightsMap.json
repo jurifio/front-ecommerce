@@ -1,0 +1,24 @@
+{
+    "entity": {
+        "name": "MarketplaceHasShopBrandRights",
+        "keys": ["id"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "marketplaceHasShop",
+                "entity": "MarketplaceHasShop",
+                "parentKeys": ["marketplaceHasShopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productBrand",
+                "entity": "productBrandId",
+                "parentKeys": ["productBrandId"],
+                "childKeys": ["id"],
+                "type": "OneToMany"
+            }
+
+        ]
+    }
+}
