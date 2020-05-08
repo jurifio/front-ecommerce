@@ -81,6 +81,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                     $dirtyProduct['checksum'] = $checksum;
                     $dirtyProductExtend['name'] = $assoc['name'];
                     $dirtyProductExtend['audience'] = 'DONNA';
+                    $dirtyProductExtend['season']=$assoc['season'].' '.$assoc['year'];
                     $dirtyProductExtend['generalColor'] = $assoc['generalColor'];
                     $dirtyProductExtend['cat1'] = $assoc['cat1'];
                     $dirtyProductExtend['cat2'] = $assoc['cat2'];
