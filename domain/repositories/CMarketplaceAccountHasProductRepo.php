@@ -37,7 +37,7 @@ class CMarketplaceAccountHasProductRepo extends ARepo
         if (!is_null($priceModifier)) {
             $config['priceModifier'] = $priceModifier;
         }
-        if ($activeAutomatic == '0') {
+        if ($activeAutomatic == '0' || $activeAutomatic=='') {
 
             $marketplaceAccountHasProduct = \Monkey ::app() -> repoFactory -> create('MarketplaceAccountHasProduct') -> getEmptyEntity();
             $marketplaceAccountHasProduct -> productId = $product -> id;
