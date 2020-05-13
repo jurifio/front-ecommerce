@@ -103,14 +103,14 @@ abstract class AExpertFeedBuilder extends ACronJob
      * Returns array of "codes" for products
      */
     protected function fetchProductsCodeMinusDeleted() {
-        $idCycle = $this->app->dbAdapter->query("SELECT concat_ws('-',id,p.productVariantId) AS code
+        $idCycle = $this->app->dbAdapter->query("SELECT concat_ws('-',p.productId,p.productVariantId) AS code
                                                   FROM Product v LEFT JOIN 
                                                         MarketplaceAccountHasProduct p ON v.id = p.productId AND 
                                                                                           v.productVariantId = p.productVariantId AND 
                                                                                           p.marketplaceId = ? AND 
                                                                                           p.marketplaceAccountId = ?
                                                   WHERE ifnull(p.isDeleted, 0) = 0
-                                                  GROUP BY id,productVariantId", [
+                                                  GROUP BY p.productId,p.productVariantId", [
             $this->marketplaceAccount->marketplaceId,
             $this->marketplaceAccount->id])->fetchAll(\PDO::FETCH_COLUMN,0);
         return $idCycle;
@@ -140,43 +140,51 @@ abstract class AExpertFeedBuilder extends ACronJob
      * @param \XMLWriter $writer
      * @return int
      */
-    protected function writeProductsMinusDeleted(\XMLWriter $writer) {
+    public function writeProductsMinusDeleted(\XMLWriter $writer) {
         $idCycle = $this->fetchProductsCodeMinusDeleted();
         $productRepo = \Monkey::app()->repoFactory->create('Product');
         $contoErrori = 0;
         foreach ($idCycle as $productId) {
             $marketplaceAccountHasProduct = null;
-            $product = $productRepo->findOneByStringId($productId);
-            try {
-                set_time_limit(10);
-                /** @var CMarketplaceAccountHasProduct $marketplaceAccountHasProduct */
-                $marketplaceAccountHasProduct = $product->marketplaceAccountHasProduct->findOneByKeys($this->marketplaceAccount->getIds());
-                $writer->writeRaw($this->writeProductEntry($product,$marketplaceAccountHasProduct ? $marketplaceAccountHasProduct : null));
+            if ($products == '') {
+                continue;
+            }
+            $prod = explode('-',$products);
+            $product = $productRepo->findOneBy(['id' => $prod[0],'productVariantId' => $prod[1]]);
+            if ($product == null) {
+                continue;
+            } else {
+                try {
+                    set_time_limit(10);
+                    /** @var CMarketplaceAccountHasProduct $marketplaceAccountHasProduct */
+                    $marketplaceAccountHasProduct = $product->marketplaceAccountHasProduct->findOneByKeys($this->marketplaceAccount->getIds());
+                    $writer->writeRaw($this->writeProductEntry($product,$marketplaceAccountHasProduct ? $marketplaceAccountHasProduct : null));
 
-                if ($marketplaceAccountHasProduct) {
-                    if(is_null($marketplaceAccountHasProduct->insertionDate)) {
-                        $marketplaceAccountHasProduct->insertionDate = $this->time();
-                        $marketplaceAccountHasProduct->publishDate = $this->time();
-                        $marketplaceAccountHasProduct->lastRevised = $this->time();
+                    if ($marketplaceAccountHasProduct) {
+                        if (is_null($marketplaceAccountHasProduct->insertionDate)) {
+                            $marketplaceAccountHasProduct->insertionDate = $this->time();
+                            $marketplaceAccountHasProduct->publishDate = $this->time();
+                            $marketplaceAccountHasProduct->lastRevised = $this->time();
+                        }
+                        $marketplaceAccountHasProduct->errorRequest = null;
+                        $marketplaceAccountHasProduct->isToWork = 0;
+                        $marketplaceAccountHasProduct->isRevised = 1;
+                        $marketplaceAccountHasProduct->hasError = 0;
+                        $marketplaceAccountHasProduct->update();
                     }
-                    $marketplaceAccountHasProduct->errorRequest = null;
-                    $marketplaceAccountHasProduct->isToWork = 0;
-                    $marketplaceAccountHasProduct->isRevised = 1;
-                    $marketplaceAccountHasProduct->hasError = 0;
-                    $marketplaceAccountHasProduct->update();
-                }
-                unset($marketplaceAccountHasProduct);
-
-            } catch (\Throwable $e) {
-                $contoErrori++;
-                if($marketplaceAccountHasProduct && !is_null($marketplaceAccountHasProduct)){
-                    $marketplaceAccountHasProduct->errorRequest = $e->getMessage() . "\n" . $e->getTraceAsString();
-                    $marketplaceAccountHasProduct->isRevised = 0;
-                    $marketplaceAccountHasProduct->hasError = 1;
-                    $marketplaceAccountHasProduct->update();
                     unset($marketplaceAccountHasProduct);
-                } else {
-                    $this->warning('Feed Product '.$this->marketplaceAccount->printId(),'Error exporting Product: '.$product->printId(),$e);
+
+                } catch (\Throwable $e) {
+                    $contoErrori++;
+                    if ($marketplaceAccountHasProduct && !is_null($marketplaceAccountHasProduct)) {
+                        $marketplaceAccountHasProduct->errorRequest = $e->getMessage() . "\n" . $e->getTraceAsString();
+                        $marketplaceAccountHasProduct->isRevised = 0;
+                        $marketplaceAccountHasProduct->hasError = 1;
+                        $marketplaceAccountHasProduct->update();
+                        unset($marketplaceAccountHasProduct);
+                    } else {
+                        $this->warning('Feed Product ' . $this->marketplaceAccount->printId(),'Error exporting Product: ' . $product->printId(),$e);
+                    }
                 }
             }
         }
