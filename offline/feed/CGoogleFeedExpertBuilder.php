@@ -131,9 +131,15 @@ class CGoogleFeedExpertBuilder extends AExpertFeedBuilder
         $writer->writeElement('g:availability', $avai > 0 ? 'in stock' : 'out of stock');
         $writer->writeElement('sizes', implode(';', $sizes));
         $writer->writeElement('g:size', implode(';', $sizes));
-        $writer->writeElement('g:price', $product->getDisplayPrice() . 'EUR');
-        if ($onSale) {
-            $writer->writeElement('g:sale_price', $product->getDisplaySalePrice() . 'EUR');
+        $priceActive=\Monkey::app()->repoFactory->create('ProductSku')->findOneBy(['productId'=>$product->id,'productVariantId'=>$product->productVariantId]);
+
+            $price=number_format($priceActive->salePrice,2,'.','');
+
+            $salePrice=number_format($priceActive->price,2,'.','');
+
+        $writer->writeElement('g:price', $price . ' EUR');
+        if ($product->isOnSale==1) {
+            $writer->writeElement('g:sale_price', $salePrice . ' EUR');
         }
         $writer->writeElement('g:mpn', $product->itemno . ' ' . $product->productVariant->name);
         $writer->writeElement('g:brand', $product->productBrand->name);

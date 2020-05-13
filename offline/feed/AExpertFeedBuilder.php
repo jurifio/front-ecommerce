@@ -144,13 +144,14 @@ abstract class AExpertFeedBuilder extends ACronJob
         $idCycle = $this->fetchProductsCodeMinusDeleted();
         $productRepo = \Monkey::app()->repoFactory->create('Product');
         $contoErrori = 0;
-        foreach ($idCycle as $productId) {
+        foreach ($idCycle as $products) {
             $marketplaceAccountHasProduct = null;
             if ($products == '') {
                 continue;
             }
             $prod = explode('-',$products);
             $product = $productRepo->findOneBy(['id' => $prod[0],'productVariantId' => $prod[1]]);
+
             if ($product == null) {
                 continue;
             } else {
