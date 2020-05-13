@@ -133,9 +133,9 @@ class CGoogleFeedExpertBuilder extends AExpertFeedBuilder
         $writer->writeElement('g:size', implode(';', $sizes));
         $priceActive=\Monkey::app()->repoFactory->create('ProductSku')->findOneBy(['productId'=>$product->id,'productVariantId'=>$product->productVariantId]);
 
-            $price=number_format($priceActive->salePrice,2,'.','');
+            $price=number_format($priceActive->price,2,'.','');
 
-            $salePrice=number_format($priceActive->price,2,'.','');
+            $salePrice=number_format($priceActive->salePrice,2,'.','');
 
         $writer->writeElement('g:price', $price . ' EUR');
         if ($product->isOnSale==1) {
