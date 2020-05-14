@@ -62,8 +62,8 @@ abstract class AExpertFeedBuilder extends ACronJob
         $idProduct=[];
         $idProduct= explode("-", $args->marketplaceAccountId);
         $id=$idProduct[0];
-        $marketPlaceId=$idProduct[1];
-        $marketplaceAccount = \Monkey::app()->repoFactory->create('MarketplaceAccount')->findOneBy(['id'=>$id,'marketPlaceId'=>$marketPlaceId]);
+        $marketplaceId=$idProduct[1];
+        $marketplaceAccount = \Monkey::app()->repoFactory->create('MarketplaceAccount')->findOneBy(['id'=>$id,'marketplaceId'=>$marketplaceId]);
       // if(!$this->checkRightMarketplace($marketplaceAccount)) throw new BambooOutOfBoundException('Wrong marketplace in configuration: '.$marketplaceAccount->marketplace->name);
         $langId = $marketplaceAccount->config['lang'];
         $lang = \Monkey::app()->repoFactory->create('Lang')->findOneBy(["lang" => $langId]);
