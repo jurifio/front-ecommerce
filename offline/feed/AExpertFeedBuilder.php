@@ -59,19 +59,20 @@ abstract class AExpertFeedBuilder extends ACronJob
         $this->minized = $args->minified;
 
         /** @var CMarketplaceAccount $marketplaceAccount */
-        $idProduct=[];
+
         $idProduct= explode("-", $args->marketplaceAccountId);
         $id=$idProduct[0];
         $marketplaceId=$idProduct[1];
         $marketplaceAccount = \Monkey::app()->repoFactory->create('MarketplaceAccount')->findOneBy(['id'=>$id,'marketplaceId'=>$marketplaceId]);
-      // if(!$this->checkRightMarketplace($marketplaceAccount)) throw new BambooOutOfBoundException('Wrong marketplace in configuration: '.$marketplaceAccount->marketplace->name);
+        //$marketplaceAccount = \Monkey::app()->repoFactory->create('MarketplaceAccount')->findOneByStringId($args->marketplaceAccountId);
+      //if(!$this->checkRightMarketplace($marketplaceAccount)) throw new BambooOutOfBoundException('Wrong marketplace in configuration: '.$marketplaceAccount->marketplace->name);
         $langId = $marketplaceAccount->config['lang'];
-        $lang = \Monkey::app()->repoFactory->create('Lang')->findOneBy(["lang" => $langId]);
+        $lang = \Monkey::app()->repoFactory->create('Lang')->findOneBy(['lang' => $langId]);
         $this->lang = new CLang($lang->id, $lang->lang);
         unset($lang);
         $this->app->setLang($this->lang);
-
-        $this->marketplaceAccount = \Monkey::app()->repoFactory->create('MarketplaceAccount', $this->lang)->findOne($marketplaceAccount->getIds());
+       $this->marketplaceAccount = \Monkey::app()->repoFactory->create('MarketplaceAccount', $this->lang)->findOne($marketplaceAccount->getIds());
+       // $this->marketplaceAccount = \Monkey::app()->repoFactory->create('MarketplaceAccount', $this->lang)->findOne($marketplaceAccount->getIds());
         $this->helper = new CWidgetHelper($this->app);
         $uri = $this->app->rootPath() . $this->app->cfg()->fetch('paths', 'productSync') . $marketplaceAccount->config['filePath'];
 

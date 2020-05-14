@@ -125,13 +125,13 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $baseUrlLang=$shopUrl. "/" . $this->lang->getLang();
             $writer->writeElement('g:link', $product->getProductUrl($baseUrlLang,$this->marketplaceAccount->getCampaignCode()));
             $writer->writeElement('g:mobile_link',$product->getProductUrl($baseUrlLang,$this->marketplaceAccount->getCampaignCode()));
-            $writer->writeElement('g:image_link',$this->helper->image($product->getPhoto(1,843),'amazon'));
-            for ($i = 2; $i < 8; $i++) {
+           // $writer->writeElement('g:image_link',$this->helper->image($product->getPhoto(1,843),'amazon'));
+           /* for ($i = 2; $i < 8; $i++) {
                 $actual = $product->getPhoto($i,843);
                 if ($actual != false && !empty($actual)) {
                     $writer->writeElement('g:additional_image_link',$this->helper->image($actual,'amazon'));
                 }
-            }
+            }*/
             $writer->writeElement('g:condition','new');
 
 
@@ -161,6 +161,7 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $writer->startElement('g:shipping');
             $writer->writeElement('g:service','IT_StandardInternational');
             $writer->writeElement('g:price','10.00 EUR');
+            $writer->writeElement('g:country','FR');
             $writer->endElement();
             $writer->startElement('g:shipping');
             $writer->writeElement('g:country','IT');
@@ -168,6 +169,7 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $writer->writeElement('g:price','5.00 EUR');
             $writer->endElement();
             $writer->startElement('g:shipping');
+            $writer->writeElement('g:country','US');
             $writer->writeElement('g:service','IT_ExpeditedInternational');
             $writer->writeElement('g:price','40.00 EUR');
 
