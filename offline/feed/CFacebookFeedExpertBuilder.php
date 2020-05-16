@@ -125,7 +125,7 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $baseUrlLang=$shopUrl. "/" . $this->lang->getLang();
             $writer->writeElement('g:link', $product->getProductUrl($baseUrlLang,$this->marketplaceAccount->getCampaignCode()));
             $writer->writeElement('g:mobile_link',$product->getProductUrl($baseUrlLang,$this->marketplaceAccount->getCampaignCode()));
-           // $writer->writeElement('g:image_link',$this->helper->image($product->getPhoto(1,843),'amazon'));
+            $writer->writeElement('g:image_link',$this->helper->image($product->getPhoto(1,843),'amazon'));
            /* for ($i = 2; $i < 8; $i++) {
                 $actual = $product->getPhoto($i,843);
                 if ($actual != false && !empty($actual)) {

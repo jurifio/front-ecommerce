@@ -80,6 +80,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                     $dirtyProduct['keysChecksum'] = json_encode($dirtyProduct);
                     $dirtyProduct['checksum'] = $checksum;
                     $dirtyProductExtend['name'] = $assoc['name'];
+                    $dirtyProductExtend['description'] = $assoc['name'];
                     $dirtyProductExtend['audience'] = 'DONNA';
                     $season=$assoc['season'].' '.$assoc['year'];
                     $dirtyProductExtend['season']=$season;
@@ -114,12 +115,12 @@ class CThomasImportStandard extends ABluesealProductImporter
 
                     $checksums[$dirtyProduct['checksum']] = $dirtyProduct['id'];
 
-                  /*  $imgs = [
-                        $assoc['img1'],
-                        $assoc['img2'],
-                        $assoc['img3'],
-                        $assoc['img4']
-                    ];*/
+                    /*  $imgs = [
+                          $assoc['img1'],
+                          $assoc['img2'],
+                          $assoc['img3'],
+                          $assoc['img4']
+                      ];*/
 
                     $details = [
                         'dettaglio1' => $assoc['det1'],
@@ -144,24 +145,24 @@ class CThomasImportStandard extends ABluesealProductImporter
                         ]);
                     }
 
-                   /* $this->debug('Cycle', 'product checking imgs', $imgs);
-                    $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $dirtyProduct['id']])->fetchAll();
-                    $position = 0;
-                   foreach ($imgs as $img) {
-                        if(empty(trim($img))) continue;
-                        foreach ($dirtyPhotos as $exImg) {
-                            if ($exImg['url'] == $img) continue 2;
-                        }
-                        $position++;
-                        \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
-                            'dirtyProductId' => $dirtyProduct['id'],
-                            'shopId' => $this->getShop()->id,
-                            'url' => $img,
-                            'location' => 'url',
-                            'position' => $position,
-                            'worked' => 0
-                        ]);
-                    }*/
+                    /* $this->debug('Cycle', 'product checking imgs', $imgs);
+                     $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $dirtyProduct['id']])->fetchAll();
+                     $position = 0;
+                    foreach ($imgs as $img) {
+                         if(empty(trim($img))) continue;
+                         foreach ($dirtyPhotos as $exImg) {
+                             if ($exImg['url'] == $img) continue 2;
+                         }
+                         $position++;
+                         \Monkey::app()->dbAdapter->insert('DirtyPhoto', [
+                             'dirtyProductId' => $dirtyProduct['id'],
+                             'shopId' => $this->getShop()->id,
+                             'url' => $img,
+                             'location' => 'url',
+                             'position' => $position,
+                             'worked' => 0
+                         ]);
+                     }*/
                 }
             } catch (\Throwable $e) {
                 $this->error('ProductCycle','Error while working product',$e);
@@ -173,7 +174,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                 $dirtySku['shopId'] = $this->getShop()->id;
                 $dirtySku['size'] = $assoc['size'];
                 $dirtySku['qty'] = $assoc['qty'];
-                $dirtySku['value'] = $this->calculateValue($assoc['price'],$assoc['brand']);
+                // $dirtySku['value'] = $this->calculateValue($assoc['price'],$assoc['brand']);
                 $dirtySku['price'] = $assoc['price'];
                 $dirtySku['checksum'] = md5(json_encode($dirtySku));
 
