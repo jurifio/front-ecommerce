@@ -137,15 +137,17 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $writer->writeElement('g:link', $product->getProductUrl($baseUrlLang,$this->marketplaceAccount->getCampaignCode()));
             $writer->writeElement('g:mobile_link',$product->getProductUrl($baseUrlLang,$this->marketplaceAccount->getCampaignCode()));
             $linkImage=$this->helper->image($product->getPhoto(1,1124),'amazon');
-            str_replace('https://cdn.iwes.it/','https://d2jto9wsi7nqrj.cloudfront.net/',$linkImage);
-            $writer->writeElement('g:image_link',$linkImage);
+            $imageLink=str_replace('https://cdn.iwes.it/','https://d2jto9wsi7nqrj.cloudfront.net/',$linkImage);
+            $writer->writeElement('g:image_link',$imageLink);
 
-           /* for ($i = 2; $i < 8; $i++) {
-                $actual = $product->getPhoto($i,843);
+            for ($i = 2; $i < 8; $i++) {
+                $actual = $product->getPhoto($i,1124);
                 if ($actual != false && !empty($actual)) {
-                    $writer->writeElement('g:additional_image_link',$this->helper->image($actual,'amazon'));
+                    $linkImageAdditional=$this->helper->image($actual,'amazon');
+                    $imageLinkAdditional=str_replace('https://cdn.iwes.it/','https://d2jto9wsi7nqrj.cloudfront.net/',$linkImageAdditional);
+                    $writer->writeElement('g:additional_image_link',$imageLinkAdditional);
                 }
-            }*/
+            }
             $writer->writeElement('g:condition','new');
            // $writer->writeElement('url', $product->getProductUrl($baseUrlLang,$this->marketplaceAccount->getCampaignCode()));
 
