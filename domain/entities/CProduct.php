@@ -104,7 +104,7 @@ class CProduct extends AEntity
             }
         }
         if (count($mCategoryNames) == 0) throw new BambooOutOfBoundException('Could not find Marketplace Category for product starting with categories: ' . implode(',', $categories));
-        return $mCategoryIds;
+        return $mCategoryNames;
     }
 
     /**
