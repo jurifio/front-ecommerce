@@ -93,6 +93,19 @@ class CProduct extends AEntity
         if (count($mCategoryIds) == 0) throw new BambooOutOfBoundException('Could not find Marketplace Category for product starting with categories: ' . implode(',', $categories));
         return $mCategoryIds;
     }
+    public function getMarketplaceAccountCategoryNames(CMarketplaceAccount $marketplaceAccount)
+    {
+        $mCategoryNames = [];
+        $categories = [];
+        foreach ($this->productCategory as $category) {
+            $categories[] = $category->id;
+            foreach ($category->marketplaceAccountCategory->findByKeys(['marketplaceId' => $marketplaceAccount->marketplaceId, 'marketplaceAccountId' => $marketplaceAccount->id, 'isRelevant' => 1]) as $mCategory) {
+                $mCategoryNames[] = $mCategory->name;
+            }
+        }
+        if (count($mCategoryNames) == 0) throw new BambooOutOfBoundException('Could not find Marketplace Category for product starting with categories: ' . implode(',', $categories));
+        return $mCategoryIds;
+    }
 
     /**
      * @return string
