@@ -98,8 +98,13 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
 
 
             $writer->startElement('description');
-
-            $writer->writeCdata($product->getDescription());
+            $dirtyProduct=\Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['productId'=>$product->id,'productVariantId'=>$product->productVariantId]);
+            $dirtyProductId=$dirtyProduct->id;
+            $audience=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dirtyProductId])->audience;
+            $description=$product->getDescription();
+            $description.= ' '.$audience;
+            $description.=' '.$product->productSeason->name;
+            $writer->writeCdata($description);
             $writer->endElement();
 
 
@@ -116,13 +121,14 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
 
             $writer->writeElement('g:product_type',implode('; ',$product_type));
 
-            $categories = $product->getMarketplaceAccountCategoryNames($this->marketplaceAccount);
-            $writer->writeElement('g:google_product_category',$categories[0]);
-            $writer->writeElement('g:age_group','20-50');
-            $dirtyProduct=\Monkey::app()->repoFactory->create('DirtyProduct')->findOneB(['productId'=>$product->id,'productVariantId'=>$product->productVariantId]);
-            $dirtyProductId=$dirtyProduct->id;
-            $audience=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dirtyProductId])->audience;
-            $writer->writeElement('g:gender',$audience);
+            $categories = $product->getMarketplaceAccountCategoryIds($this->marketplaceAccount);
+
+                $writer->writeElement('g:google_product_category',$categories[0]);
+
+            $writer->writeElement('g:age_group','all ages');
+
+
+                $writer->writeElement('g:gender','unisex');
 
             // $baseUrlLang = $this->app->cfg()->fetch("paths","domain") . "/" . $this->lang->getLang();
             $shopFind=\Monkey::app()->repoFactory->create('Shop')->findOneBy(['id'=>$this->marketplaceAccount->config['shopId']]);
@@ -130,9 +136,10 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $baseUrlLang=$shopUrl. "/" . $this->lang->getLang();
             $writer->writeElement('g:link', $product->getProductUrl($baseUrlLang,$this->marketplaceAccount->getCampaignCode()));
             $writer->writeElement('g:mobile_link',$product->getProductUrl($baseUrlLang,$this->marketplaceAccount->getCampaignCode()));
-            $writer->writeElement('g:image_link',$this->helper->image($product->getPhoto(1,843),'amazon'));
-            $writer->writeElement('image',$this->helper->image($product->getPhoto(1,843),'amazon'));
-            $writer->writeElement('image_link',$this->helper->image($product->getPhoto(1,843),'amazon'));
+            $linkImage=$this->helper->image($product->getPhoto(1,1124),'amazon');
+            str_replace('https://cdn.iwes.it/','https://d2jto9wsi7nqrj.cloudfront.net/',$linkImage);
+            $writer->writeElement('g:image_link',$linkImage);
+
            /* for ($i = 2; $i < 8; $i++) {
                 $actual = $product->getPhoto($i,843);
                 if ($actual != false && !empty($actual)) {
@@ -140,19 +147,18 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
                 }
             }*/
             $writer->writeElement('g:condition','new');
-            $writer->writeElement('g:url', $product->getProductUrl($baseUrlLang,$this->marketplaceAccount->getCampaignCode()));
+           // $writer->writeElement('url', $product->getProductUrl($baseUrlLang,$this->marketplaceAccount->getCampaignCode()));
 
 
             $writer->writeElement('g:availability',$avai > 0 ? 'in stock' : 'out of stock');
             //$writer->writeElement('sizes',implode(';',$sizes));
-            foreach ($sizes as $size) {
+           foreach ($sizes as $size) {
                   $writer->writeElement('g:size', $size);
             }
             $priceActive = \Monkey::app()->repoFactory->create('ProductSku')->findOneBy(['productId' => $product->id,'productVariantId' => $product->productVariantId]);
 
             $price = number_format($priceActive->price,2,'.','');
 
-            $writer->writeElement('g:price',$price . ' EUR');
             $writer->writeElement('g:price',$price . ' EUR');
             if ($product->isOnSale == 1) {
                 $salePrice = number_format($priceActive->salePrice,2,'.','');
