@@ -49,6 +49,7 @@ use bamboo\domain\repositories\CProductHistoryRepo;
  * @property CProductCardPhoto $productCardPhoto
  * @property CObjectCollection $productHasTag
  * @property CObjectCollection $productEan
+ * @property CObjectCollection $productView
  * @property CPrestashopHasProduct $prestashopHasProduct
  * @property CProductBrandHasPrestashopManufacturer $productBrandHasPrestashopManufacturer
  * @property CProductColorGroupHasPrestashopColorOption $productColorGroupHasPrestashopColorOption

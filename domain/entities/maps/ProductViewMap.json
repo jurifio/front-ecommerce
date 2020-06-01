@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "ProductView",
+        "keys": ["productId", "productVariantId"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": ["productId,productVariantId"],
+                "childKeys": ["id,productVariantId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

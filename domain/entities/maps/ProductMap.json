@@ -54,6 +54,12 @@
                 "childKeys": ["id"],
                 "type": "OneToOne"
             },{
+                "name": "productView",
+                "entity": "ProductView",
+                "parentKeys": ["id,ProductVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToOne"
+            },{
                 "name": "productSku",
                 "entity": "ProductSku",
                 "parentKeys": [
