@@ -1,7 +1,7 @@
 {
     "entity": {
         "name": "ProductView",
-        "keys": ["productId", "productVariantId"],
+        "keys": ["id"],
         "cacheable" : "true",
         "cacheExpiration": 86400,
         "children": [

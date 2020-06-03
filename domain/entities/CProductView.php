@@ -12,7 +12,7 @@ use bamboo\domain\repositories\CDocumentRepo;
 use bamboo\domain\repositories\CProductHistoryRepo;
 
 /**
- * Class CProduct
+ * Class CProductView
  * @package bamboo\domain\entities
  *
  * @author Bambooshoot Team <emanuele@bambooshoot.agency>
@@ -49,7 +49,7 @@ use bamboo\domain\repositories\CProductHistoryRepo;
  * @property CProductCardPhoto $productCardPhoto
  * @property CObjectCollection $productHasTag
  * @property CObjectCollection $productEan
- * @property CObjectCollection $productView
+ * @property CObjectCollection $product
  * @property CPrestashopHasProduct $prestashopHasProduct
  * @property CProductBrandHasPrestashopManufacturer $productBrandHasPrestashopManufacturer
  * @property CProductColorGroupHasPrestashopColorOption $productColorGroupHasPrestashopColorOption
@@ -58,8 +58,8 @@ use bamboo\domain\repositories\CProductHistoryRepo;
  */
 class CProductView extends AEntity
 {
-    protected $entityTable = 'Product';
-    protected $primaryKeys = ['id', 'productVariantId'];
+    protected $entityTable = 'ProductView';
+    protected $primaryKeys = ["id"];
 
 
 
