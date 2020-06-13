@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "ProductCorrelation",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "productHasProductCorrelation",
+                "entity": "ProductHasProductCorrelation",
+                "parentKeys": ["id"],
+                "childKeys": ["correlationId"],
+                "type": "OneToMany",
+                "lang": true
+            }
+        ]
+    }
+}
