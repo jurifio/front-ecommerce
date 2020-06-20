@@ -28,11 +28,11 @@
     "mapping": {
         "main":  {
             "itemno": 1,
-            "var" : 5,
+            "var" : 20,
             "extId": 0,
-            "price": 18,
-            "salePrice": 25,
-            "value" : 7
+            "price": 31,
+            "salePrice": 32,
+            "value" : 29
         },
         "skus": {
             "var" : 3,
