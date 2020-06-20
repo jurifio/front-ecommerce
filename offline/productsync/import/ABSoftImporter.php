@@ -17,7 +17,7 @@ use bamboo\core\exceptions\RedPandaException;
  * @date 20/06/2020
  * @since 1.0
  */
-abstract class ABSoftImporter extends AProductImporter
+abstract class  ABSoftImporter extends AProductImporter
 {
     protected $skus;
     protected $skusF;
@@ -90,7 +90,7 @@ abstract class ABSoftImporter extends AProductImporter
             sleep(1);
             $size = filesize($products);
         }
-        $this->progressive = $this->app->rootPath().$this->app->cfg()->fetch('paths', 'productSync') . '/' . $this->shop->name . '/import/prog' . rand(0, 1000) . '.csv';
+        $this->progressive = $this->app->rootPath().$this->app->cfg()->fetch('paths', 'productSync') . '/' . $this->shop->name . '/import/progressive' . rand(0, 1000) . '.csv';
         copy($products, $this->progressive);
         for ($i = 0; $i < (count($files) - 1); $i++) {
             unlink($files[$i]);
