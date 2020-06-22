@@ -188,7 +188,7 @@ abstract class  ABSoftImporter extends AProductImporter
                    $dirtyProductInsert->extId=$dirtyProduct[$i]['extId'];
                    $dirtyProductInsert->insert();
 
-                    $lastId = $this->app->dbAdapter->query('SELECT max(`id`) as dirtyProductId FROM `dirtyProduct`',[])->fetchAll()[0]['dirtyProductId'];
+                    $lastId = $this->app->dbAdapter->query('SELECT max(`id`) as dirtyProductId FROM `DirtyProduct`',[])->fetchAll()[0]['dirtyProductId'];
                     $dirtyProductExtended[$i]['dirtyProductId'] = $lastId;
                     $dirtyProductExtendInsert=\Monkey::app()->repoFactory->create('DirtyProductExtend')->getEmptyEntity();
                     $dirtyProductExtendInsert->shopId=60;
