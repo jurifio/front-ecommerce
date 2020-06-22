@@ -168,17 +168,10 @@ abstract class  ABSoftImporter extends AProductImporter
 
                 $keys = $this->config->fetch('files','main')['extKeys'];
 
-                /** find keys */
-                $match = [];
-                $match['shopId'] = 60;
-                $match['extId'] = $dirtyProduct[$i]['extId'];
-                $match['var'] = $dirtyProduct[$i]['var'];
-                /* foreach ($keys as $key) {
-                     $match[$key] = $one[$key];
-                 }*/
+
 
                 /** find existing product */
-                $res = $this->app->dbAdapter->select('DirtyProduct',$match)->fetchAll();
+                $res = $this->app->dbAdapter->select('DirtyProduct',['exitId'=> $dirtySku[$i]['extSizeId'],'shopId' => 60,'var'=>$dirtyProduct[$i]['var']])->fetchAll();
                 if (count($res) == 0) {
                     /** è un nuovo prodotto lo scrivo */
                     $dirtyProduct[$i]['shopId'] = 60;
@@ -194,7 +187,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     /** update existing product if changed */
                     //exist.. what to do? uhm... update?
 
-                    $dirtyProductUpdate = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId' => $dirtyProduct[$i]['extId'],'var' => $dirtyProduct[$i]['var']]);
+                    $dirtyProductUpdate = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId' => $dirtyProduct[$i]['extId'],'var' => $dirtyProduct[$i]['var'],'shopId'=>60]);
                     $dirtyProductId = $dirtyProductUpdate->id;
                     $dirtyProductUpdate->itemno = $dirtyProduct[$i]['itemno'];
                     $dirtyProductUpdate->brand = $dirtyProduct[$i]['brand'];
@@ -202,7 +195,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtyProductUpdate->value = $dirtyProduct[$i]['value'];
                     $dirtyProductUpdate->salePrice = $dirtyProduct[$i]['salePrice'];
                     $dirtyProductUpdate->update();
-                    $dirtyProductExtendedUpdate = \Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId' => $dirtyProductId]);
+                    $dirtyProductExtendedUpdate = \Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId' => $dirtyProductId,'shopId'=>60]);
                     $dirtyProductExtendedUpdate->name = $dirtyProductExtended[$i]['name'];
                     $dirtyProductExtendedUpdate->description = $dirtyProductExtended[$i]['description'];
                     $dirtyProductExtendedUpdate->season = $dirtyProductExtended[$i]['season'];
