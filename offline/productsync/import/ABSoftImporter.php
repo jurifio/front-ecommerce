@@ -176,13 +176,33 @@ abstract class  ABSoftImporter extends AProductImporter
                     /** è un nuovo prodotto lo scrivo */
                     $dirtyProduct[$i]['shopId'] = 60;
                     $dirtyProduct[$i]['dirtyStatus'] = 'E';
-                    $res = $this->app->dbAdapter->insert('DirtyProduct',$dirtyProduct[$i]);
+                   $dirtyProductInsert=\Monkey::app()->repoFactory->create('DirtyProduct')->getEmptyEntity();
+                   $dirtyProductInsert->shopId=60;
+                   $dirtyProductInsert->itemno = $dirtyProduct[$i]['itemno'];
+                   $dirtyProductInsert->brand= $dirtyProduct[$i]['brand'];
+                   $dirtyProductInsert->var=$dirtyProduct[$i]['var'];
+                   $dirtyProductInsert->value=$dirtyProduct[$i]['value'];
+                   $dirtyProductInsert->price=$dirtyProduct[$i]['price'];
+                   $dirtyProductInsert->salePrice= $dirtyProduct[$i]['salePrice'];
+                   $dirtyProductInsert->checksum= $dirtyProduct[$i]['checksum'];
+                   $dirtyProductInsert->extId=$dirtyProduct[$i]['extId'];
+                   $dirtyProductInsert->insert();
+
                     $lastId = $this->app->dbAdapter->query('SELECT max(`id`) as dirtyProductId FROM `dirtyProduct`',[])->fetchAll()[0]['dirtyProductId'];
                     $dirtyProductExtended[$i]['dirtyProductId'] = $lastId;
-                    $insertDirtyProductExtend = $this->app->dbAdapter->insert('DirtyProductExtend',$dirtyProductExtended[$i]);
-                    if ($res < 0) {
-                        continue;
-                    }
+                    $dirtyProductExtendInsert=\Monkey::app()->repoFactory->create('DirtyProductExtend')->getEmptyEntity();
+                    $dirtyProductExtendInsert->shopId=60;
+                    $dirtyProductExtendInsert->name=$dirtyProductExtended[$i]['name'];
+                    $dirtyProductExtendInsert->description=$dirtyProductExtended[$i]['description'];
+                    $dirtyProductExtendInsert->season = $dirtyProductExtended[$i]['season'];
+                    $dirtyProductExtendInsert->audience=$dirtyProductExtended[$i]['audience'];
+                    $dirtyProductExtendInsert->cat1 = $dirtyProductExtended[$i]['cat1'];
+                    $dirtyProductExtendInsert->cat2 = $dirtyProductExtended[$i]['cat2'];
+                    $dirtyProductExtendInsert->cat3 = $dirtyProductExtended[$i]['cat3'];
+                    $dirtyProductExtendInsert->cat4 = $dirtyProductExtended[$i]['cat4'];
+                    $dirtyProductExtendInsert->insert();
+
+
                 } elseif (count($res) == 1) {
                     /** update existing product if changed */
                     //exist.. what to do? uhm... update?
@@ -207,12 +227,14 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtyProductExtendedUpdate->shopId = $dirtyProductExtended[$i]['shopId'];
                     $dirtyProductExtendedUpdate->generalColor = $dirtyProductExtended[$i]['generalColor'];
                     $dirtyProductExtendedUpdate->colorDescription = $dirtyProductExtended[$i]['colorDescription'];
+                    $dirtyProductExtendedUpdate->update();
                 } else {
                     //error
                     //log
                     continue;
                 }
             }
+            $i++;
         }
     }
 
@@ -252,13 +274,32 @@ abstract class  ABSoftImporter extends AProductImporter
 
                 /** Already written */
                 if (count($exist) == 0) {
-                    $dirtySku['id'] = \Monkey::app()->dbAdapter->insert('DirtySku',$dirtySkus[$i]);
-                    $this->debug('processFile','Sku don\'t Exist, insert',$dirtySkus[$i]);
+                    $dirtySkuInsert=\Monkey::app()->repoFactory->create('DirtySku')->getEmptyEntity();
+                    $dirtySkuInsert->extSizeId= $dirtySkus[$i]['extSkuId'];
+                    $dirtySkuInsert->size=$dirtySkus[$i]['size'];
+                    $dirtySkuInsert->shopId=60;
+                    $dirtySkuInsert->qty=$dirtySkus[$i]['qty'];
+                    $dirtySkuInsert->value=$dirtySkus[$i]['value'];
+                    $dirtySkuInsert->dirtyProductId= $dirtySkus[$i]['dirtyProductId'];
+                    $dirtySkuInsert->price=$dirtySkus[$i]['value'];
+                    $dirtySkuInsert->salePrice=$dirtySkus[$i]['salePrice'];
+                    $dirtySkuInsert->checksum=$dirtySkus[$i]['checksum'];
+                    $dirtySkuInsert->insert();
+                    $this->debug('processFile','Sku don\'t Exist, insert',$dirtySkus[$i]['dirtyProductId']);
 
                 } elseif (count($exist) == 1) {
-                    \Monkey::app()->dbAdapter->update('DirtySku',$dirtySkus,['id' => $exist[0]['id']]);
-                    $dirtySkus[$i]['id'] = $existingSku[0]['id'];
-                    $this->debug('processFile','Sku Exist, update',$dirtySkus[$i]['id']);
+                    $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$exit[0]['id']]);
+                    $dirtySkuUpdate->extSizeId= $dirtySkus[$i]['extSkuId'];
+                    $dirtySkuUpdate->size=$dirtySkus[$i]['size'];
+                    $dirtySkuUpdate->shopId=60;
+                    $dirtySkuUpdate->qty=$dirtySkus[$i]['qty'];
+                    $dirtySkuUpdate->value=$dirtySkus[$i]['value'];
+                    $dirtySkuUpdate->dirtyProductId= $dirtySkus[$i]['dirtyProductId'];
+                    $dirtySkuUpdate->price=$dirtySkus[$i]['value'];
+                    $dirtySkuUpdate->salePrice=$dirtySkus[$i]['salePrice'];
+                    $dirtySkuUpdate->checksum=$dirtySkus[$i]['checksum'];
+                    $dirtySkuUpdate->update();
+                    $this->debug('processFile','Sku Exist, update',$exit[0]['id']);
 
                 } else throw new BambooException('More than 1 sku found to update');
 
@@ -298,6 +339,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     $this->seenSkus[] = $exist[0]['id'];
                     $updateDirtySku=$dirtySkuRepo->findOneBy(['id'=>$exist[0]['id']]);
                     $updateDirtySku->size=$dirtySku[$i]['size'];
+                    $updateDirtySku->update();
                 }else{
                     continue;
                 }
