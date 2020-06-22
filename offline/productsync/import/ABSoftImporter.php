@@ -126,6 +126,7 @@ abstract class  ABSoftImporter extends AProductImporter
             $dirtyProduct[$i]['brand'] = $values[12];
             $dirtyProduct[$i]['var'] = $values[20];
             $dirtyProduct[$i]['itemno'] = $values[0];
+
             $dirtyProduct[$i]['extId'] = $values[19];
             $dirtyProduct[$i]['value'] = str_replace(',','.',$values[29]);
             $dirtyProduct[$i]['price'] = str_replace(',','.',$values[30]);
@@ -158,8 +159,8 @@ abstract class  ABSoftImporter extends AProductImporter
                 foreach ($mapping as $key => $val) {
                     $one[$key] = trim($values[$val]);
                 }
-                $dirtyProduct['text'] = $line;
-                $dirtyProduct['checksum'] = $crc32;
+                $dirtyProduct[$i]['text'] = $line;
+                $dirtyProduct[$i]['checksum'] = $crc32;
 
                 $keys = $this->config->fetch('files','main')['extKeys'];
 
@@ -179,7 +180,7 @@ abstract class  ABSoftImporter extends AProductImporter
                    $dirtyProductInsert->value=$dirtyProduct[$i]['value'];
                    $dirtyProductInsert->price=$dirtyProduct[$i]['price'];
                    $dirtyProductInsert->salePrice= $dirtyProduct[$i]['salePrice'];
-                   $dirtyProductInsert->checksum= $dirtyProduct[$i]['checksum'];
+                   $dirtyProductInsert->checksum = $dirtyProduct[$i]['checksum'];
                    $dirtyProductInsert->extId=$dirtyProduct[$i]['extId'];
                    $dirtyProductInsert->insert();
 
