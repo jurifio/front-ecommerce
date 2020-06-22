@@ -76,7 +76,7 @@ abstract class  ABSoftImporter extends AProductImporter
         }
 
         /** PRODUCTSEXTEND */
-        $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Articoli*.txt');
+        $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Articoli.txt');
         $products = $files[count($files) - 1];
 
         $size = filesize($products);
@@ -90,7 +90,7 @@ abstract class  ABSoftImporter extends AProductImporter
             unlink($files[$i]);
         }
         /** TAGLIE */
-        $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Taglie*.csv');
+        $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Taglie.csv');
         $products = $files[count($files) - 1];
         $size = filesize($products);
         while ($size != filesize($products)) {
@@ -103,7 +103,7 @@ abstract class  ABSoftImporter extends AProductImporter
             unlink($files[$i]);
         }
         /** PROGRESSIVI */
-        $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Progressivi*.txt');
+        $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Progressivi.txt');
         $products = $files[count($files) - 1];
         $size = filesize($products);
         while ($size != filesize($products)) {
