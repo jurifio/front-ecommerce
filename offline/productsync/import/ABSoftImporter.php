@@ -35,7 +35,7 @@ abstract class  ABSoftImporter extends AProductImporter
      */
     public function run($args = null)
     {
-        $this->report("Run","Import START","Inizio importazione " . $this->shop->name);
+        $this->report("Run","Import START","Inizio importazione  The Square Roma" );
 
         $this->report("Run","Fetch Filse","Carico i files");
         $this->fetchFiles();
