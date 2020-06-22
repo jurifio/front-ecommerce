@@ -69,7 +69,7 @@ abstract class  ABSoftImporter extends AProductImporter
             sleep(1);
             $size = filesize($products);
         }
-        $this->main = $this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/' . $this->shop->name . '/import/main' . rand(0,1000) . '.csv';
+        $this->main = $this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/import/main' . rand(0,1000) . '.csv';
         copy($products,$this->main);
         for ($i = 0; $i < (count($files) - 1); $i++) {
             unlink($files[$i]);
@@ -84,7 +84,7 @@ abstract class  ABSoftImporter extends AProductImporter
             sleep(1);
             $size = filesize($products);
         }
-        $this->main = $this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/' . $this->shop->name . '/import/extend' . rand(0,1000) . '.csv';
+        $this->main = $this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '\'/thesquareroma/import/extend' . rand(0,1000) . '.csv';
         copy($products,$this->main);
         for ($i = 0; $i < (count($files) - 1); $i++) {
             unlink($files[$i]);
@@ -97,7 +97,7 @@ abstract class  ABSoftImporter extends AProductImporter
             sleep(1);
             $size = filesize($products);
         }
-        $this->skus = $this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/' . $this->shop->name . '/import/skus' . rand(0,1000) . '.csv';
+        $this->skus = $this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/import/skus' . rand(0,1000) . '.csv';
         copy($products,$this->skus);
         for ($i = 0; $i < (count($files) - 1); $i++) {
             unlink($files[$i]);
@@ -110,7 +110,7 @@ abstract class  ABSoftImporter extends AProductImporter
             sleep(1);
             $size = filesize($products);
         }
-        $this->progressive = $this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/' . $this->shop->name . '/import/progressive' . rand(0,1000) . '.csv';
+        $this->progressive = $this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/import/progressive' . rand(0,1000) . '.csv';
         copy($products,$this->progressive);
         for ($i = 0; $i < (count($files) - 1); $i++) {
             unlink($files[$i]);
