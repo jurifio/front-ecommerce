@@ -155,9 +155,10 @@ abstract class  ABSoftImporter extends AProductImporter
             $dirtyProductExtended[$i]['cat2'] = $values[16];
             $dirtyProductExtended[$i]['cat3'] = $values[14];
             $dirtyProductExtended[$i]['cat4'] = $values[26];
+            $dirtyProductExtended[$i]['shopId'] = 60;
 
             $crc32 = md5($line);
-            $exist = $this->app->dbAdapter->selectCount("DirtyProduct",['checksum' => $crc32,'shopId' => $this->shop->id]);
+            $exist = $this->app->dbAdapter->selectCount("DirtyProduct",['checksum' => $crc32,'shopId' => 60]);
             /** Already written */
             if ($exist == 1) {
                 continue;
@@ -182,7 +183,7 @@ abstract class  ABSoftImporter extends AProductImporter
 
                 /** find keys */
                 $match = [];
-                $match['shopId'] = $this->shop->id;
+                $match['shopId'] = 60;
                 $match['extId'] = $dirtyProduct[$i]['extId'];
                 $match['var'] = $dirtyProduct[$i]['var'];
                 /* foreach ($keys as $key) {
@@ -193,7 +194,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 $res = $this->app->dbAdapter->select('DirtyProduct',$match)->fetchAll();
                 if (count($res) == 0) {
                     /** è un nuovo prodotto lo scrivo */
-                    $dirtyProduct[$i]['shopId'] = $this->shop->id;
+                    $dirtyProduct[$i]['shopId'] = 60;
                     $dirtyProduct[$i]['dirtyStatus'] = 'E';
                     $res = $this->app->dbAdapter->insert('DirtyProduct',$dirtyProduct[$i]);
                     $lastId = $this->app->dbAdapter->query('SELECT max(`id`) as dirtyProductId FROM `dirtyProduct`',[])->fetchAll()[0]['dirtyProductId'];
@@ -205,7 +206,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 } elseif (count($res) == 1) {
                     /** update existing product if changed */
                     //exist.. what to do? uhm... update?
-                    $res = $this->app->dbAdapter->update('DirtyProduct',array_diff($dirtyProduct[$i],$match),$match);
+
                     $dirtyProductUpdate = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId' => $dirtyProduct[$i]['extId'],'var' => $dirtyProduct[$i]['var']]);
                     $dirtyProductId = $dirtyProductUpdate->id;
                     $dirtyProductUpdate->itemno = $dirtyProduct[$i]['itemno'];
@@ -223,6 +224,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtyProductExtendedUpdate->cat2 = $dirtyProductExtended[$i]['cat2'];
                     $dirtyProductExtendedUpdate->cat3 = $dirtyProductExtended[$i]['cat3'];
                     $dirtyProductExtendedUpdate->cat4 = $dirtyProductExtended[$i]['cat4'];
+                    $dirtyProductExtendedUpdate->shopId = $dirtyProductExtended[$i]['shopId'];
                     $dirtyProductExtendedUpdate->generalColor = $dirtyProductExtended[$i]['generalColor'];
                     $dirtyProductExtendedUpdate->colorDescription = $dirtyProductExtended[$i]['colorDescription'];
                 } else {
@@ -254,7 +256,8 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['extSizeId'] = $values[1];
                 $dirtySkus[$i]['qty'] = $values[2];
                 $dirtySkus[$i]['size'] = 'TU';
-                $dirtyProduct = $dirtyProductRepo->findOneBy(['var' => $dirtySkus[$i]['extSkuId']]);
+                $dirtySkus[$i]['shopId'] = 60;
+                $dirtyProduct = $dirtyProductRepo->findOneBy(['var' => $dirtySkus[$i]['extSkuId'],'shopId'=>$dirtySkus[$i]['shopId']]);
                 if ($dirtyProduct == null) {
                     continue;
                 }
@@ -262,9 +265,10 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['value'] = $dirtyProduct->value;
                 $dirtySkus[$i]['price'] = $dirtyProduct->price;
                 $dirtySkus[$i]['salePrice'] = $dirtyProduct->salePrice;
+
                 $crc32 = md5($dirtySkus[$i]);
                 $dirtySkus[$i]['checksum'] = $crc32;
-                $exist = $this->app->dbAdapter->select("DirtySku",['checksum' => $crc32,'shopId' => $this->shop->id])->fetchAll();
+                $exist = $this->app->dbAdapter->select("DirtySku",['checksum' => $crc32,'shopId' =>$dirtySkus[$i]['shopId']])->fetchAll();
 
                 /** Already written */
                 if (count($exist) == 0) {
@@ -307,7 +311,7 @@ abstract class  ABSoftImporter extends AProductImporter
 
                 $dirtySku[$i]['extSizeId'] = $values[2];
                 $dirtySku[$i]['size'] = $values[1].'-'.$values[3];
-                $exist = $this->app->dbAdapter->select("DirtySku",['extSizeId' => $dirtySku[$i]['extSizeId'],'shopId' => $this->shop->id])->fetchAll();
+                $exist = $this->app->dbAdapter->select("DirtySku",['extSizeId' => $dirtySku[$i]['extSizeId'],'shopId' => 60])->fetchAll();
 
                 /** Already written */
                 if (count($exist) == 1) {
@@ -340,7 +344,7 @@ abstract class  ABSoftImporter extends AProductImporter
 	                                      ds.productSizeId = ps.productSizeId AND
 	                                      dp.fullMatch = 1 AND
 	                                      ds.qty != 0 AND
-	                                      ps.shopId = ?",[$this->shop->id])->fetchAll();
+	                                      ps.shopId = ?",[60])->fetchAll();
 
         $this->report("findZeroSkus","Product to set 0: " . count($res),[]);
         $this->report("findZeroSkus","Product not at 0: " . count($res),[]);
@@ -363,7 +367,7 @@ abstract class  ABSoftImporter extends AProductImporter
         $dest = $this->err ? "err" : "done";
 
         $now = new \DateTime();
-        $phar = new \PharData($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/' . $this->shop->name . '/import/' . $dest . '/' . $now->format('YmdHis') . '.tar');
+        $phar = new \PharData($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/import/' . $dest . '/' . $now->format('YmdHis') . '.tar');
 
 
         $phar->addFile($this->main);
@@ -377,6 +381,6 @@ abstract class  ABSoftImporter extends AProductImporter
         unlink($this->main);
         unlink($this->skus);
         unlink($this->progressive);
-        unlink($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/' . $this->shop->name . '/import/' . $dest . '/' . $now->format('YmdHis') . '.tar');
+        unlink($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/import/' . $dest . '/' . $now->format('YmdHis') . '.tar');
     }
 }
