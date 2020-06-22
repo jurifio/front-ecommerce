@@ -120,9 +120,7 @@ abstract class  ABSoftImporter extends AProductImporter
         $dirtyProductExtended = [];
         $i = 0;
         while (($values = fgetcsv($main,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
-            if ($values[0][0] == '"') {
-                $values[0] = substr($values[0],1);
-            }
+
 
             $line = implode($this->config->fetch('miscellaneous','separator'),$values);
             $dirtyProduct[$i]['brand'] = $values[12];
@@ -154,10 +152,7 @@ abstract class  ABSoftImporter extends AProductImporter
             if ($exist == 0) {
                 $one = [];
                 /** Count columns */
-                if (count($values) != $this->config->fetch('files','main')['columns']) {
-                    //ERROR
-                    continue;
-                }
+
                 /** Isolate values and find good ones */
                 $mapping = $this->config->fetch('mapping','main');
                 foreach ($mapping as $key => $val) {
@@ -249,10 +244,7 @@ abstract class  ABSoftImporter extends AProductImporter
         $dirtyProductRepo = \Monkey::app()->repoFactory->create('DirtyProduct');
         while (($values = fgetcsv($progressives,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
             try {
-                if (count($values) != $this->config->fetch('files','skus')['columns']) {
-                    $this->warning('Columns Count',count($values) . ' columns find, expecting ' . $this->config->fetch('files','skus')['columns'],$values);
-                    continue;
-                }
+
                 $line = implode($this->config->fetch('miscellaneous','separator'),$values);
                 $dirtySkus[$i]['extSkuId'] = $values[0];
                 $dirtySkus[$i]['extSizeId'] = $values[1];
@@ -310,6 +302,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 $this->error('Read Sku','Error while reading Sku',$e);
 
             }
+            $i++;
         }
     }
 
@@ -325,10 +318,7 @@ abstract class  ABSoftImporter extends AProductImporter
         $dirtySkuRepo=\Monkey::app()->repoFactory->create('DirtySku');
         while (($values = fgetcsv($skus,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
             try {
-                if (count($values) != $this->config->fetch('files','skus')['columns']) {
-                    $this->warning('Columns Count',count($values) . ' columns find, expecting ' . $this->config->fetch('files','skus')['columns'],$values);
-                    continue;
-                }
+
 
                 $dirtySku[$i]['extSizeId'] = $values[2];
                 $dirtySku[$i]['size'] = $values[1].'-'.$values[3];
@@ -347,6 +337,7 @@ abstract class  ABSoftImporter extends AProductImporter
             } catch (\Throwable $e) {
                 $this->error('Read Sku','Error while update Sku Size',$e);
             }
+            $i++;
         }
     }
 
