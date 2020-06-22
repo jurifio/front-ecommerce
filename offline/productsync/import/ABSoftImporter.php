@@ -77,7 +77,7 @@ abstract class  ABSoftImporter extends AProductImporter
 
 
         /** TAGLIE */
-        $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Taglie.csv');
+        $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Taglie.txt');
         $products = $files[count($files) - 1];
         $size = filesize($products);
         while ($size != filesize($products)) {
