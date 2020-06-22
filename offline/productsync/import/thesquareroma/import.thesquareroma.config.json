@@ -14,38 +14,53 @@
             "columns":  48,
             "extKeys": ["extId","var"]
         },
+        "extend": {
+            "location": "main.csv",
+            "columns":  48,
+            "extKeys": ["extId","var"]
+        },
         "skus": {
             "location": "skus.csv",
             "columns":  4,
-            "extKeys": ["extId","var"]
+            "extKeys": ["extSizeId"]
         },
         "progressive": {
             "location": "progressive.csv",
             "columns":  2,
-            "extKeys": ["extId","var"]
+            "extKeys": ["extSizeId","extId"]
         }
     },
     "mapping": {
         "main":  {
-            "itemno": 1,
+            "itemno": 0,
             "var" : 20,
-            "extId": 0,
+            "extId": 19,
+            "brand": 12,
+            "value" : 29,
             "price": 31,
-            "salePrice": 32,
-            "value" : 29
+            "salePrice": 32
+
+        },
+        "extend":  {
+            "season": 6,
+            "name": 1,
+            "description": 2,
+            "colorDescription": 22,
+            "generalColor": 22,
+            "audience": 18,
+            "cat1": 28,
+            "cat2": 16,
+            "cat3": 14,
+            "cat4": 26
+
         },
         "skus": {
-            "var" : 3,
-            "extId": 2,
-            "price": 5,
-            "salePrice": 6,
-            "value" : 7,
-            "shopId" : 8,
-            "size" : 2,
-            "qty" : 3
+            "sizeGroup": 1,
+            "extSizeId": 2,
+            "size" : 3
         },
         "progressive": {
-            "var" : 10,
+            "var" : 0,
             "size": 1,
             "qty" : 2
         }

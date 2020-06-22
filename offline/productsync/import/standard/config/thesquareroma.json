@@ -31,7 +31,9 @@
             "extId": 4,
             "price": 18,
             "salePrice": 25,
+            "value": 32,
             "supplier": 1
+
         },
         "extend":  {
             "season": 2,
