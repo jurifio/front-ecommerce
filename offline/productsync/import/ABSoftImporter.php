@@ -166,7 +166,7 @@ abstract class  ABSoftImporter extends AProductImporter
 
 
                 /** find existing product */
-                $res = $this->app->dbAdapter->select('DirtyProduct',['exitId'=> $dirtySku[$i]['extSizeId'],'shopId' => 60,'var'=>$dirtyProduct[$i]['var']])->fetchAll();
+                $res = $this->app->dbAdapter->select('DirtyProduct',['exitId'=> $dirtyProduct[$i]['extSizeId'],'shopId' => 60,'var'=>$dirtyProduct[$i]['var']])->fetchAll();
                 if (count($res) == 0) {
                     /** è un nuovo prodotto lo scrivo */
                     $dirtyProduct[$i]['shopId'] = 60;
