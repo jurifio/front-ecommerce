@@ -232,7 +232,7 @@ abstract class  ABSoftImporter extends AProductImporter
         $dirtySkus = [];
         $i = 0;
         $dirtyProductRepo = \Monkey::app()->repoFactory->create('DirtyProduct');
-        while (($values = fgetcsv($skus,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
+        while (($values = fgetcsv($progressives,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
             try {
                 if (count($values) != $this->config->fetch('files','skus')['columns']) {
                     $this->warning('Columns Count',count($values) . ' columns find, expecting ' . $this->config->fetch('files','skus')['columns'],$values);
