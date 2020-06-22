@@ -75,20 +75,7 @@ abstract class  ABSoftImporter extends AProductImporter
             unlink($files[$i]);
         }
 
-        /** PRODUCTSEXTEND */
-        $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Articoli.txt');
-        $products = $files[count($files) - 1];
 
-        $size = filesize($products);
-        while ($size != filesize($products)) {
-            sleep(1);
-            $size = filesize($products);
-        }
-        $this->main = $this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/import/extend' . rand(0,1000) . '.csv';
-        copy($products,$this->main);
-        for ($i = 0; $i < (count($files) - 1); $i++) {
-            unlink($files[$i]);
-        }
         /** TAGLIE */
         $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Taglie.csv');
         $products = $files[count($files) - 1];
