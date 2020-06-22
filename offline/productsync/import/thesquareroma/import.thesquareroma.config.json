@@ -14,19 +14,14 @@
             "columns":  48,
             "extKeys": ["extId","var"]
         },
-        "extend": {
-            "location": "main.csv",
-            "columns":  48,
-            "extKeys": ["extId","var"]
-        },
         "skus": {
             "location": "skus.csv",
-            "columns":  4,
+            "columns":  5,
             "extKeys": ["extSizeId"]
         },
         "progressive": {
             "location": "progressive.csv",
-            "columns":  2,
+            "columns":  3,
             "extKeys": ["extSizeId","extId"]
         }
     },
