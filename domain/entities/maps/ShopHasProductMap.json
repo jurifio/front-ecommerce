@@ -24,6 +24,12 @@
                 "childKeys": ["productId","productVariantId","shopId"],
                 "type": "OneToMany"
             },{
+                "name": "productHasProductCorrelation",
+                "entity": "ProductHasProductCorrelation",
+                "parentKeys": ["productId","productVariantId","shopId"],
+                "childKeys": ["productId","productVariantId","shopId"],
+                "type": "OneToMany"
+            },{
                 "name": "productSku",
                 "entity": "ProductSku",
                 "parentKeys": ["productId", "productVariantId", "shopId"],
