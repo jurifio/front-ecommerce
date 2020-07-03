@@ -177,7 +177,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtyProductInsert->value = $dirtyProduct[$i]['value'];
                     $dirtyProductInsert->price = $dirtyProduct[$i]['price'];
                     $dirtyProductInsert->text = $line;
-                    $dirtyProductInsert->status = 'E';
+                    $dirtyProductInsert->dirtyStatus = 'E';
                     $dirtyProductInsert->salePrice = $dirtyProduct[$i]['salePrice'];
                     $dirtyProductInsert->checksum = $dirtyProduct[$i]['checksum'];
                     $dirtyProductInsert->extId = $dirtyProduct[$i]['extId'];
