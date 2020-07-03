@@ -325,8 +325,8 @@ abstract class  ABSoftImporter extends AProductImporter
             try {
 
 
-                $dirtySku[$i]['extSizeId'] = str_replace('-','',$values[2]);
-                $dirtySku[$i]['size'] = $values[1].'-'.$values[3];
+                $dirtySku[$i]['extSizeId'] = $values[2];
+                $dirtySku[$i]['size'] = $values[3];
                 $exist = $this->app->dbAdapter->select("DirtySku",['extSizeId' => $dirtySku[$i]['extSizeId'],'shopId' => 60])->fetchAll();
 
                 /** Already written */
