@@ -197,6 +197,9 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtyProductExtendInsert->cat2 = $dirtyProductExtended[$i]['cat2'];
                     $dirtyProductExtendInsert->cat3 = $dirtyProductExtended[$i]['cat3'];
                     $dirtyProductExtendInsert->cat4 = $dirtyProductExtended[$i]['cat4'];
+                    $dirtyProductExtendInsert->colorDescription = $dirtyProductExtended[$i]['colorDescription'];
+                    $dirtyProductExtendInsert->generalColor = $dirtyProductExtended[$i]['generalColor'];
+                    $dirtyProductExtendInsert->cheksum=$dirtyProduct[$i]['checksum'];
                     $dirtyProductExtendInsert->insert();
 
 
@@ -319,7 +322,7 @@ abstract class  ABSoftImporter extends AProductImporter
         $dirtySku = [];
         $i = 0;
         $dirtySkuRepo=\Monkey::app()->repoFactory->create('DirtySku');
-        while (($values = fgetcsv($skus,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
+        while (($values = fgetcsv($skus,0,'|')) !== false) {
             try {
 
 
