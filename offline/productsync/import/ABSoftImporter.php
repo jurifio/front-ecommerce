@@ -121,74 +121,76 @@ abstract class  ABSoftImporter extends AProductImporter
         //read main
         $main = $this->mainF;
         fgets($main);
-        $dirtyProduct = [];
-        $dirtyProductExtended = [];
+
         $i = 0;
         try {
             while (($values = fgetcsv($main,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
-
+                $dirtyProduct = [];
+                $dirtyProductExtended = [];
 
                 $line = implode($this->config->fetch('miscellaneous','separator'),$values);
-                $dirtyProduct[$i]['brand'] = $values[12];
-                $dirtyProduct[$i]['var'] = $values[20];
-                $dirtyProduct[$i]['itemno'] = $values[0];
+                $dirtyProduct['brand'] = $values[12];
+                $dirtyProduct['var'] = $values[20];
+                $dirtyProduct['itemno'] = $values[0];
 
-                $dirtyProduct[$i]['extId'] = $values[19];
-                $dirtyProduct[$i]['value'] = str_replace(',','.',$values[29]);
-                $dirtyProduct[$i]['price'] = str_replace(',','.',$values[30]);
-                $dirtyProduct[$i]['salePrice'] = str_replace(',','.',$values[31]);
-                $dirtyProductExtended[$i]['season'] = $values[6];
-                $dirtyProductExtended[$i]['name'] = $values[1];
-                $dirtyProductExtended[$i]['description'] = $values[2];
-                $dirtyProductExtended[$i]['colorDescription'] = $values[22];
-                $dirtyProductExtended[$i]['generalColor'] = $values[22];
-                $dirtyProductExtended[$i]['audience'] = $values[18];
-                $dirtyProductExtended[$i]['cat1'] = $values[28];
-                $dirtyProductExtended[$i]['cat2'] = $values[16];
-                $dirtyProductExtended[$i]['cat3'] = $values[14];
-                $dirtyProductExtended[$i]['cat4'] = $values[26];
-                $dirtyProductExtended[$i]['shopId'] = 60;
+                $dirtyProduct['extId'] = $values[19];
+                $dirtyProduct['value'] = str_replace(',','.',$values[29]);
+                $dirtyProduct['price'] = str_replace(',','.',$values[30]);
+                $dirtyProduct['salePrice'] = str_replace(',','.',$values[31]);
+                $dirtyProduct['text']=$line;
+                $dirtyProductExtended['season'] = $values[6];
+                $dirtyProductExtended['name'] = $values[1];
+                $dirtyProductExtended['description'] = $values[2];
+                $dirtyProductExtended['colorDescription'] = $values[22];
+                $dirtyProductExtended['generalColor'] = $values[22];
+                $dirtyProductExtended['audience'] = $values[18];
+                $dirtyProductExtended['cat1'] = $values[28];
+                $dirtyProductExtended['cat2'] = $values[16];
+                $dirtyProductExtended['cat3'] = $values[14];
+                $dirtyProductExtended['cat4'] = $values[26];
+                $dirtyProductExtended['shopId'] = 60;
 
                 $crc32 = md5($line);
 
                 /** Insert */
 
-                    $dirtyProduct[$i]['text'] = $line;
-                    $dirtyProduct[$i]['checksum'] = $crc32;
+                    $dirtyProduct['text'] = $line;
+                    $dirtyProduct['checksum'] = $crc32;
 
                     $keys = $this->config->fetch('files','main')['extKeys'];
 
 
                     /** find existing product */
-                    $res = $this->app->dbAdapter->select('DirtyProduct',['checksum' => $crc32,'extId' => $dirtyProduct[$i]['extId'],'shopId' => 60,'var' => $dirtyProduct[$i]['var']])->fetchAll();
+                    $res = $this->app->dbAdapter->select('DirtyProduct',['checksum' => $crc32,'extId' => $dirtyProduct['extId'],'shopId' => 60,'var' => $dirtyProduct['var']])->fetchAll();
                     if (count($res) == 0) {
                         /** è un nuovo prodotto lo scrivo */
-                        $dirtyProduct[$i]['shopId'] = 60;
-                        $dirtyProduct[$i]['dirtyStatus'] = 'E';
+                        $dirtyProduct['shopId'] = 60;
+                        $dirtyProduct['dirtyStatus'] = 'E';
                         $dirtyProductInsert = \Monkey::app()->repoFactory->create('DirtyProduct')->getEmptyEntity();
                         $dirtyProductInsert->shopId = 60;
-                        $dirtyProductInsert->itemno = $dirtyProduct[$i]['itemno'];
-                        $dirtyProductInsert->brand = $dirtyProduct[$i]['brand'];
-                        $dirtyProductInsert->var = $dirtyProduct[$i]['var'];
-                        $dirtyProductInsert->value = $dirtyProduct[$i]['value'];
-                        $dirtyProductInsert->price = $dirtyProduct[$i]['price'];
-                        $dirtyProductInsert->salePrice = $dirtyProduct[$i]['salePrice'];
-                        $dirtyProductInsert->checksum = $dirtyProduct[$i]['checksum'];
-                        $dirtyProductInsert->extId = $dirtyProduct[$i]['extId'];
+                        $dirtyProductInsert->itemno = $dirtyProduct['itemno'];
+                        $dirtyProductInsert->brand = $dirtyProduct['brand'];
+                        $dirtyProductInsert->var = $dirtyProduct['var'];
+                        $dirtyProductInsert->value = $dirtyProduct['value'];
+                        $dirtyProductInsert->text = $dirtyProduct['text'];
+                        $dirtyProductInsert->price = $dirtyProduct['price'];
+                        $dirtyProductInsert->salePrice = $dirtyProduct['salePrice'];
+                        $dirtyProductInsert->checksum = $dirtyProduct['checksum'];
+                        $dirtyProductInsert->extId = $dirtyProduct['extId'];
                         $dirtyProductInsert->insert();
 
                         $lastId = $this->app->dbAdapter->query('SELECT max(`id`) as dirtyProductId FROM `DirtyProduct`',[])->fetchAll()[0]['dirtyProductId'];
-                        $dirtyProductExtended[$i]['dirtyProductId'] = $lastId;
+                        $dirtyProductExtended['dirtyProductId'] = $lastId;
                         $dirtyProductExtendInsert = \Monkey::app()->repoFactory->create('DirtyProductExtend')->getEmptyEntity();
                         $dirtyProductExtendInsert->shopId = 60;
-                        $dirtyProductExtendInsert->name = $dirtyProductExtended[$i]['name'];
-                        $dirtyProductExtendInsert->description = $dirtyProductExtended[$i]['description'];
-                        $dirtyProductExtendInsert->season = $dirtyProductExtended[$i]['season'];
-                        $dirtyProductExtendInsert->audience = $dirtyProductExtended[$i]['audience'];
-                        $dirtyProductExtendInsert->cat1 = $dirtyProductExtended[$i]['cat1'];
-                        $dirtyProductExtendInsert->cat2 = $dirtyProductExtended[$i]['cat2'];
-                        $dirtyProductExtendInsert->cat3 = $dirtyProductExtended[$i]['cat3'];
-                        $dirtyProductExtendInsert->cat4 = $dirtyProductExtended[$i]['cat4'];
+                        $dirtyProductExtendInsert->name = $dirtyProductExtended['name'];
+                        $dirtyProductExtendInsert->description = $dirtyProductExtended['description'];
+                        $dirtyProductExtendInsert->season = $dirtyProductExtended['season'];
+                        $dirtyProductExtendInsert->audience = $dirtyProductExtended['audience'];
+                        $dirtyProductExtendInsert->cat1 = $dirtyProductExtended['cat1'];
+                        $dirtyProductExtendInsert->cat2 = $dirtyProductExtended['cat2'];
+                        $dirtyProductExtendInsert->cat3 = $dirtyProductExtended['cat3'];
+                        $dirtyProductExtendInsert->cat4 = $dirtyProductExtended['cat4'];
                         $dirtyProductExtendInsert->insert();
 
 
@@ -196,26 +198,26 @@ abstract class  ABSoftImporter extends AProductImporter
                         /** update existing product if changed */
                         //exist.. what to do? uhm... update?
 
-                        $dirtyProductUpdate = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId' => $dirtyProduct[$i]['extId'],'var' => $dirtyProduct[$i]['var'],'shopId' => 60]);
+                        $dirtyProductUpdate = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId' => $dirtyProduct['extId'],'var' => $dirtyProduct['var'],'shopId' => 60]);
                         $dirtyProductId = $dirtyProductUpdate->id;
-                        $dirtyProductUpdate->itemno = $dirtyProduct[$i]['itemno'];
-                        $dirtyProductUpdate->brand = $dirtyProduct[$i]['brand'];
-                        $dirtyProductUpdate->price = $dirtyProduct[$i]['price'];
-                        $dirtyProductUpdate->value = $dirtyProduct[$i]['value'];
-                        $dirtyProductUpdate->salePrice = $dirtyProduct[$i]['salePrice'];
+                        $dirtyProductUpdate->itemno = $dirtyProduct['itemno'];
+                        $dirtyProductUpdate->brand = $dirtyProduct['brand'];
+                        $dirtyProductUpdate->price = $dirtyProduct['price'];
+                        $dirtyProductUpdate->value = $dirtyProduct['value'];
+                        $dirtyProductUpdate->salePrice = $dirtyProduct['salePrice'];
                         $dirtyProductUpdate->update();
                         $dirtyProductExtendedUpdate = \Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId' => $dirtyProductId,'shopId' => 60]);
-                        $dirtyProductExtendedUpdate->name = $dirtyProductExtended[$i]['name'];
-                        $dirtyProductExtendedUpdate->description = $dirtyProductExtended[$i]['description'];
-                        $dirtyProductExtendedUpdate->season = $dirtyProductExtended[$i]['season'];
-                        $dirtyProductExtendedUpdate->audience = $dirtyProductExtended[$i]['audience'];
-                        $dirtyProductExtendedUpdate->cat1 = $dirtyProductExtended[$i]['cat1'];
-                        $dirtyProductExtendedUpdate->cat2 = $dirtyProductExtended[$i]['cat2'];
-                        $dirtyProductExtendedUpdate->cat3 = $dirtyProductExtended[$i]['cat3'];
-                        $dirtyProductExtendedUpdate->cat4 = $dirtyProductExtended[$i]['cat4'];
-                        $dirtyProductExtendedUpdate->shopId = $dirtyProductExtended[$i]['shopId'];
-                        $dirtyProductExtendedUpdate->generalColor = $dirtyProductExtended[$i]['generalColor'];
-                        $dirtyProductExtendedUpdate->colorDescription = $dirtyProductExtended[$i]['colorDescription'];
+                        $dirtyProductExtendedUpdate->name = $dirtyProductExtended['name'];
+                        $dirtyProductExtendedUpdate->description = $dirtyProductExtended['description'];
+                        $dirtyProductExtendedUpdate->season = $dirtyProductExtended['season'];
+                        $dirtyProductExtendedUpdate->audience = $dirtyProductExtended['audience'];
+                        $dirtyProductExtendedUpdate->cat1 = $dirtyProductExtended['cat1'];
+                        $dirtyProductExtendedUpdate->cat2 = $dirtyProductExtended['cat2'];
+                        $dirtyProductExtendedUpdate->cat3 = $dirtyProductExtended['cat3'];
+                        $dirtyProductExtendedUpdate->cat4 = $dirtyProductExtended['cat4'];
+                        $dirtyProductExtendedUpdate->shopId = $dirtyProductExtended['shopId'];
+                        $dirtyProductExtendedUpdate->generalColor = $dirtyProductExtended['generalColor'];
+                        $dirtyProductExtendedUpdate->colorDescription = $dirtyProductExtended['colorDescription'];
                         $dirtyProductExtendedUpdate->update();
                     } else {
                         //error
@@ -237,57 +239,55 @@ abstract class  ABSoftImporter extends AProductImporter
         $progressives = $this->progressiveF;
         $shopOk = 0;
         $shopKo = 0;
-        $dirtySkus = [];
+
         $i = 0;
         $dirtyProductRepo = \Monkey::app()->repoFactory->create('DirtyProduct');
         while (($values = fgetcsv($progressives,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
             try {
-
+                $dirtySkus = [];
                 $line = implode($this->config->fetch('miscellaneous','separator'),$values);
-                $dirtySkus[$i]['extSkuId'] = $values[0];
-                $dirtySkus[$i]['extSizeId'] = $values[1];
-                $dirtySkus[$i]['qty'] = $values[2];
-                $dirtySkus[$i]['size'] = 'TU';
-                $dirtySkus[$i]['shopId'] = 60;
-                $dirtyProduct = $dirtyProductRepo->findOneBy(['var' => $dirtySkus[$i]['extSkuId'],'shopId'=>$dirtySkus[$i]['shopId']]);
-                if ($dirtyProduct == null) {
-                    continue;
-                }
-                $dirtySkus[$i]['dirtyProductId'] = $dirtyProduct->id;
-                $dirtySkus[$i]['value'] = $dirtyProduct->value;
-                $dirtySkus[$i]['price'] = $dirtyProduct->price;
-                $dirtySkus[$i]['salePrice'] = $dirtyProduct->salePrice;
+                $dirtySkus['extSkuId'] = $values[0];
+                $dirtySkus['extSizeId'] = $values[1];
+                $dirtySkus['qty'] = $values[2];
+                $dirtySkus['size'] = 'TU';
+                $dirtySkus['shopId'] = 60;
+                $dirtyProduct = $dirtyProductRepo->findOneBy(['var' => $dirtySkus['extSkuId'],'shopId'=>$dirtySkus['shopId']]);
+
+                $dirtySkus['dirtyProductId'] = $dirtyProduct->id;
+                $dirtySkus['value'] = $dirtyProduct->value;
+                $dirtySkus['price'] = $dirtyProduct->price;
+                $dirtySkus['salePrice'] = $dirtyProduct->salePrice;
 
                 $crc32 = md5($dirtySkus[$i]);
                 $dirtySkus[$i]['checksum'] = $crc32;
-                $exist = $this->app->dbAdapter->select("DirtySku",['checksum' => $crc32,'shopId' =>$dirtySkus[$i]['shopId']])->fetchAll();
+                $exist = $this->app->dbAdapter->select("DirtySku",['checksum' => $crc32,'shopId' =>$dirtySkus['shopId']])->fetchAll();
 
                 /** Already written */
                 if (count($exist) == 0) {
                     $dirtySkuInsert=\Monkey::app()->repoFactory->create('DirtySku')->getEmptyEntity();
-                    $dirtySkuInsert->extSizeId= $dirtySkus[$i]['extSkuId'];
-                    $dirtySkuInsert->size=$dirtySkus[$i]['size'];
+                    $dirtySkuInsert->extSizeId= $dirtySkus['extSkuId'];
+                    $dirtySkuInsert->size=$dirtySkus['size'];
                     $dirtySkuInsert->shopId=60;
-                    $dirtySkuInsert->qty=$dirtySkus[$i]['qty'];
-                    $dirtySkuInsert->value=$dirtySkus[$i]['value'];
-                    $dirtySkuInsert->dirtyProductId= $dirtySkus[$i]['dirtyProductId'];
-                    $dirtySkuInsert->price=$dirtySkus[$i]['value'];
-                    $dirtySkuInsert->salePrice=$dirtySkus[$i]['salePrice'];
-                    $dirtySkuInsert->checksum=$dirtySkus[$i]['checksum'];
+                    $dirtySkuInsert->qty=$dirtySkus['qty'];
+                    $dirtySkuInsert->value=$dirtySkus['value'];
+                    $dirtySkuInsert->dirtyProductId= $dirtySkus['dirtyProductId'];
+                    $dirtySkuInsert->price=$dirtySkus['value'];
+                    $dirtySkuInsert->salePrice=$dirtySkus['salePrice'];
+                    $dirtySkuInsert->checksum=$dirtySkus['checksum'];
                     $dirtySkuInsert->insert();
-                    $this->debug('processFile','Sku don\'t Exist, insert',$dirtySkus[$i]['dirtyProductId']);
+                    $this->debug('processFile','Sku don\'t Exist, insert',$dirtySkus['dirtyProductId']);
 
                 } elseif (count($exist) == 1) {
                     $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$exit[0]['id']]);
-                    $dirtySkuUpdate->extSizeId= $dirtySkus[$i]['extSkuId'];
-                    $dirtySkuUpdate->size=$dirtySkus[$i]['size'];
+                    $dirtySkuUpdate->extSizeId= $dirtySkus['extSkuId'];
+                    $dirtySkuUpdate->size=$dirtySkus['size'];
                     $dirtySkuUpdate->shopId=60;
-                    $dirtySkuUpdate->qty=$dirtySkus[$i]['qty'];
-                    $dirtySkuUpdate->value=$dirtySkus[$i]['value'];
-                    $dirtySkuUpdate->dirtyProductId= $dirtySkus[$i]['dirtyProductId'];
-                    $dirtySkuUpdate->price=$dirtySkus[$i]['value'];
-                    $dirtySkuUpdate->salePrice=$dirtySkus[$i]['salePrice'];
-                    $dirtySkuUpdate->checksum=$dirtySkus[$i]['checksum'];
+                    $dirtySkuUpdate->qty=$dirtySkus['qty'];
+                    $dirtySkuUpdate->value=$dirtySkus['value'];
+                    $dirtySkuUpdate->dirtyProductId= $dirtySkus['dirtyProductId'];
+                    $dirtySkuUpdate->price=$dirtySkus['value'];
+                    $dirtySkuUpdate->salePrice=$dirtySkus['salePrice'];
+                    $dirtySkuUpdate->checksum=$dirtySkus['checksum'];
                     $dirtySkuUpdate->update();
                     $this->debug('processFile','Sku Exist, update',$exit[0]['id']);
 
@@ -311,22 +311,22 @@ abstract class  ABSoftImporter extends AProductImporter
         $skus = $this->skusF;
         $shopOk = 0;
         $shopKo = 0;
-        $dirtySku = [];
+
         $i = 0;
         $dirtySkuRepo=\Monkey::app()->repoFactory->create('DirtySku');
         while (($values = fgetcsv($skus,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
             try {
+                $dirtySku = [];
 
-
-                $dirtySku[$i]['extSizeId'] = $values[2];
-                $dirtySku[$i]['size'] = $values[1].'-'.$values[3];
-                $exist = $this->app->dbAdapter->select("DirtySku",['extSizeId' => $dirtySku[$i]['extSizeId'],'shopId' => 60])->fetchAll();
+                $dirtySku['extSizeId'] = $values[2];
+                $dirtySku['size'] = $values[1].'-'.$values[3];
+                $exist = $this->app->dbAdapter->select("DirtySku",['extSizeId' => $dirtySku['extSizeId'],'shopId' => 60])->fetchAll();
 
                 /** Already written */
                 if (count($exist) == 1) {
                     $this->seenSkus[] = $exist[0]['id'];
                     $updateDirtySku=$dirtySkuRepo->findOneBy(['id'=>$exist[0]['id']]);
-                    $updateDirtySku->size=$dirtySku[$i]['size'];
+                    $updateDirtySku->size=$dirtySku['size'];
                     $updateDirtySku->update();
                 }else{
                     continue;
