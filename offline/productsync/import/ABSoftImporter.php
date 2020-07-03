@@ -152,9 +152,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 $crc32 = md5($line);
                 $exist = $this->app->dbAdapter->selectCount("DirtyProduct",['checksum' => $crc32,'shopId' => 60]);
                 /** Already written */
-                if ($exist == 1) {
-                    continue;
-                }
+                
                 /** Insert */
 
                 $dirtyProduct[$i]['text'] = $line;
