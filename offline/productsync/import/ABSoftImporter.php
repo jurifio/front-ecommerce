@@ -254,7 +254,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['extSkuId'] = $values[0];
                 $dirtySkus[$i]['extSizeId'] = $values[1];
                 $dirtySkus[$i]['qty'] = $values[2];
-                //$dirtySkus[$i]['size'] = 'TU';
+                $dirtySkus[$i]['size'] = $values[0].'-'.$values[1];
                 $dirtySkus[$i]['shopId'] = 60;
                 $dirtyProduct = $dirtyProductRepo->findOneBy(['extId' => $dirtySkus[$i]['extSkuId'],'shopId'=>$dirtySkus[$i]['shopId']]);
                 if ($dirtyProduct == null) {
@@ -273,7 +273,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 if (count($exist) == 0) {
                     $dirtySkuInsert=\Monkey::app()->repoFactory->create('DirtySku')->getEmptyEntity();
                     $dirtySkuInsert->extSkuId= $dirtySkus[$i]['extSkuId'];
-                  //  $dirtySkuInsert->size=$dirtySkus[$i]['size'];
+                    $dirtySkuInsert->size=$dirtySkus[$i]['size'];
                     $dirtySkuInsert->extSizeId= $dirtySkus[$i]['extSizeId'];
                     $dirtySkuInsert->shopId=60;
                     $dirtySkuInsert->qty=$dirtySkus[$i]['qty'];
@@ -288,8 +288,6 @@ abstract class  ABSoftImporter extends AProductImporter
                 } elseif (count($exist) == 1) {
                     $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$exit[0]['id']]);
                     $dirtySkuUpdate->extSkuId= $dirtySkus[$i]['extSkuId'];
-                 //   $dirtySkuUpdate->size=$dirtySkus[$i]['size'];
-                    $dirtySkuUpdate->extSizeId= $dirtySkus[$i]['extSizeId'];
                     $dirtySkuUpdate->shopId=60;
                     $dirtySkuUpdate->qty=$dirtySkus[$i]['qty'];
                     $dirtySkuUpdate->value=$dirtySkus[$i]['value'];
