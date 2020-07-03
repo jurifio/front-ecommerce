@@ -150,7 +150,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 continue;
             }
             /** Insert */
-
+            if ($exist == 0) {
                 $one = [];
                 /** Count columns */
 
@@ -177,7 +177,6 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtyProductInsert->itemno = $dirtyProduct[$i]['itemno'];
                     $dirtyProductInsert->brand= $dirtyProduct[$i]['brand'];
                     $dirtyProductInsert->var=$dirtyProduct[$i]['var'];
-                    $dirtyProductInsert->text=$dirtyProduct[$i]['text'];
                     $dirtyProductInsert->value=$dirtyProduct[$i]['value'];
                     $dirtyProductInsert->price=$dirtyProduct[$i]['price'];
                     $dirtyProductInsert->salePrice= $dirtyProduct[$i]['salePrice'];
@@ -232,7 +231,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     //log
                     continue;
                 }
-
+            }
             $i++;
         }
     }
@@ -255,7 +254,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['qty'] = $values[2];
                 $dirtySkus[$i]['size'] = 'TU';
                 $dirtySkus[$i]['shopId'] = 60;
-                $dirtyProduct = $dirtyProductRepo->findOneBy(['extId' => $dirtySkus[$i]['extSkuId'],'shopId'=>$dirtySkus[$i]['shopId']]);
+                $dirtyProduct = $dirtyProductRepo->findOneBy(['var' => $dirtySkus[$i]['extSkuId'],'shopId'=>$dirtySkus[$i]['shopId']]);
                 if ($dirtyProduct == null) {
                     continue;
                 }
@@ -263,17 +262,16 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['value'] = $dirtyProduct->value;
                 $dirtySkus[$i]['price'] = $dirtyProduct->price;
                 $dirtySkus[$i]['salePrice'] = $dirtyProduct->salePrice;
-               // $prev=$dirtySkus[$i]['extSkuId'].$dirtySkus[$i]['extSizeId'].$dirtySkus[$i]['qty'].$dirtySkus[$i]['size'].$dirtySkus[$i]['shopId'].$dirtySkus[$i]['dirtyProductId'].$dirtySkus[$i]['value'].$dirtySkus[$i]['price'].$dirtySkus[$i]['salePrice'];
-                $crc32 = md5($line);
+
+                $crc32 = md5($dirtySkus[$i]);
                 $dirtySkus[$i]['checksum'] = $crc32;
                 $exist = $this->app->dbAdapter->select("DirtySku",['checksum' => $crc32,'shopId' =>$dirtySkus[$i]['shopId']])->fetchAll();
 
                 /** Already written */
                 if (count($exist) == 0) {
                     $dirtySkuInsert=\Monkey::app()->repoFactory->create('DirtySku')->getEmptyEntity();
-                    $dirtySkuInsert->extSkuId= $dirtySkus[$i]['extSkuId'];
+                    $dirtySkuInsert->extSizeId= $dirtySkus[$i]['extSkuId'];
                     $dirtySkuInsert->size=$dirtySkus[$i]['size'];
-                    $dirtySkuInsert->extSizeId= $dirtySkus[$i]['extSizeId'];
                     $dirtySkuInsert->shopId=60;
                     $dirtySkuInsert->qty=$dirtySkus[$i]['qty'];
                     $dirtySkuInsert->value=$dirtySkus[$i]['value'];
@@ -286,19 +284,22 @@ abstract class  ABSoftImporter extends AProductImporter
 
                 } elseif (count($exist) == 1) {
                     $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$exist[0]['id']]);
-                    $dirtySkuUpdate->extSkuId= $dirtySkus[$i]['extSkuId'];
+                    $dirtySkuUpdate->extSizeId= $dirtySkus[$i]['extSkuId'];
+                    $dirtySkuUpdate->size=$dirtySkus[$i]['size'];
                     $dirtySkuUpdate->shopId=60;
                     $dirtySkuUpdate->qty=$dirtySkus[$i]['qty'];
                     $dirtySkuUpdate->value=$dirtySkus[$i]['value'];
                     $dirtySkuUpdate->dirtyProductId= $dirtySkus[$i]['dirtyProductId'];
                     $dirtySkuUpdate->price=$dirtySkus[$i]['value'];
                     $dirtySkuUpdate->salePrice=$dirtySkus[$i]['salePrice'];
+                    $dirtySkuUpdate->checksum=$dirtySkus[$i]['checksum'];
                     $dirtySkuUpdate->update();
                     $this->debug('processFile','Sku Exist, update',$exist[0]['id']);
+                    $seenSkus[] = $exist[0]['id'];
 
                 } else throw new BambooException('More than 1 sku found to update');
 
-               // $seenSkus[] = $dirtySkus['id'];
+
 
 
             } catch (\Throwable $e) {
