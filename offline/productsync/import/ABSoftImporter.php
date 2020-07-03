@@ -131,9 +131,9 @@ abstract class  ABSoftImporter extends AProductImporter
                 $line = implode($this->config->fetch('miscellaneous','separator'),$values);
                 $dirtyProduct[$i]['brand'] = $values[12];
                 $dirtyProduct[$i]['var'] = $values[20];
-                $dirtyProduct[$i]['itemno'] = $values[0];
+                $dirtyProduct[$i]['itemno'] = str_replace('-','',values[0]);
 
-                $dirtyProduct[$i]['extId'] = $values[19];
+                $dirtyProduct[$i]['extId'] = str_replace('-','',$values[19]);
                 $dirtyProduct[$i]['value'] = str_replace(',','.',$values[29]);
                 $dirtyProduct[$i]['price'] = str_replace(',','.',$values[30]);
                 $dirtyProduct[$i]['salePrice'] = str_replace(',','.',$values[31]);
@@ -249,12 +249,12 @@ abstract class  ABSoftImporter extends AProductImporter
             try {
 
                 $line = implode($this->config->fetch('miscellaneous','separator'),$values);
-                $dirtySkus[$i]['extSkuId'] = $values[0];
-                $dirtySkus[$i]['extSizeId'] = $values[1];
+                $dirtySkus[$i]['extSkuId'] = str_replace('-','',$values[0]);
+                $dirtySkus[$i]['extSizeId'] = str_replace('-','',$values[1]);
                 $dirtySkus[$i]['qty'] = $values[2];
                 $dirtySkus[$i]['size'] = 'TU';
                 $dirtySkus[$i]['shopId'] = 60;
-                $dirtyProduct = $dirtyProductRepo->findOneBy(['var' => $dirtySkus[$i]['extSkuId'],'shopId'=>$dirtySkus[$i]['shopId']]);
+                $dirtyProduct = $dirtyProductRepo->findOneBy(['var' => $dirtySkus[$i]['extSkuId'],'shopId'=>60]);
                 if ($dirtyProduct == null) {
                     continue;
                 }
@@ -263,9 +263,9 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['price'] = $dirtyProduct->price;
                 $dirtySkus[$i]['salePrice'] = $dirtyProduct->salePrice;
 
-                $crc32 = md5($dirtySkus[$i]);
+                $crc32 = md5($dirtySkus[$line]);
                 $dirtySkus[$i]['checksum'] = $crc32;
-                $exist = $this->app->dbAdapter->select("DirtySku",['checksum' => $crc32,'shopId' =>$dirtySkus[$i]['shopId']])->fetchAll();
+                $exist = $this->app->dbAdapter->select("DirtySku",['checksum' => $crc32,'shopId' =>60])->fetchAll();
 
                 /** Already written */
                 if (count($exist) == 0) {
@@ -323,7 +323,7 @@ abstract class  ABSoftImporter extends AProductImporter
             try {
 
 
-                $dirtySku[$i]['extSizeId'] = $values[2];
+                $dirtySku[$i]['extSizeId'] = str_replace('-','',$values[2]);
                 $dirtySku[$i]['size'] = $values[1].'-'.$values[3];
                 $exist = $this->app->dbAdapter->select("DirtySku",['extSizeId' => $dirtySku[$i]['extSizeId'],'shopId' => 60])->fetchAll();
 
