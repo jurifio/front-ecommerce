@@ -195,6 +195,8 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtyProductExtendInsert->cat2 = $dirtyProductExtended[$i]['cat2'];
                     $dirtyProductExtendInsert->cat3 = $dirtyProductExtended[$i]['cat3'];
                     $dirtyProductExtendInsert->cat4 = $dirtyProductExtended[$i]['cat4'];
+                    $dirtyProductExtendedUpdate->generalColor = $dirtyProductExtended[$i]['generalColor'];
+                    $dirtyProductExtendedUpdate->colorDescription = $dirtyProductExtended[$i]['colorDescription'];
                     $dirtyProductExtendInsert->insert();
 
 
@@ -203,8 +205,6 @@ abstract class  ABSoftImporter extends AProductImporter
                     //exist.. what to do? uhm... update?
                     $dirtyProductUpdate = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId' => $dirtyProduct[$i]['extId'],'var' => $dirtyProduct[$i]['var'],'shopId' => 60]);
                     $dirtyProductId = $dirtyProductUpdate->id;
-                    $dirtyProductUpdate->itemno = $dirtyProduct[$i]['itemno'];
-                    $dirtyProductUpdate->brand = $dirtyProduct[$i]['brand'];
                     $dirtyProductUpdate->price = $dirtyProduct[$i]['price'];
                     $dirtyProductUpdate->value = $dirtyProduct[$i]['value'];
                     $dirtyProductUpdate->salePrice = $dirtyProduct[$i]['salePrice'];
@@ -248,7 +248,7 @@ abstract class  ABSoftImporter extends AProductImporter
         while (($values = fgetcsv($progressives,0,'|')) !== false) {
             try {
 
-                $line = implode($this->config->fetch('miscellaneous','separator'),$values);
+                $line = implode('|',$values);
                 $dirtySkus[$i]['extSkuId'] = $values[0];
                 $dirtySkus[$i]['extSizeId'] = $values[1];
                 $dirtySkus[$i]['qty'] = $values[2];
