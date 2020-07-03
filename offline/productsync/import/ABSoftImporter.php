@@ -61,7 +61,7 @@ abstract class  ABSoftImporter extends AProductImporter
     public function fetchFiles()
     {
         /** PRODUCTS */
-        $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Articoli*.txt');
+        $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/Articoli.txt');
         $products = $files[count($files) - 1];
 
         $size = filesize($products);
