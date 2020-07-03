@@ -130,10 +130,10 @@ abstract class  ABSoftImporter extends AProductImporter
 
                 $line = implode('-',$values);
                 $dirtyProduct[$i]['brand'] = $values[12];
-                $dirtyProduct[$i]['var'] = str_replace('-','',$values[20]);
-                $dirtyProduct[$i]['itemno'] = str_replace('-','',$values[0]);
+                $dirtyProduct[$i]['var'] = $values[20];
+                $dirtyProduct[$i]['itemno'] = $values[0];
 
-                $dirtyProduct[$i]['extId'] = str_replace('-','',$values[19]);
+                $dirtyProduct[$i]['extId'] = $values[19];
                 $dirtyProduct[$i]['value'] = str_replace(',','.',$values[29]);
                 $dirtyProduct[$i]['price'] = str_replace(',','.',$values[30]);
                 $dirtyProduct[$i]['salePrice'] = str_replace(',','.',$values[31]);
@@ -152,7 +152,9 @@ abstract class  ABSoftImporter extends AProductImporter
                 $crc32 = md5($line);
                 $exist = $this->app->dbAdapter->selectCount("DirtyProduct",['checksum' => $crc32,'shopId' => 60]);
                 /** Already written */
-                
+                if ($exist == 1) {
+                    continue;
+                }
                 /** Insert */
 
                 $dirtyProduct[$i]['text'] = $line;
@@ -175,6 +177,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtyProductInsert->value = $dirtyProduct[$i]['value'];
                     $dirtyProductInsert->price = $dirtyProduct[$i]['price'];
                     $dirtyProductInsert->text = $line;
+                    $dirtyProductInsert->status = 'E';
                     $dirtyProductInsert->salePrice = $dirtyProduct[$i]['salePrice'];
                     $dirtyProductInsert->checksum = $dirtyProduct[$i]['checksum'];
                     $dirtyProductInsert->extId = $dirtyProduct[$i]['extId'];
@@ -192,15 +195,12 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtyProductExtendInsert->cat2 = $dirtyProductExtended[$i]['cat2'];
                     $dirtyProductExtendInsert->cat3 = $dirtyProductExtended[$i]['cat3'];
                     $dirtyProductExtendInsert->cat4 = $dirtyProductExtended[$i]['cat4'];
-                    $dirtyProductExtendInsert->generalColor = $dirtyProductExtended[$i]['generalColor'];
-                    $dirtyProductExtendInsert->colorDescription = $dirtyProductExtended[$i]['colorDescription'];
                     $dirtyProductExtendInsert->insert();
 
 
                 } elseif (count($res) == 1) {
                     /** update existing product if changed */
                     //exist.. what to do? uhm... update?
-
                     $dirtyProductUpdate = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId' => $dirtyProduct[$i]['extId'],'var' => $dirtyProduct[$i]['var'],'shopId' => 60]);
                     $dirtyProductId = $dirtyProductUpdate->id;
                     $dirtyProductUpdate->itemno = $dirtyProduct[$i]['itemno'];
@@ -249,12 +249,12 @@ abstract class  ABSoftImporter extends AProductImporter
             try {
 
                 $line = implode($this->config->fetch('miscellaneous','separator'),$values);
-                $dirtySkus[$i]['extSkuId'] = str_replace('-','',$values[0]);
-                $dirtySkus[$i]['extSizeId'] = str_replace('-','',$values[1]);
+                $dirtySkus[$i]['extSkuId'] = $values[0];
+                $dirtySkus[$i]['extSizeId'] = $values[1];
                 $dirtySkus[$i]['qty'] = $values[2];
                 $dirtySkus[$i]['size'] = 'TU';
                 $dirtySkus[$i]['shopId'] = 60;
-                $dirtyProduct = $dirtyProductRepo->findOneBy(['var' => $dirtySkus[$i]['extSkuId'],'shopId'=>60]);
+                $dirtyProduct = $dirtyProductRepo->findOneBy(['extId' => $dirtySkus[$i]['extSkuId'],'shopId'=>60]);
                 if ($dirtyProduct == null) {
                     continue;
                 }
@@ -270,7 +270,8 @@ abstract class  ABSoftImporter extends AProductImporter
                 /** Already written */
                 if (count($exist) == 0) {
                     $dirtySkuInsert=\Monkey::app()->repoFactory->create('DirtySku')->getEmptyEntity();
-                    $dirtySkuInsert->extSizeId= $dirtySkus[$i]['extSkuId'];
+                    $dirtySkuInsert->extSkuId= $dirtySkus[$i]['extSkuId'];
+                    $dirtySkuInsert->extSizeId= $dirtySkus[$i]['extSizeId'];
                     $dirtySkuInsert->size=$dirtySkus[$i]['size'];
                     $dirtySkuInsert->shopId=60;
                     $dirtySkuInsert->qty=$dirtySkus[$i]['qty'];
@@ -295,10 +296,11 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtySkuUpdate->checksum=$dirtySkus[$i]['checksum'];
                     $dirtySkuUpdate->update();
                     $this->debug('processFile','Sku Exist, update',$exist[0]['id']);
+                    $this->seenSkus[] = $exist[0]['id'];
 
                 } else throw new BambooException('More than 1 sku found to update');
 
-                $seenSkus[] = $dirtySkus['id'];
+
 
 
             } catch (\Throwable $e) {
