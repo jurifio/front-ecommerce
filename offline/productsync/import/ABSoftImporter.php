@@ -128,10 +128,10 @@ abstract class  ABSoftImporter extends AProductImporter
             while (($values = fgetcsv($main,0,'|')) !== false) {
 
 
-                $line = implode($this->config->fetch('miscellaneous','separator'),$values);
+                $line = implode('-',$values);
                 $dirtyProduct[$i]['brand'] = $values[12];
-                $dirtyProduct[$i]['var'] = $values[20];
-                $dirtyProduct[$i]['itemno'] = str_replace('-','',values[0]);
+                $dirtyProduct[$i]['var'] = str_replace('-','',$values[20]);
+                $dirtyProduct[$i]['itemno'] = str_replace('-','',$values[0]);
 
                 $dirtyProduct[$i]['extId'] = str_replace('-','',$values[19]);
                 $dirtyProduct[$i]['value'] = str_replace(',','.',$values[29]);
