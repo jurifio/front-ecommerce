@@ -49,8 +49,8 @@ abstract class  ABSoftImporter extends AProductImporter
         $this->readSku();
         $this->report("Run","Find Zero Skus","Azzero le quantità dei prodotti non elaborati");
         $this->findZeroSkus();
-       // $this->saveFiles();
-       // $this->report("Run","Import END","Inizio importazione the Square Roma Pdio "  );
+       $this->saveFiles();
+       $this->report("Run","Import END","Inizio importazione the Square Roma Pdio "  );
 
         echo 'done';
     }
