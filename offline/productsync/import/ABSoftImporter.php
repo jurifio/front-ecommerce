@@ -299,7 +299,7 @@ abstract class  ABSoftImporter extends AProductImporter
 
                 } else throw new BambooException('More than 1 sku found to update');
 
-                $seenSkus[] = $dirtySkus['id'];
+               // $seenSkus[] = $dirtySkus['id'];
 
 
             } catch (\Throwable $e) {
