@@ -146,19 +146,7 @@ abstract class  ABSoftImporter extends AProductImporter
             $crc32 = md5($line);
             $exist = $this->app->dbAdapter->selectCount("DirtyProduct",['checksum' => $crc32,'shopId' => 60]);
             /** Already written */
-            if ($exist == 1) {
-                continue;
-            }
-            /** Insert */
-            if ($exist == 0) {
-                $one = [];
-                /** Count columns */
 
-                /** Isolate values and find good ones */
-                $mapping = $this->config->fetch('mapping','main');
-                foreach ($mapping as $key => $val) {
-                    $one[$key] = trim($values[$val]);
-                }
                 $dirtyProduct[$i]['text'] = $line;
                 $dirtyProduct[$i]['checksum'] = $crc32;
 
@@ -231,7 +219,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     //log
                     continue;
                 }
-            }
+
             $i++;
         }
     }
