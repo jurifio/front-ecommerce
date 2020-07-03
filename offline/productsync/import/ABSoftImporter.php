@@ -263,7 +263,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['price'] = $dirtyProduct->price;
                 $dirtySkus[$i]['salePrice'] = $dirtyProduct->salePrice;
 
-                $crc32 = md5($line);
+                $crc32 = md5($dirtySkus[$i]);
                 $dirtySkus[$i]['checksum'] = $crc32;
                 $exist = $this->app->dbAdapter->select("DirtySku",['checksum' => $crc32,'shopId' =>60])->fetchAll();
 
