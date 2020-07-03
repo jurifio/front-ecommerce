@@ -125,7 +125,7 @@ abstract class  ABSoftImporter extends AProductImporter
         $dirtyProductExtended = [];
         $i = 0;
         try {
-            while (($values = fgetcsv($main,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
+            while (($values = fgetcsv($main,0,'|')) !== false) {
 
 
                 $line = implode($this->config->fetch('miscellaneous','separator'),$values);

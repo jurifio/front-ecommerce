@@ -11,17 +11,17 @@
     "files": {
         "main": {
             "location": "main.csv",
-            "columns":  38,
+            "columns":  39,
             "extKeys": ["extId","var"]
         },
         "skus": {
             "location": "skus.csv",
-            "columns":  3,
+            "columns":  5,
             "extKeys": ["extSizeId"]
         },
         "progressive": {
             "location": "progressive.csv",
-            "columns":  6,
+            "columns":  7,
             "extKeys": ["extSizeId","extId"]
         }
     },
