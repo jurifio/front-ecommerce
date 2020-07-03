@@ -63,6 +63,11 @@ abstract class  ABSoftImporter extends AProductImporter
         /** PRODUCTS */
         $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths','productSync') . '/thesquareroma/articoli.txt');
         $products = $files[count($files) - 1];
+        if(file_exists($files)){
+        $this->report("AbssoftwareImporter","Read Main","file Trovato");
+    }else{
+        $this->report("AbssoftwareImporter","Read Main","file Non Trovato");
+    }
 
         $size = filesize($products);
         while ($size != filesize($products)) {
