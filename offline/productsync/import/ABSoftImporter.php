@@ -195,7 +195,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtyProductExtendInsert->cat2 = $dirtyProductExtended[$i]['cat2'];
                     $dirtyProductExtendInsert->cat3 = $dirtyProductExtended[$i]['cat3'];
                     $dirtyProductExtendInsert->cat4 = $dirtyProductExtended[$i]['cat4'];
-                    $dirtyProductExtendedUpdate->generalColor = $dirtyProductExtended[$i]['generalColor'];
+                    $dirtyProductExtendedUpdate->generalColor = $dirtyProductExtended[$i]['colorDescription'];
                     $dirtyProductExtendedUpdate->colorDescription = $dirtyProductExtended[$i]['colorDescription'];
                     $dirtyProductExtendInsert->insert();
 
@@ -250,7 +250,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['price'] = $dirtyProduct->price;
                 $dirtySkus[$i]['salePrice'] = $dirtyProduct->salePrice;
 
-                $crc32 = md5($dirtySkus[$i]);
+                $crc32 = md5($line);
                 $dirtySkus[$i]['checksum'] = $crc32;
                 $exist = $this->app->dbAdapter->select("DirtySku",['extSkuId' => $dirtySkus[$i]['extSkuId'],'extSizeId'=>$dirtySkus[$i]['extSizeId'],'shopId' =>60])->fetchAll();
 
