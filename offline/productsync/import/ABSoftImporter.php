@@ -150,21 +150,9 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtyProductExtended[$i]['shopId'] = 60;
 
                 $crc32 = md5($line);
-                $exist = $this->app->dbAdapter->selectCount("DirtyProduct",['checksum' => $crc32,'shopId' => 60]);
-                /** Already written */
-                if ($exist == 1) {
-                    continue;
-                }
-                /** Insert */
-                if ($exist == 0) {
-                    $one = [];
-                    /** Count columns */
 
-                    /** Isolate values and find good ones */
-                    $mapping = $this->config->fetch('mapping','main');
-                    foreach ($mapping as $key => $val) {
-                        $one[$key] = trim($values[$val]);
-                    }
+                /** Insert */
+
                     $dirtyProduct[$i]['text'] = $line;
                     $dirtyProduct[$i]['checksum'] = $crc32;
 
@@ -172,7 +160,7 @@ abstract class  ABSoftImporter extends AProductImporter
 
 
                     /** find existing product */
-                    $res = $this->app->dbAdapter->select('DirtyProduct',['extId' => $dirtyProduct[$i]['extId'],'shopId' => 60,'var' => $dirtyProduct[$i]['var']])->fetchAll();
+                    $res = $this->app->dbAdapter->select('DirtyProduct',['checksum' => $crc32,'extId' => $dirtyProduct[$i]['extId'],'shopId' => 60,'var' => $dirtyProduct[$i]['var']])->fetchAll();
                     if (count($res) == 0) {
                         /** è un nuovo prodotto lo scrivo */
                         $dirtyProduct[$i]['shopId'] = 60;
@@ -234,7 +222,7 @@ abstract class  ABSoftImporter extends AProductImporter
                         //log
                         continue;
                     }
-                }
+
                 $i++;
             }
             $this->log('log','AbsoftImporter','count line',$i);
