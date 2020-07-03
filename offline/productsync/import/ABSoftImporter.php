@@ -264,8 +264,8 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['value'] = $dirtyProduct->value;
                 $dirtySkus[$i]['price'] = $dirtyProduct->price;
                 $dirtySkus[$i]['salePrice'] = $dirtyProduct->salePrice;
-
-                $crc32 = md5($line);
+                $prev=$dirtySkus[$i]['extSkuId'].$dirtySkus[$i]['extSizeId'].$dirtySkus[$i]['qty'].$dirtySkus[$i]['size'].$dirtySkus[$i]['shopId'].$dirtySkus[$i]['dirtyProductId'].$dirtySkus[$i]['value'].$dirtySkus[$i]['price']. $dirtySkus[$i]['salePrice'];
+                $crc32 = md5($prev);
                 $dirtySkus[$i]['checksum'] = $crc32;
                 $exist = $this->app->dbAdapter->select("DirtySku",['checksum' => $crc32,'shopId' =>$dirtySkus[$i]['shopId']])->fetchAll();
 
@@ -295,7 +295,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtySkuUpdate->price=$dirtySkus[$i]['value'];
                     $dirtySkuUpdate->salePrice=$dirtySkus[$i]['salePrice'];
                     $dirtySkuUpdate->update();
-                    $this->debug('processFile','Sku Exist, update',$exit[0]['id']);
+                    $this->debug('processFile','Sku Exist, update',$exist[0]['id']);
 
                 } else throw new BambooException('More than 1 sku found to update');
 
