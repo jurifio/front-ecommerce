@@ -50,7 +50,7 @@ abstract class  ABSoftImporter extends AProductImporter
         $this->report("Run","Find Zero Skus","Azzero le quantità dei prodotti non elaborati");
         $this->findZeroSkus();
         $this->saveFiles();
-        $this->report("Run","Import END","Inizio importazione the Square Roma Pdio "  );
+        $this->report("Run","Import END","Inizio importazione the Square Roma  "  );
 
         echo 'done';
     }
@@ -254,7 +254,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['extSkuId'] = $values[0];
                 $dirtySkus[$i]['extSizeId'] = $values[1];
                 $dirtySkus[$i]['qty'] = $values[2];
-                $dirtySkus[$i]['size'] = $values[0].'-'.$values[1];
+                $dirtySkus[$i]['size'] = 'TU';
                 $dirtySkus[$i]['shopId'] = 60;
                 $dirtyProduct = $dirtyProductRepo->findOneBy(['extId' => $dirtySkus[$i]['extSkuId'],'shopId'=>$dirtySkus[$i]['shopId']]);
                 if ($dirtyProduct == null) {
