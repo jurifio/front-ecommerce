@@ -286,7 +286,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     $this->debug('processFile','Sku don\'t Exist, insert',$dirtySkus[$i]['dirtyProductId']);
 
                 } elseif (count($exist) == 1) {
-                    $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$exit[0]['id']]);
+                    $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$exist[0]['id']]);
                     $dirtySkuUpdate->extSkuId= $dirtySkus[$i]['extSkuId'];
                     $dirtySkuUpdate->shopId=60;
                     $dirtySkuUpdate->qty=$dirtySkus[$i]['qty'];
