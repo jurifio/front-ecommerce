@@ -16,12 +16,12 @@
         },
         "skus": {
             "location": "skus.csv",
-            "columns":  6,
+            "columns":  4,
             "extKeys": ["extSizeId"]
         },
         "progressive": {
             "location": "progressive.csv",
-            "columns":  3,
+            "columns":  6,
             "extKeys": ["extSizeId","extId"]
         }
     },
