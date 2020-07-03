@@ -262,15 +262,16 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['price'] = $dirtyProduct->price;
                 $dirtySkus[$i]['salePrice'] = $dirtyProduct->salePrice;
 
-                $crc32 = md5($dirtySkus[$i]);
+                $crc32 = md5($line);
                 $dirtySkus[$i]['checksum'] = $crc32;
                 $exist = $this->app->dbAdapter->select("DirtySku",['checksum' => $crc32,'shopId' =>$dirtySkus[$i]['shopId']])->fetchAll();
 
                 /** Already written */
                 if (count($exist) == 0) {
                     $dirtySkuInsert=\Monkey::app()->repoFactory->create('DirtySku')->getEmptyEntity();
-                    $dirtySkuInsert->extSizeId= $dirtySkus[$i]['extSkuId'];
+                    $dirtySkuInsert->extSkuId= $dirtySkus[$i]['extSkuId'];
                     $dirtySkuInsert->size=$dirtySkus[$i]['size'];
+                    $dirtySkuInsert->extSizeId= $dirtySkus[$i]['extSizeId'];
                     $dirtySkuInsert->shopId=60;
                     $dirtySkuInsert->qty=$dirtySkus[$i]['qty'];
                     $dirtySkuInsert->value=$dirtySkus[$i]['value'];
@@ -283,15 +284,15 @@ abstract class  ABSoftImporter extends AProductImporter
 
                 } elseif (count($exist) == 1) {
                     $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$exit[0]['id']]);
-                    $dirtySkuUpdate->extSizeId= $dirtySkus[$i]['extSkuId'];
+                    $dirtySkuUpdate->extSkuId= $dirtySkus[$i]['extSkuId'];
                     $dirtySkuUpdate->size=$dirtySkus[$i]['size'];
+                    $dirtySkuUpdate->extSizeId= $dirtySkus[$i]['extSizeId'];
                     $dirtySkuUpdate->shopId=60;
                     $dirtySkuUpdate->qty=$dirtySkus[$i]['qty'];
                     $dirtySkuUpdate->value=$dirtySkus[$i]['value'];
                     $dirtySkuUpdate->dirtyProductId= $dirtySkus[$i]['dirtyProductId'];
                     $dirtySkuUpdate->price=$dirtySkus[$i]['value'];
                     $dirtySkuUpdate->salePrice=$dirtySkus[$i]['salePrice'];
-                    $dirtySkuUpdate->checksum=$dirtySkus[$i]['checksum'];
                     $dirtySkuUpdate->update();
                     $this->debug('processFile','Sku Exist, update',$exit[0]['id']);
 
@@ -323,7 +324,7 @@ abstract class  ABSoftImporter extends AProductImporter
 
 
                 $dirtySku[$i]['extSizeId'] = $values[2];
-                $dirtySku[$i]['size'] = $values[1].'-'.$values[3];
+                $dirtySku[$i]['size'] = $values[3];
                 $exist = $this->app->dbAdapter->select("DirtySku",['extSizeId' => $dirtySku[$i]['extSizeId'],'shopId' => 60])->fetchAll();
 
                 /** Already written */
