@@ -124,7 +124,7 @@ abstract class  ABSoftImporter extends AProductImporter
         $dirtyProduct = [];
         $dirtyProductExtended = [];
         $i = 0;
-        while (($values = fgetcsv($main,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
+        while (($values = fgetcsv($main,500000,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
 
 
             $line = implode($this->config->fetch('miscellaneous','separator'),$values);
@@ -248,7 +248,7 @@ abstract class  ABSoftImporter extends AProductImporter
         $dirtySkus = [];
         $i = 0;
         $dirtyProductRepo = \Monkey::app()->repoFactory->create('DirtyProduct');
-        while (($values = fgetcsv($progressives,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
+        while (($values = fgetcsv($progressives,500000,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
             try {
 
                 $line = implode($this->config->fetch('miscellaneous','separator'),$values);
@@ -322,7 +322,7 @@ abstract class  ABSoftImporter extends AProductImporter
         $dirtySku = [];
         $i = 0;
         $dirtySkuRepo=\Monkey::app()->repoFactory->create('DirtySku');
-        while (($values = fgetcsv($skus,0,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
+        while (($values = fgetcsv($skus,500000,$this->config->fetch('miscellaneous','separator'),'|')) !== false) {
             try {
 
 
