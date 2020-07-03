@@ -204,24 +204,11 @@ abstract class  ABSoftImporter extends AProductImporter
                     /** update existing product if changed */
                     //exist.. what to do? uhm... update?
                     $dirtyProductUpdate = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId' => $dirtyProduct[$i]['extId'],'var' => $dirtyProduct[$i]['var'],'shopId' => 60]);
-                    $dirtyProductId = $dirtyProductUpdate->id;
                     $dirtyProductUpdate->price = $dirtyProduct[$i]['price'];
                     $dirtyProductUpdate->value = $dirtyProduct[$i]['value'];
                     $dirtyProductUpdate->salePrice = $dirtyProduct[$i]['salePrice'];
                     $dirtyProductUpdate->update();
-                    $dirtyProductExtendedUpdate = \Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId' => $dirtyProductId,'shopId' => 60]);
-                    $dirtyProductExtendedUpdate->name = $dirtyProductExtended[$i]['name'];
-                    $dirtyProductExtendedUpdate->description = $dirtyProductExtended[$i]['description'];
-                    $dirtyProductExtendedUpdate->season = $dirtyProductExtended[$i]['season'];
-                    $dirtyProductExtendedUpdate->audience = $dirtyProductExtended[$i]['audience'];
-                    $dirtyProductExtendedUpdate->cat1 = $dirtyProductExtended[$i]['cat1'];
-                    $dirtyProductExtendedUpdate->cat2 = $dirtyProductExtended[$i]['cat2'];
-                    $dirtyProductExtendedUpdate->cat3 = $dirtyProductExtended[$i]['cat3'];
-                    $dirtyProductExtendedUpdate->cat4 = $dirtyProductExtended[$i]['cat4'];
-                    $dirtyProductExtendedUpdate->shopId = $dirtyProductExtended[$i]['shopId'];
-                    $dirtyProductExtendedUpdate->generalColor = $dirtyProductExtended[$i]['generalColor'];
-                    $dirtyProductExtendedUpdate->colorDescription = $dirtyProductExtended[$i]['colorDescription'];
-                    $dirtyProductExtendedUpdate->update();
+
                 } else {
                     //error
                     //log
