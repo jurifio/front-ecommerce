@@ -199,7 +199,7 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtyProductExtendInsert->cat4 = $dirtyProductExtended[$i]['cat4'];
                     $dirtyProductExtendInsert->colorDescription = $dirtyProductExtended[$i]['colorDescription'];
                     $dirtyProductExtendInsert->generalColor = $dirtyProductExtended[$i]['generalColor'];
-                    $dirtyProductExtendInsert->cheksum=$dirtyProduct[$i]['checksum'];
+                    $dirtyProductExtendInsert->checksum=$dirtyProduct[$i]['checksum'];
                     $dirtyProductExtendInsert->insert();
 
 
