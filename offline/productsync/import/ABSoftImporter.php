@@ -43,14 +43,12 @@ abstract class  ABSoftImporter extends AProductImporter
         $this->readFiles();
         $this->report("Run","Read Main","Leggo il file Main cercando Prodotti");
         $this->readMain();
-        $this->report("Run","Read Sku","Leggo il file degli Sku");
+        $this->report("Run","Read Progressive","Leggo il file dei Progressivi e inserisco gli sku");
         $this->readProgressive();
-        $this->report("Run","Find progressive Skus","Trova i progressvi e gli sku");
-        $this->readSku();
         $this->report("Run","Find Zero Skus","Azzero le quantità dei prodotti non elaborati");
         $this->findZeroSkus();
         $this->saveFiles();
-        $this->report("Run","Import END","Inizio importazione the Square Roma Pdio "  );
+        $this->report("Run","Import END","Fine importazione the Square Roma Pdio "  );
 
         echo 'done';
     }
@@ -228,7 +226,22 @@ abstract class  ABSoftImporter extends AProductImporter
 
     public function readProgressive()
     {
-        //read SKUS ------------------
+        $skus = $this->skusF;
+        $shopOk = 0;
+        $shopKo = 0;
+        $dirtySku = [];
+        $k = 0;
+        while (($values = fgetcsv($skus,0,'|')) !== false) {
+
+
+            $dirtySku[$k]['extSizeId'] = $values[2];
+            $dirtySku[$k]['size'] = $values[3];
+            $k++;
+
+        }
+
+
+        //read Progressive ------------------
         $progressives = $this->progressiveF;
         $shopOk = 0;
         $shopKo = 0;
@@ -242,7 +255,12 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['extSkuId'] = $values[0];
                 $dirtySkus[$i]['extSizeId'] = $values[1];
                 $dirtySkus[$i]['qty'] = $values[2];
-                $dirtySkus[$i]['size'] = 'TU';
+                foreach($dirtySku as $key=>$value){
+                    if($value['extSizeId']==$dirtySkus[$i]['extSizeId']){
+                        $dirtySkus[$i]['size']=$skus->size;
+                        break;
+                    }
+                }
                 $dirtySkus[$i]['shopId'] = 60;
                 $dirtyProduct = $dirtyProductRepo->findOneBy(['extId' => $dirtySkus[$i]['extSkuId'],'shopId'=>$dirtySkus[$i]['shopId']]);
                 if ($dirtyProduct == null) {
