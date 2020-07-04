@@ -251,7 +251,7 @@ abstract class  ABSoftImporter extends AProductImporter
         while (($values = fgetcsv($progressives,0,'|')) !== false) {
             try {
 
-                $line = implode($this->config->fetch('miscellaneous','separator'),$values);
+
                 $dirtySkus[$i]['extSkuId'] = $values[0];
                 $dirtySkus[$i]['extSizeId'] = $values[1];
                 $dirtySkus[$i]['qty'] = $values[2];
@@ -261,6 +261,7 @@ abstract class  ABSoftImporter extends AProductImporter
                         break;
                     }
                 }
+
                 $dirtySkus[$i]['shopId'] = 60;
                 $dirtyProduct = $dirtyProductRepo->findOneBy(['extId' => $dirtySkus[$i]['extSkuId'],'shopId'=>$dirtySkus[$i]['shopId']]);
                 if ($dirtyProduct == null) {
@@ -270,8 +271,9 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['value'] = $dirtyProduct->value;
                 $dirtySkus[$i]['price'] = $dirtyProduct->price;
                 $dirtySkus[$i]['salePrice'] = $dirtyProduct->salePrice;
+                $line = implode('|',$dirtySkus[$i]);
 
-                $crc32 = md5($dirtySkus[$i]);
+                $crc32 = md5($line);
                 $dirtySkus[$i]['checksum'] = $crc32;
                 $exist = $this->app->dbAdapter->select("DirtySku",['checksum'=>$crc32,'shopId' =>$dirtySkus[$i]['shopId']])->fetchAll();
 
