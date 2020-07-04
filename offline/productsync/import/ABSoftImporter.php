@@ -194,8 +194,8 @@ abstract class  ABSoftImporter extends AProductImporter
             } elseif (count($res) == 1) {
                 /** update existing product if changed */
                 //exist.. what to do? uhm... update?
-
-                $dirtyProductUpdate = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId' => $dirtyProduct[$i]['extId'],'var' => $dirtyProduct[$i]['var'],'shopId'=>60]);
+                continue;
+                /*$dirtyProductUpdate = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId' => $dirtyProduct[$i]['extId'],'var' => $dirtyProduct[$i]['var'],'shopId'=>60]);
                 $dirtyProductId = $dirtyProductUpdate->id;
                 $dirtyProductUpdate->itemno = $dirtyProduct[$i]['itemno'];
                 $dirtyProductUpdate->brand = $dirtyProduct[$i]['brand'];
@@ -215,7 +215,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtyProductExtendedUpdate->shopId = $dirtyProductExtended[$i]['shopId'];
                 $dirtyProductExtendedUpdate->generalColor = $dirtyProductExtended[$i]['generalColor'];
                 $dirtyProductExtendedUpdate->colorDescription = $dirtyProductExtended[$i]['colorDescription'];
-                $dirtyProductExtendedUpdate->update();
+                $dirtyProductExtendedUpdate->update();*/
             } else {
                 //error
                 //log
