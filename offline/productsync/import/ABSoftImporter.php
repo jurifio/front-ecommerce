@@ -146,23 +146,11 @@ abstract class  ABSoftImporter extends AProductImporter
             $crc32 = md5($line);
             $exist = $this->app->dbAdapter->selectCount("DirtyProduct",['checksum' => $crc32,'shopId' => 60]);
             /** Already written */
-            if ($exist == 1) {
-                continue;
-            }
-            /** Insert */
 
-            $one = [];
-            /** Count columns */
-
-            /** Isolate values and find good ones */
-            $mapping = $this->config->fetch('mapping','main');
-            foreach ($mapping as $key => $val) {
-                $one[$key] = trim($values[$val]);
-            }
             $dirtyProduct[$i]['text'] = $line;
             $dirtyProduct[$i]['checksum'] = $crc32;
 
-            $keys = $this->config->fetch('files','main')['extKeys'];
+
 
 
 
@@ -199,7 +187,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtyProductExtendInsert->cat4 = $dirtyProductExtended[$i]['cat4'];
                 $dirtyProductExtendInsert->colorDescription = $dirtyProductExtended[$i]['colorDescription'];
                 $dirtyProductExtendInsert->generalColor = $dirtyProductExtended[$i]['generalColor'];
-                $dirtyProductExtendInsert->cheksum=$dirtyProduct[$i]['checksum'];
+                $dirtyProductExtendInsert->checksum=$dirtyProduct[$i]['checksum'];
                 $dirtyProductExtendInsert->insert();
 
 
