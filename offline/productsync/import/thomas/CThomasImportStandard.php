@@ -177,6 +177,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                 $dirtySku['qty'] = $assoc['qty'];
                 // $dirtySku['value'] = $this->calculateValue($assoc['price'],$assoc['brand']);
                 $dirtySku['price'] = $assoc['price'];
+                $dirtySku['price'] = $assoc['value'];
                 $dirtySku['checksum'] = md5(json_encode($dirtySku));
 
                 if(isset($skusChecksums[$dirtySku['checksum']])) {
