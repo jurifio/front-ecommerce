@@ -122,7 +122,7 @@ abstract class  ABSoftImporter extends AProductImporter
         while (($values = fgetcsv($main,0,'|')) !== false) {
 
 
-            $line = implode($this->config->fetch('miscellaneous','separator'),$values);
+            $line = implode('|',$values);
             $dirtyProduct[$i]['brand'] = $values[12];
             $dirtyProduct[$i]['var'] = $values[20];
             $dirtyProduct[$i]['itemno'] = $values[0];
