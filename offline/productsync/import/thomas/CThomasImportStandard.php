@@ -36,7 +36,7 @@ class CThomasImportStandard extends ABluesealProductImporter
 
         $this->report('set', 'All Configuration Ready');
 
-        $rows = \Monkey::app()->dbAdapter->query('SELECT id, keysChecksum, checksum FROM DirtyProduct WHERE shopId = ? AND keysChecksum IS NOT NULL', [$this->getShop()->id])->fetchAll();
+        $rows = \Monkey::app()->dbAdapter->query('SELECT id, keysChecksum, `checksum` FROM DirtyProduct WHERE shopId = ? AND keysChecksum IS NOT NULL', [$this->getShop()->id])->fetchAll();
         $checksums = [];
         $keysChecksums = [];
         foreach ($rows as $one) {
@@ -44,7 +44,7 @@ class CThomasImportStandard extends ABluesealProductImporter
             $keysChecksums[$one['keysChecksum']] = $one['id'];
         }
 
-        $rows = \Monkey::app()->dbAdapter->query('SELECT checksum, id FROM DirtySku WHERE shopId = ? AND qty > 0', [$this->getShop()->id])->fetchAll();
+        $rows = \Monkey::app()->dbAdapter->query('SELECT `checksum`, id FROM DirtySku WHERE shopId = ? AND qty > 0', [$this->getShop()->id])->fetchAll();
         $skusChecksums = [];
         foreach ($rows as $row) {
             $skusChecksums[$row['checksum']] = $row['id'];
@@ -53,7 +53,7 @@ class CThomasImportStandard extends ABluesealProductImporter
         $productCount = 0;
         $skuCount = 0;
         $seenSkus = [];
-        while (($values = fgetcsv($f, 100000, ";")) !== false) {
+        while (($values = fgetcsv($f, 0, ";")) !== false) {
             $assoc = $this->mapValues($values, $fileMapping);
 
             try {
