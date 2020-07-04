@@ -144,7 +144,7 @@ abstract class  ABSoftImporter extends AProductImporter
             $dirtyCategory= $dirtyProductExtended[$i]['audience'].'-'.$dirtyProductExtended[$i]['cat1']. '-'.$dirtyProductExtended[$i]['cat2'].'-'.$dirtyProductExtended[$i]['cat3'].'-'.$dirtyProductExtended[$i]['cat4'];
             $dirtyCategoryFind=\Monkey::app()->repoFactory->create('dirtyCategory')->findOneBy(['shopId'=>60,'term'=>$dirtyCategory]);
             if($dirtyCategoryFind==null){
-                $dirtyCategoryInsert=\Monkey::app()->repoFactory->create('DirtyCategoryry')->getEmptyEntity();
+                $dirtyCategoryInsert=\Monkey::app()->repoFactory->create('DirtyCategory')->getEmptyEntity();
                 $dirtyCategoryInsert->shopId=60;
                 $dirtyCategoryInsert->term=$dirtyCategory;
                 $dirtyCategoryInsert->insert();
