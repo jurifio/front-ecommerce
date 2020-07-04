@@ -142,30 +142,30 @@ abstract class  ABSoftImporter extends AProductImporter
             $dirtyProductExtended[$i]['cat4'] = $values[26];
             $dirtyProductExtended[$i]['shopId'] = 60;
             $dirtyCategory= $dirtyProductExtended[$i]['audience'].'-'.$dirtyProductExtended[$i]['cat1']. '-'.$dirtyProductExtended[$i]['cat2'].'-'.$dirtyProductExtended[$i]['cat3'].'-'.$dirtyProductExtended[$i]['cat4'];
-            $dirtyCategoryFind=\Monkey::app()->repoFactory->create('dirtyCategory')->findOneBy(['shopId'=>60,'term'=>$dirtyCategory]);
+            $dirtyCategoryFind=\Monkey::app()->repoFactory->create('DictionaryCategory')->findOneBy(['shopId'=>60,'term'=>$dirtyCategory]);
             if($dirtyCategoryFind==null){
-                $dirtyCategoryInsert=\Monkey::app()->repoFactory->create('DirtyCategory')->getEmptyEntity();
+                $dirtyCategoryInsert=\Monkey::app()->repoFactory->create('DictionaryCategory')->getEmptyEntity();
                 $dirtyCategoryInsert->shopId=60;
                 $dirtyCategoryInsert->term=$dirtyCategory;
                 $dirtyCategoryInsert->insert();
             }
-            $dirtySeasonFind=\Monkey::app()->repoFactory->create('DirtySeason')->findOneBy(['shopId'=>60,'term'=>$dirtyProductExtended[$i]['season']]);
+            $dirtySeasonFind=\Monkey::app()->repoFactory->create('DictionarySeason')->findOneBy(['shopId'=>60,'term'=>$dirtyProductExtended[$i]['season']]);
             if($dirtySeasonFind==null){
-                $dirtySeasonInsert=\Monkey::app()->repoFactory->create('DirtySeason')->getEmptyEntity();
+                $dirtySeasonInsert=\Monkey::app()->repoFactory->create('DictionarySeason')->getEmptyEntity();
                 $dirtySeasonInsert->shopId=60;
                 $dirtySeasonInsert->term=$dirtyProductExtended[$i]['season'];
                 $dirtySeasonInsert->insert();
             }
-            $dirtyColorGroupFind=\Monkey::app()->repoFactory->create('dirtyColorGroup')->findOneBy(['shopId'=>60,'term'=>$dirtyProductExtended[$i]['generalColor']]);
+            $dirtyColorGroupFind=\Monkey::app()->repoFactory->create('DictionaryColorGroup')->findOneBy(['shopId'=>60,'term'=>$dirtyProductExtended[$i]['generalColor']]);
             if($dirtyColorGroupFind==null){
-                $dirtyColorGroupInsert=\Monkey::app()->repoFactory->create('DirtyColorGroup')->getEmptyEntity();
+                $dirtyColorGroupInsert=\Monkey::app()->repoFactory->create('DictionaryColorGroup')->getEmptyEntity();
                 $dirtyColorGroupInsert->shopId=60;
                 $dirtyColorGroupInsert->term=$dirtyProductExtended[$i]['generalColor'];
                 $dirtyColorGroupInsert->insert();
             }
-            $dirtyBrandFind=\Monkey::app()->repoFactory->create('DirtyBrand')->findOneBy(['shopId'=>60,'term'=> $dirtyProduct[$i]['brand']]);
+            $dirtyBrandFind=\Monkey::app()->repoFactory->create('DictionaryBrand')->findOneBy(['shopId'=>60,'term'=> $dirtyProduct[$i]['brand']]);
             if($dirtyBrandFind==null){
-                $dirtyBrandInsert =\Monkey::app()->repoFactory->create('DirtyBrand')->getEmptyEntity();
+                $dirtyBrandInsert =\Monkey::app()->repoFactory->create('DictionaryBrand')->getEmptyEntity();
                 $dirtyBrandInsert->shopId=60;
                 $dirtyBrandInsert->term=$dirtyProduct[$i]['brand'];
                 $dirtyBrandInsert->insert();
@@ -297,9 +297,9 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtyProductExtend=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['id'=>$dirtyProduct->id]);
                 if($dirtyProductExtend!=null){
                     $linedirty=$dirtyProductExtend->audience.'-'.$dirtyProductExtend->cat1.'-'.$dirtyProductExtend->cat2.'-'.$dirtyProductExtend->cat3.'-'.$dirtyProductExtend->cat4;
-                      $dirtySizeFind=\Monkey::app()->repoFactory->create('DirtySize')->findOneBy(['shopId'=>60,'term'=> $dirtySkus[$i]['size'],'categoryFriend'=>$linedirty]);
+                      $dirtySizeFind=\Monkey::app()->repoFactory->create('DictionarySize')->findOneBy(['shopId'=>60,'term'=> $dirtySkus[$i]['size'],'categoryFriend'=>$linedirty]);
                       if($dirtySizeFind==null){
-                          $dirtySizeInsert=\Monkey::app()->repoFactory->create('DirtySize')->getEmptyEntity();
+                          $dirtySizeInsert=\Monkey::app()->repoFactory->create('DictionarySize')->getEmptyEntity();
                           $dirtySizeInsert->term=$dirtySkus[$i]['size'];
                           $dirtySizeInsert->shopId=60;
                           $dirtySizeInsert->categoryFriend=$linedirty;
