@@ -257,7 +257,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 $dirtySkus[$i]['qty'] = $values[2];
                 foreach($dirtySku as $key=>$value){
                     if($value['extSizeId']==$dirtySkus[$i]['extSizeId']){
-                        $dirtySkus[$i]['size']=$skus->size;
+                        $dirtySkus[$i]['size']=$value['size'];
                         break;
                     }
                 }
