@@ -294,7 +294,7 @@ abstract class  ABSoftImporter extends AProductImporter
                 if ($dirtyProduct == null) {
                     continue;
                 }
-                $dirtyProductExtend=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['id'=>$dirtyProduct->id]);
+                $dirtyProductExtend=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dirtyProduct->id]);
                 if($dirtyProductExtend!=null){
                     $linedirty=$dirtyProductExtend->audience.'-'.$dirtyProductExtend->cat1.'-'.$dirtyProductExtend->cat2.'-'.$dirtyProductExtend->cat3.'-'.$dirtyProductExtend->cat4;
                       $dirtySizeFind=\Monkey::app()->repoFactory->create('DictionarySize')->findOneBy(['shopId'=>60,'term'=> $dirtySkus[$i]['size'],'categoryFriend'=>$linedirty]);
