@@ -341,10 +341,11 @@ abstract class  ABSoftImporter extends AProductImporter
                     $dirtySkuUpdate->salePrice=$dirtySkus[$i]['salePrice'];
                     $dirtySkuUpdate->update();
                     $this->debug('processFile','Sku Exist, update',$exist[0]['id']);
+                    $this->seenSkus[] = $exist[0]['id'];
 
                 } else throw new BambooException('More than 1 sku found to update');
 
-                $this->seenSkus[] = $exist[0]['id'];
+
 
 
             } catch (\Throwable $e) {
