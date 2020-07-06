@@ -88,6 +88,8 @@ class CThomasImportStandard extends ABluesealProductImporter
                     $dirtyProductExtend['colorDescription'] = $assoc['colorDescription'];
                     $dirtyProductExtend['cat1'] = $assoc['cat1'];
                     $dirtyProductExtend['cat2'] = $assoc['cat2'];
+                    $dirtyProductExtend['value'] = $assoc['value'];
+                    $dirtyProductExtend['price'] = $assoc['price'];
                     $dirtyProductExtend['checksum'] = md5(json_encode($dirtyProductExtend));
 
                     if (isset($keysChecksums[$dirtyProduct['keysChecksum']])) {
@@ -177,7 +179,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                 $dirtySku['qty'] = $assoc['qty'];
                 // $dirtySku['value'] = $this->calculateValue($assoc['price'],$assoc['brand']);
                 $dirtySku['price'] = $assoc['price'];
-                $dirtySku['price'] = $assoc['value'];
+                $dirtySku['value'] = $assoc['value'];
                 $dirtySku['checksum'] = md5(json_encode($dirtySku));
 
                 if(isset($skusChecksums[$dirtySku['checksum']])) {
