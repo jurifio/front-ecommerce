@@ -85,7 +85,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                     $season=$assoc['season'].' '.$assoc['year'];
                     $dirtyProductExtend['season']=$season;
                     $dirtyProductExtend['generalColor'] = $assoc['generalColor'];
-                   // $dirtyProductExtend['colorDescription'] = $assoc['generalColor'];
+                    $dirtyProductExtend['colorDescription'] = $assoc['colorDescription'];
                     $dirtyProductExtend['cat1'] = $assoc['cat1'];
                     $dirtyProductExtend['cat2'] = $assoc['cat2'];
                     $dirtyProductExtend['value'] = $assoc['value'];
@@ -208,7 +208,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                 }
 
             } catch (\Throwable $e) {
-                $this->error('ProductCycke','Error while working sku',$e);
+                $this->error('ProductCycle','Error while working sku',$e);
                 continue;
             }
         }
