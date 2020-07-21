@@ -77,7 +77,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                     $dirtyProduct['extId'] = $assoc['extId'];
 
 
-                    $dirtyProduct['keysChecksum'] = json_encode($dirtyProduct);
+                    $dirtyProduct['keysChecksum'] = md5(json_encode($dirtyProduct));
                     $dirtyProduct['checksum'] = $checksum;
                     $dirtyProductExtend['name'] = $assoc['name'];
                     $dirtyProductExtend['description'] = $assoc['name'];
