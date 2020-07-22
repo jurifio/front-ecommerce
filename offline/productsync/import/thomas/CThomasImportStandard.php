@@ -100,7 +100,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                         ]);
 
                         \Monkey::app()->dbAdapter->update('DirtyProductExtend', $dirtyProductExtend, [
-                            'id' => $keysChecksums[$dirtyProduct['keysChecksum']],
+                            'dirtyProductId' => $keysChecksums[$dirtyProduct['keysChecksum']],
                             'shopId' => $this->getShop()->id,
 
                         ]);
@@ -171,10 +171,37 @@ class CThomasImportStandard extends ABluesealProductImporter
                      }*/
                 }
                 $dirtyExtendFind=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dirtyProduct['id'],'shopId'=>$this->getShop()->id]);
-                if($dirtyExtendFind==null){
-                    \Monkey::app()->dbAdapter->insert('DirtyProductExtend', $dirtyProductExtend);
-
+                if($dirtyExtendFind==null) {
+                    $dirtyProductExtendInsert = \Monkey::app()->repoFactory->create('DirtyProductExtend')->getEmptyEntity();
+                    $dirtyProductExtendInsert->shopId = 58;
+                    $dirtyProductExtendInsert->name = $assoc['name'];
+                    $dirtyProductExtendInsert->name = $assoc['description'];
+                    $dirtyProductExtendInsert->season = $assoc['season'] . ' ' . $assoc['year'];
+                    $dirtyProductExtendInsert->audience = 'donna';
+                    $dirtyProductExtendInsert->cat1 = 'donna';
+                    $dirtyProductExtendInsert->generalColor = $assoc['generalColor'];
+                    $dirtyProductExtendInsert->colorDescription = $assoc['colorDescription'];
+                    $dirtyProductExtendInsert->cat1 = $assoc['cat1'];
+                    $dirtyProductExtendInsert->cat2 = $assoc['cat2'];
+                    $dirtyProductExtendInsert->checksum = md5(json_encode($dirtyProductExtend));
+                    $dirtyProductExtendInsert->insert();
+                }else {
+                    $dirtyProductExtendInsert->shopId = 58;
+                    $dirtyProductExtendInsert->name = $assoc['name'];
+                    $dirtyProductExtendInsert->name = $assoc['description'];
+                    $dirtyProductExtendInsert->season = $assoc['season'] . ' ' . $assoc['year'];
+                    $dirtyProductExtendInsert->audience = 'donna';
+                    $dirtyProductExtendInsert->cat1 = 'donna';
+                    $dirtyProductExtendInsert->generalColor = $assoc['generalColor'];
+                    $dirtyProductExtendInsert->colorDescription = $assoc['colorDescription'];
+                    $dirtyProductExtendInsert->cat1 = $assoc['cat1'];
+                    $dirtyProductExtendInsert->cat2 = $assoc['cat2'];
+                    $dirtyProductExtendInsert->checksum = md5(json_encode($dirtyProductExtend));
+                    $dirtyProductExtendInsert->update();
                 }
+
+
+
             } catch (\Throwable $e) {
                 $this->error('ProductCycle','Error while working product',$e);
                 continue;
