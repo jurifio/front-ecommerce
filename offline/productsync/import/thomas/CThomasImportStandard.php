@@ -42,7 +42,6 @@ class CThomasImportStandard extends ABluesealProductImporter
         foreach ($rows as $one) {
             $checksums[$one['checksum']] = $one['id'];
             $keysChecksums[$one['keysChecksum']] = $one['id'];
-
         }
 
         $rows = \Monkey::app()->dbAdapter->query('SELECT `checksum`, id FROM DirtySku WHERE shopId = ? AND qty > 0', [$this->getShop()->id])->fetchAll();
@@ -76,11 +75,11 @@ class CThomasImportStandard extends ABluesealProductImporter
                     $dirtyProduct['itemno'] = $assoc['itemno'];
                     $dirtyProduct['var'] = $assoc['var'];
                     $dirtyProduct['extId'] = $assoc['extId'];
-                    $dirtyProduct['value']=$assoc['value'];
-                    $dirtyProduct['price']=$assoc['price'];
+                    $dirtyProduct['value'] = $assoc['value'];
+                    $dirtyProduct['price'] = $assoc['price'];
 
 
-                    $dirtyProduct['keysChecksum'] = md5(json_encode($dirtyProduct));
+                    $dirtyProduct['keysChecksum'] = json_encode($dirtyProduct);
                     $dirtyProduct['checksum'] = $checksum;
                     $dirtyProductExtend['name'] = $assoc['name'];
                     $dirtyProductExtend['description'] = $assoc['name'];
@@ -91,18 +90,18 @@ class CThomasImportStandard extends ABluesealProductImporter
                     $dirtyProductExtend['colorDescription'] = $assoc['colorDescription'];
                     $dirtyProductExtend['cat1'] = $assoc['cat1'];
                     $dirtyProductExtend['cat2'] = $assoc['cat2'];
+
                     $dirtyProductExtend['checksum'] = md5(json_encode($dirtyProductExtend));
 
                     if (isset($keysChecksums[$dirtyProduct['keysChecksum']])) {
                         \Monkey::app()->dbAdapter->update('DirtyProduct', $dirtyProduct, [
                             'id' => $keysChecksums[$dirtyProduct['keysChecksum']],
-                            'shopId' => $this->getShop()->id,
+                            'shopId' => $this->getShop()->id
                         ]);
 
                         \Monkey::app()->dbAdapter->update('DirtyProductExtend', $dirtyProductExtend, [
-                            'dirtyProductId' => $keysChecksums[$dirtyProduct['keysChecksum']],
-                            'shopId' => $this->getShop()->id,
-
+                            'id' => $keysChecksums[$dirtyProduct['keysChecksum']],
+                            'shopId' => $this->getShop()->id
                         ]);
 
                         $dirtyProduct['id'] = $keysChecksums[$dirtyProduct['keysChecksum']];
@@ -119,7 +118,6 @@ class CThomasImportStandard extends ABluesealProductImporter
                     }
 
                     $checksums[$dirtyProduct['checksum']] = $dirtyProduct['id'];
-
 
                     /*  $imgs = [
                           $assoc['img1'],
@@ -170,35 +168,6 @@ class CThomasImportStandard extends ABluesealProductImporter
                          ]);
                      }*/
                 }
-                $dirtyExtendFind=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dirtyProduct['id'],'shopId'=>$this->getShop()->id]);
-                if($dirtyExtendFind==null) {
-                    $dirtyProductExtend['name'] = $assoc['name'];
-                    $dirtyProductExtend['description'] = $assoc['name'];
-                    $dirtyProductExtend['audience'] = 'DONNA';
-                    $season = $assoc['season'] . ' ' . $assoc['year'];
-                    $dirtyProductExtend['season'] = $season;
-                    $dirtyProductExtend['generalColor'] = $assoc['generalColor'];
-                    $dirtyProductExtend['colorDescription'] = $assoc['colorDescription'];
-                    $dirtyProductExtend['cat1'] = $assoc['cat1'];
-                    $dirtyProductExtend['cat2'] = $assoc['cat2'];
-                    $dirtyProductExtend['checksum'] = md5(json_encode($dirtyProductExtend));
-                    $dirtyProductExtendInsert = \Monkey::app()->repoFactory->create('DirtyProductExtend')->getEmptyEntity();
-                    $dirtyProductExtendInsert->shopId = 58;
-                    $dirtyProductExtendInsert->name = $assoc['name'];
-                    $dirtyProductExtendInsert->name = $assoc['description'];
-                    $dirtyProductExtendInsert->season = $assoc['season'] . ' ' . $assoc['year'];
-                    $dirtyProductExtendInsert->audience = 'donna';
-                    $dirtyProductExtendInsert->cat1 = 'donna';
-                    $dirtyProductExtendInsert->generalColor = $assoc['generalColor'];
-                    $dirtyProductExtendInsert->colorDescription = $assoc['colorDescription'];
-                    $dirtyProductExtendInsert->cat1 = $assoc['cat1'];
-                    $dirtyProductExtendInsert->cat2 = $assoc['cat2'];
-                    $dirtyProductExtendInsert->checksum = md5(json_encode($dirtyProductExtend));
-                    $dirtyProductExtendInsert->insert();
-                }
-
-
-
             } catch (\Throwable $e) {
                 $this->error('ProductCycle','Error while working product',$e);
                 continue;
@@ -240,7 +209,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                 }
 
             } catch (\Throwable $e) {
-                $this->error('ProductCycle','Error while working sku',$e);
+                $this->error('ProductCycke','Error while working sku',$e);
                 continue;
             }
         }
