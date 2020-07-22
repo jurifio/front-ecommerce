@@ -75,6 +75,8 @@ class CThomasImportStandard extends ABluesealProductImporter
                     $dirtyProduct['itemno'] = $assoc['itemno'];
                     $dirtyProduct['var'] = $assoc['var'];
                     $dirtyProduct['extId'] = $assoc['extId'];
+                    $dirtyProduct['value']=$assoc['value'];
+                    $dirtyProduct['price']=$assoc['price'];
 
 
                     $dirtyProduct['keysChecksum'] = md5(json_encode($dirtyProduct));
@@ -88,19 +90,18 @@ class CThomasImportStandard extends ABluesealProductImporter
                     $dirtyProductExtend['colorDescription'] = $assoc['colorDescription'];
                     $dirtyProductExtend['cat1'] = $assoc['cat1'];
                     $dirtyProductExtend['cat2'] = $assoc['cat2'];
-                    $dirtyProductExtend['value'] = $assoc['value'];
-                    $dirtyProductExtend['price'] = $assoc['price'];
                     $dirtyProductExtend['checksum'] = md5(json_encode($dirtyProductExtend));
 
                     if (isset($keysChecksums[$dirtyProduct['keysChecksum']])) {
                         \Monkey::app()->dbAdapter->update('DirtyProduct', $dirtyProduct, [
                             'id' => $keysChecksums[$dirtyProduct['keysChecksum']],
-                            'shopId' => $this->getShop()->id
+                            'shopId' => $this->getShop()->id,
                         ]);
 
                         \Monkey::app()->dbAdapter->update('DirtyProductExtend', $dirtyProductExtend, [
                             'id' => $keysChecksums[$dirtyProduct['keysChecksum']],
-                            'shopId' => $this->getShop()->id
+                            'shopId' => $this->getShop()->id,
+
                         ]);
 
                         $dirtyProduct['id'] = $keysChecksums[$dirtyProduct['keysChecksum']];
@@ -117,6 +118,11 @@ class CThomasImportStandard extends ABluesealProductImporter
                     }
 
                     $checksums[$dirtyProduct['checksum']] = $dirtyProduct['id'];
+                    $dirtyExtendFind=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dirtyProduct['id'],'shopId'=>$this->getShop()->id]);
+                    if($dirtyExtendFind==null){
+                        \Monkey::app()->dbAdapter->insert('DirtyProductExtend', $dirtyProductExtend);
+
+                    }
 
                     /*  $imgs = [
                           $assoc['img1'],
