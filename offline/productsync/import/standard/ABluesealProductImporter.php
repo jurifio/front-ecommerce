@@ -623,9 +623,9 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 /** Inserisco la variante*/
                 $variant = $variantFactory->getEmptyEntity();
                 $variant->name = $dirtyProduct->var;
-                if( $dirtyProduct->extend->colorDescription!=null) {
+              /*  if( $dirtyProduct->extend->colorDescription!=null) {
                     $variant->description = $dirtyProduct->extend->colorDescription;
-                }
+                }*/
 
 
                 /** Inserisco il prodotto */
