@@ -42,6 +42,7 @@ class CThomasImportStandard extends ABluesealProductImporter
         foreach ($rows as $one) {
             $checksums[$one['checksum']] = $one['id'];
             $keysChecksums[$one['keysChecksum']] = $one['id'];
+
         }
 
         $rows = \Monkey::app()->dbAdapter->query('SELECT `checksum`, id FROM DirtySku WHERE shopId = ? AND qty > 0', [$this->getShop()->id])->fetchAll();
