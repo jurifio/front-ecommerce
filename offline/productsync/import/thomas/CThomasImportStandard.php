@@ -175,8 +175,8 @@ class CThomasImportStandard extends ABluesealProductImporter
                     $dirtyProductExtend['name'] = $assoc['name'];
                     $dirtyProductExtend['description'] = $assoc['name'];
                     $dirtyProductExtend['audience'] = 'DONNA';
-                    $season=$assoc['season'].' '.$assoc['year'];
-                    $dirtyProductExtend['season']=$season;
+                    $season = $assoc['season'] . ' ' . $assoc['year'];
+                    $dirtyProductExtend['season'] = $season;
                     $dirtyProductExtend['generalColor'] = $assoc['generalColor'];
                     $dirtyProductExtend['colorDescription'] = $assoc['colorDescription'];
                     $dirtyProductExtend['cat1'] = $assoc['cat1'];
@@ -195,29 +195,6 @@ class CThomasImportStandard extends ABluesealProductImporter
                     $dirtyProductExtendInsert->cat2 = $assoc['cat2'];
                     $dirtyProductExtendInsert->checksum = md5(json_encode($dirtyProductExtend));
                     $dirtyProductExtendInsert->insert();
-                }else {
-                    $dirtyProductExtend['name'] = $assoc['name'];
-                    $dirtyProductExtend['description'] = $assoc['name'];
-                    $dirtyProductExtend['audience'] = 'DONNA';
-                    $season=$assoc['season'].' '.$assoc['year'];
-                    $dirtyProductExtend['season']=$season;
-                    $dirtyProductExtend['generalColor'] = $assoc['generalColor'];
-                    $dirtyProductExtend['colorDescription'] = $assoc['colorDescription'];
-                    $dirtyProductExtend['cat1'] = $assoc['cat1'];
-                    $dirtyProductExtend['cat2'] = $assoc['cat2'];
-                    $dirtyProductExtend['checksum'] = md5(json_encode($dirtyProductExtend));
-                    $dirtyProductExtendInsert->shopId = 58;
-                    $dirtyProductExtendInsert->name = $assoc['name'];
-                    $dirtyProductExtendInsert->name = $assoc['description'];
-                    $dirtyProductExtendInsert->season = $assoc['season'] . ' ' . $assoc['year'];
-                    $dirtyProductExtendInsert->audience = 'donna';
-                    $dirtyProductExtendInsert->cat1 = 'donna';
-                    $dirtyProductExtendInsert->generalColor = $assoc['generalColor'];
-                    $dirtyProductExtendInsert->colorDescription = $assoc['colorDescription'];
-                    $dirtyProductExtendInsert->cat1 = $assoc['cat1'];
-                    $dirtyProductExtendInsert->cat2 = $assoc['cat2'];
-                    $dirtyProductExtendInsert->checksum = md5(json_encode($dirtyProductExtend));
-                    $dirtyProductExtendInsert->update();
                 }
 
 
