@@ -171,18 +171,19 @@ class CThomasImportStandard extends ABluesealProductImporter
                 $findDirtyProductId=\Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId'=>$assoc['extId']]);
                 $findDirtyProductExtend=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$findDirtyProductId->id]);
                 if($findDirtyProductExtend==null){
-                    $dirtyProductExtend['dirtyProductId'] = $findDirtyProductId->id;
-                    $dirtyProductExtend['name'] = $assoc['name'];
-                    $dirtyProductExtend['description'] = $assoc['name'];
-                    $dirtyProductExtend['audience'] = 'DONNA';
+                    $dirtyProductExtendOne['dirtyProductId'] = $findDirtyProductId->id;
+                    $dirtyProductExtendOne['shopId'] = 58;
+                    $dirtyProductExtendOne['name'] = $assoc['name'];
+                    $dirtyProductExtendOne['description'] = $assoc['name'];
+                    $dirtyProductExtendOne['audience'] = 'DONNA';
                     $season=$assoc['season'].' '.$assoc['year'];
-                    $dirtyProductExtend['season']=$season;
-                    $dirtyProductExtend['generalColor'] = $assoc['generalColor'];
-                    $dirtyProductExtend['colorDescription'] = $assoc['colorDescription'];
-                    $dirtyProductExtend['cat1'] = $assoc['cat1'];
-                    $dirtyProductExtend['cat2'] = $assoc['cat2'];
-                    $dirtyProductExtend['checksum'] = md5(json_encode($dirtyProductExtend));
-                    \Monkey::app()->dbAdapter->insert('DirtyProductExtend', $dirtyProductExtend);
+                    $dirtyProductExtendOne['season']=$season;
+                    $dirtyProductExtendOne['generalColor'] = $assoc['generalColor'];
+                    $dirtyProductExtendOne['colorDescription'] = $assoc['colorDescription'];
+                    $dirtyProductExtendOne['cat1'] = $assoc['cat1'];
+                    $dirtyProductExtendOne['cat2'] = $assoc['cat2'];
+                    $dirtyProductExtendOne['checksum'] = md5(json_encode($dirtyProductExtendOne));
+                    \Monkey::app()->dbAdapter->insert('DirtyProductExtend', $dirtyProductExtendOne);
 
                 }
 
