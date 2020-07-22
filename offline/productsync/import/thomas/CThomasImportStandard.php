@@ -168,6 +168,26 @@ class CThomasImportStandard extends ABluesealProductImporter
                          ]);
                      }*/
                 }
+                $findDirtyProductId=\Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId'=>$assoc['extId']]);
+                $findDirtyProductExtend=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$findDirtyProductId->id]);
+                if($findDirtyProductExtend==null){
+                    $dirtyProductExtend['name'] = $assoc['name'];
+                    $dirtyProductExtend['description'] = $assoc['name'];
+                    $dirtyProductExtend['audience'] = 'DONNA';
+                    $season=$assoc['season'].' '.$assoc['year'];
+                    $dirtyProductExtend['season']=$season;
+                    $dirtyProductExtend['generalColor'] = $assoc['generalColor'];
+                    $dirtyProductExtend['colorDescription'] = $assoc['colorDescription'];
+                    $dirtyProductExtend['cat1'] = $assoc['cat1'];
+                    $dirtyProductExtend['cat2'] = $assoc['cat2'];
+                    $dirtyProductExtend['checksum'] = md5(json_encode($dirtyProductExtend));
+                    \Monkey::app()->dbAdapter->insert('DirtyProductExtend', $dirtyProductExtend);
+
+                }
+
+
+
+
             } catch (\Throwable $e) {
                 $this->error('ProductCycle','Error while working product',$e);
                 continue;
