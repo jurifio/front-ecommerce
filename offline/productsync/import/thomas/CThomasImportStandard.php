@@ -118,11 +118,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                     }
 
                     $checksums[$dirtyProduct['checksum']] = $dirtyProduct['id'];
-                    $dirtyExtendFind=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dirtyProduct['id'],'shopId'=>$this->getShop()->id]);
-                    if($dirtyExtendFind==null){
-                        \Monkey::app()->dbAdapter->insert('DirtyProductExtend', $dirtyProductExtend);
 
-                    }
 
                     /*  $imgs = [
                           $assoc['img1'],
@@ -172,6 +168,11 @@ class CThomasImportStandard extends ABluesealProductImporter
                              'worked' => 0
                          ]);
                      }*/
+                }
+                $dirtyExtendFind=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dirtyProduct['id'],'shopId'=>$this->getShop()->id]);
+                if($dirtyExtendFind==null){
+                    \Monkey::app()->dbAdapter->insert('DirtyProductExtend', $dirtyProductExtend);
+
                 }
             } catch (\Throwable $e) {
                 $this->error('ProductCycle','Error while working product',$e);
