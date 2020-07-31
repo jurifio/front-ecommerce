@@ -26,11 +26,13 @@ class CPayPalGateway extends APaymentGateway
         $base = 'https://www.paypal.com/cgi-bin/webscr';// o nostro?
         $cfg = $this->app->cfg()->fetch('miscellaneous','orderGateways');
         $param['amount'] = $this->order->netTotal;
-        $param['divisa'] = 'EUR';
+        $param['divisa'] = "EUR";
         //$param['form_action'] = 'https://www.paypal.com/cgi-bin/webscr';
+        //  $param['currency_code'] = "EUR";
         $param['cmd'] = "_xclick";
         $param['no_note'] = 1;
-        $param['currency_code'] =  "EUR";
+
+        $param['image_url'] =  "https://www.thomasboutique.it/assets/logowid.png";
 
         $param['business'] =  $cfg['payPal']['business'];
         $param['item_name'] = "Ordine ".$this->app->getName()." ".$this->order->id." da ".$this->order->user->getFullName();
@@ -60,7 +62,7 @@ class CPayPalGateway extends APaymentGateway
 
         $param['notify_url'] = $cfg['payPal']['urlPost'];
 
-        $this->url = $base.'?'.http_build_query($param);
+        $this->url = $base.'?currency_code=EUR&'.http_build_query($param);
         return true;
     }
 
@@ -106,7 +108,7 @@ class CPayPalGateway extends APaymentGateway
             $this->app->orderManager->registerEvent($order->id, "Pagamento Paypal - FAIL verifica'","'Errore nell'apertura fsock", $order->status);
         } else {
             fputs($fp, $header . $req);
-	        usleep(1000);
+            usleep(1000);
             while (!feof($fp)) {
                 $res = fgets($fp, 1024);
                 if (strcmp($res, "VERIFIED") == 0) {
