@@ -336,6 +336,11 @@ class COrderLineRepo extends ARepo
                             $billingAddressId = 105;
                             $shipmentAddressId = 105;
                             break;
+                        case '58':
+                            $userRemoteId = 301;
+                            $billingAddressId = 111;
+                            $shipmentAddressId = 111;
+                            break;
                     }
                     $billingAddressFind = \Monkey::app()->repoFactory->create('UserAddress')->findOneBy(['id' => '5843']);
                     $billingAddress = $billingAddressFind->froze();
