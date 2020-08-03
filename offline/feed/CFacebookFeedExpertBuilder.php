@@ -101,7 +101,11 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $dirtyProduct=\Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['productId'=>$product->id,'productVariantId'=>$product->productVariantId]);
             $dirtyProductId=$dirtyProduct->id;
             $audienceFind=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dirtyProductId]);
-            $audience=$audienceFind->audience;
+            if($audienceFind!=null) {
+                $audience = $audienceFind->audience;
+            }else{
+                $audience='';
+            }
             $description=$product->getDescription();
             $description.= ' '.$audience;
             $description.=' '.$product->productSeason->name;
