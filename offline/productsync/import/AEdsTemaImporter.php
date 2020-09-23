@@ -53,7 +53,7 @@ abstract class AEdsTemaImporter extends AProductImporter
     public function fetchFiles()
     {
         /** PRODUCTS */
-        $files = glob($this->app->rootPath().$this->app->cfg()->fetch('paths', 'productSync') . '/cartechini/PRODUCTS_*.CSV');
+        $files = glob($this->app->rootPath().$this->app->cfg()->fetch('paths', 'productSync') . '/' . $this->shop->name . '/PRODUCTS_*.CSV');
         $products = $files[count($files) - 1];
 
         $size = filesize($products);
@@ -67,7 +67,7 @@ abstract class AEdsTemaImporter extends AProductImporter
             unlink($files[$i]);
         }
         /** SKUS */
-        $files = glob($this->app->rootPath().$this->app->cfg()->fetch('paths', 'productSync') . '/cartechini/SKUS_*.CSV');
+        $files = glob($this->app->rootPath().$this->app->cfg()->fetch('paths', 'productSync') . '/' . $this->shop->name . '/cartechini/SKUS_*.CSV');
         $products = $files[count($files) - 1];
         $size = filesize($products);
         while ($size != filesize($products)) {
@@ -115,6 +115,7 @@ abstract class AEdsTemaImporter extends AProductImporter
                 $one = [];
                 /** Count columns */
                 if (count($values) != $this->config->fetch('files', 'main')['columns']) {
+                    $this->warning('Columns Count Main',count($values).' columns find, expecting '.$this->config->fetch('files', 'main')['columns'],$values);
                     //ERROR
                     continue;
                 }
@@ -167,12 +168,8 @@ abstract class AEdsTemaImporter extends AProductImporter
         while (($values = fgetcsv($skus, 0, $this->config->fetch('miscellaneous', 'separator'), '|')) !== false) {
             try{
 
-                if ($values[0][0] == '"') {
-                    $values[0] = substr($values[0], 1);
-                }
-                    $value[12]=str_replace('"',"", $values[12]);
 
-                if (count($values) != 13) {
+                if (count($values) != $this->config->fetch('files', 'skus')['columns']) {
                     $this->warning('Columns Count',count($values).' columns find, expecting '.$this->config->fetch('files', 'skus')['columns'],$values);
                     continue;
                 }
