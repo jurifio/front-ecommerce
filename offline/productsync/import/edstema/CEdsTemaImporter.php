@@ -243,6 +243,12 @@ class CEdsTemaImporter extends ABluesealProductImporter
         while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
             $this->debug('Read Sku','Cycle skus', $values);
             try {
+                if ($values[0][0] == '"') {
+                    $values[0] = substr($values[0], 1);
+                }
+                if ($values[12][0] == '"') {
+                    $values[12] = "";
+                }
                 if (count($values) != $columnNumbers) {
                     $this->warning('Columns Count', count($values) . ' columns find, expecting ' . $columnNumbers, $values);
                     continue;
@@ -279,6 +285,8 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 $sku['price'] = str_replace(',', '.', $sku['price']);
                 $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
                 $sku['value'] = str_replace(',', '.', $sku['value']);
+                $sku['storeHouseId'] =str_replace('0', '',  $sku['storeHouseId']);
+
 
                 $dirtyProduct = $this->app->dbAdapter->select('DirtyProduct', $match)->fetchAll();
                 if (count($dirtyProduct) != 1) {

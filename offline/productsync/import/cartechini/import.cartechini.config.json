@@ -38,7 +38,7 @@
             "size" : 2,
             "qty" : 3,
             "storeHouseId" : 8,
-            "ean": 11
+            "barcode": 11
         }
     },
     "miscellaneous": {
