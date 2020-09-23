@@ -249,7 +249,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 if ($values[12][0] == '"') {
                     $values[12] = "";
                 }
-                if (count($values) != $columnNumbers) {
+                if (count($values) != 13) {
                     $this->warning('Columns Count', count($values) . ' columns find, expecting ' . $columnNumbers, $values);
                     continue;
                 }
