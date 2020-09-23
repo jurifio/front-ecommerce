@@ -169,9 +169,14 @@ abstract class AEdsTemaImporter extends AProductImporter
         $skus = $this->skusF;
         $shopOk = 0;
         $shopKo = 0;
-        while (($values = fgetcsv($skus, 0, $this->config->fetch('miscellaneous', 'separator'), '|')) !== false) {
+        while (($values = fgetcsv($skus, 500000, $this->config->fetch('miscellaneous', 'separator'), '\"')) !== false) {
             try{
-
+                if ($values[0][0] == '"') {
+                    $values[0] = substr($values[0], 1);
+                }
+                if ($values[12][0] == '"') {
+                    $values[12] = "";
+                }
 
                 if (count($values) != $this->config->fetch('files', 'skus')['columns']) {
                     $this->warning('Columns Count',count($values).' columns find, expecting '.$this->config->fetch('files', 'skus')['columns'],$values);
