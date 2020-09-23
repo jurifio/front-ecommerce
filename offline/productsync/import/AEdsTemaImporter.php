@@ -167,8 +167,10 @@ abstract class AEdsTemaImporter extends AProductImporter
         while (($values = fgetcsv($skus, 0, $this->config->fetch('miscellaneous', 'separator'), '|')) !== false) {
             try{
 
-                    $values[0]=str_replace('\"',"", $values[0]);
-                    $value[12]=str_replace('\"',"", $values[12]);
+                if ($values[0][0] == '"') {
+                    $values[0] = substr($values[0], 1);
+                }
+                    $value[12]=str_replace('"',"", $values[12]);
 
                 if (count($values) != $this->config->fetch('files', 'skus')['columns']) {
                     $this->warning('Columns Count',count($values).' columns find, expecting '.$this->config->fetch('files', 'skus')['columns'],$values);
