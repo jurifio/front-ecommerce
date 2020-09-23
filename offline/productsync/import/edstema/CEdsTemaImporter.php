@@ -243,12 +243,6 @@ class CEdsTemaImporter extends ABluesealProductImporter
         while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
             $this->debug('Read Sku','Cycle skus', $values);
             try {
-                if ($values[0][0] == '"') {
-                    $values[0] = substr($values[0], 1);
-                }
-                if ($values[12][0] == '"') {
-                    $values[12] = "";
-                }
                 if (count($values) != 13) {
                     $this->warning('Columns Count', count($values) . ' columns find, expecting ' . $columnNumbers, $values);
                     continue;
