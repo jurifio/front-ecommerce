@@ -273,13 +273,15 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 $match = $this->mapKeys($sku, $keysMapping);
                 $match['shopId'] = $this->getShop()->id;
 
+
+
                 $sku['price'] = str_replace('.', '', $sku['price']);
                 $sku['salePrice'] = str_replace('.', '', $sku['salePrice']);
                 $sku['value'] = str_replace('.', '', $sku['value']);
                 $sku['price'] = str_replace(',', '.', $sku['price']);
                 $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
                 $sku['value'] = str_replace(',', '.', $sku['value']);
-                $sku['storeHouseId'] =str_replace('0', '',  $sku['storeHouseId']);
+                $sku['storeHouseId'] = str_replace('0','',$values[8]);
 
 
                 $dirtyProduct = $this->app->dbAdapter->select('DirtyProduct', $match)->fetchAll();
