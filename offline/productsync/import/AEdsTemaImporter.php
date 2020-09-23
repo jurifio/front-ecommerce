@@ -172,7 +172,7 @@ abstract class AEdsTemaImporter extends AProductImporter
                 }
                     $value[12]=str_replace('"',"", $values[12]);
 
-                if (count($values) != $this->config->fetch('files', 'skus')['columns']) {
+                if (count($values) != 13) {
                     $this->warning('Columns Count',count($values).' columns find, expecting '.$this->config->fetch('files', 'skus')['columns'],$values);
                     continue;
                 }
