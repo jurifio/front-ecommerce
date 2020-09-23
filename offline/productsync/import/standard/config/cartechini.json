@@ -19,7 +19,7 @@
         },
         "skus": {
             "location": "local",
-            "columns":  12,
+            "columns":  13,
             "extKeys": ["extId","var"]
         }
     },
@@ -49,7 +49,9 @@
             "value" : 7,
             "shopId" : 8,
             "size" : 2,
-            "qty" : 3
+            "qty" : 3,
+            "storeHouseId" : 8,
+            "barcode": 11
         }
     },
     "miscellaneous": {
