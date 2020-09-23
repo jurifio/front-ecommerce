@@ -37,7 +37,7 @@
             "shopId" : 8,
             "size" : 2,
             "qty" : 3,
-            "mag" : 9,
+            "storeId" : 9,
             "ean": 12
         }
     },
