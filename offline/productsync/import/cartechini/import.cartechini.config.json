@@ -16,7 +16,7 @@
         },
         "skus": {
             "location": "skus.csv",
-            "columns":  12,
+            "columns":  13,
             "extKeys": ["extId","var"]
         }
     },
@@ -37,8 +37,8 @@
             "shopId" : 8,
             "size" : 2,
             "qty" : 3,
-            "storeHouseId" : 9,
-            "ean": 12
+            "storeHouseId" : 8,
+            "ean": 11
         }
     },
     "miscellaneous": {
