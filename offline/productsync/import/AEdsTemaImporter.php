@@ -35,11 +35,15 @@ abstract class AEdsTemaImporter extends AProductImporter
         $this->fetchFiles();
         $this->report( "Run", "Read Files", "Leggo i files");
         $this->readFiles();
+        sleep(2);
         $this->report( "Run", "Read Main", "Leggo il file Main cercando Prodotti");
+        sleep(2);
         $this->readMain();
         $this->report( "Run", "Read Sku", "Leggo il file degli Sku");
+        sleep(2);
         $this->readSku();
         $this->report( "Run", "Find Zero Skus", "Azzero le quantità dei prodotti non elaborati");
+        sleep(2);
         $this->findZeroSkus();
         $this->saveFiles();
         $this->report( "Run", "Import END", "Inizio importazione " . $this->shop->name);
@@ -58,7 +62,7 @@ abstract class AEdsTemaImporter extends AProductImporter
 
         $size = filesize($products);
         while ($size != filesize($products)) {
-            sleep(1);
+            sleep(2);
             $size = filesize($products);
         }
         $this->main = $this->app->rootPath().$this->app->cfg()->fetch('paths', 'productSync')  . '/' . $this->shop->name . '/import/main' . rand(0, 1000) . '.csv';
@@ -71,7 +75,7 @@ abstract class AEdsTemaImporter extends AProductImporter
         $products = $files[count($files) - 1];
         $size = filesize($products);
         while ($size != filesize($products)) {
-            sleep(1);
+            sleep(2);
             $size = filesize($products);
         }
         $this->skus = $this->app->rootPath().$this->app->cfg()->fetch('paths', 'productSync') . '/' . $this->shop->name . '/import/sku' . rand(0, 1000) . '.csv';
