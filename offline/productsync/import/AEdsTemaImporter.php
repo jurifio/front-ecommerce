@@ -178,10 +178,10 @@ abstract class AEdsTemaImporter extends AProductImporter
                     $values[12] = "";
                 }
 
-                if (count($values) != $this->config->fetch('files', 'skus')['columns']) {
+                /*if (count($values) !== $this->config->fetch('files', 'skus')['columns']) {
                     $this->warning('Columns Count',count($values).' columns find, expecting '.$this->config->fetch('files', 'skus')['columns'],$values);
                     continue;
-                }
+                }*/
                 $line = implode($this->config->fetch('miscellaneous', 'separator'), $values);
                 $crc32 = md5($line);
                 $exist = $this->app->dbAdapter->select("DirtySku", ['checksum' => $crc32, 'shopId'=>$this->shop->id])->fetchAll();
