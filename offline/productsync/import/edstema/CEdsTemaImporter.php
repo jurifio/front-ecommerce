@@ -299,6 +299,25 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 if (count($res) == 1) {
                     $sku['changed'] = 1;
                     $id = $res[0]['id'];
+                    $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
+                        'shopId'=> $this->getShop()->id,
+                        'size'=>$sku['size'],
+                        'dirtySkuId'=>$id,
+                        'storeHouseId'=> $sku['storeHouseId']
+                    ]);
+                    if(count($findDirtyHasStoreHouse)==0){
+                        $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
+                        $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
+                        $insertDirtySkuHasStoreHouse->dirtySkuId=$id;
+                        $insertDirtySkuHasStoreHouse->storeHouseId= str_replace('0','',$values[8]);
+                        $insertDirtySkuHasStoreHouse->size=$sku['size'];
+                        $insertDirtySkuHasStoreHouse->dirtyProduct=$dirtyProduct['id'];
+                        $insertDirtySkuHasStoreHouse->qty=$values[3];
+                        $insertDirtySkuHasStoreHouse->barcode=$value[11];
+                        $insertDirtySkuHasStoreHouse->productSizeId= $res[0]['productSizeId'];
+                        $insertDirtySkuHasStoreHouse->insert();
+                    }
+
                     $this->debug('Read Sku','Updating Sku',$sku);
                     $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$id]);
                     $dirtySkuUpdate->value=$sku['price'];
