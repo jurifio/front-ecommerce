@@ -311,6 +311,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     unset($sku['var']);
                     $sku['dirtyProductId'] = $dirtyProduct['id'];
                     $sku['shopId'] = $this->shop->id;
+                    $sku['storeHouseId'] = str_replace('0','',$values[8]);
                     $sku['changed'] = 1;
                     $new = $this->app->dbAdapter->insert('DirtySku', $sku);
                     $seenSkus[] = $new;
