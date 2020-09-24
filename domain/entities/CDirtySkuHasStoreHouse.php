@@ -22,5 +22,4 @@ class CDirtySkuHasStoreHouse extends AEntity
     protected $primaryKeys = ['id','storeHouseId'];
 	protected $isCacheable = false;
 
-	CONST EXCLUDED_STATUS = 'exclude';
 }
