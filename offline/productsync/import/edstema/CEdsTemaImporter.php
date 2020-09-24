@@ -260,6 +260,10 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
                 $sku['value'] = str_replace(',', '.', $sku['value']);
                 $sku['storeHouseId'] = str_replace('0','',$values[8]);
+                $sku['shopId'] = $this->getShop()->id;
+
+                $match = $this->mapKeys($sku, $keysMapping);
+                $match['shopId'] = $this->getShop()->id;
                 $dirtyProductFind=\Monkey::app()->repoFactory->create('DirtyProduct')->findBy(['shopId'=>$thisShopExtId]);
                 if(count($dirtyProductFind)!=0){
                     foreach($dirtyProductFind as $dpfi){
@@ -302,10 +306,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 } else {
                     $shopOk++;
                 }
-                $sku['shopId'] = $this->getShop()->id;
 
-                $match = $this->mapKeys($sku, $keysMapping);
-                $match['shopId'] = $this->getShop()->id;
 
 
 
