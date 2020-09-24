@@ -268,12 +268,12 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 if(count($dirtyProductFind)!=0){
                     foreach($dirtyProductFind as $dpfi) {
                         $resi = $this->app->dbAdapter->select('DirtySku',['dirtyProductId' => $dpfi['id'],'size' => $sku['size'],'shopId' => $thisShopExtId])->fetchAll();
-                        if (count($dirtyProductFind) != 0) {
-                            $idfind = $resi[0]['id'];
+                        if (count($resi) != 0) {
+                            $idFind = $resi[0]['id'];
                             $findDirtyHasStoreHouse = \Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
                                 'shopId' => $this->getShop()->id,
                                 'size' => $sku['size'],
-                                'dirtySkuId' => $id,
+                                'dirtySkuId' => $idFind,
                                 'storeHouseId' => $sku['storeHouseId']
                             ]);
                             if (count($findDirtyHasStoreHouse) == 0) {
