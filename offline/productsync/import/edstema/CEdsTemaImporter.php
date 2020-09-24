@@ -185,10 +185,10 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     $productExtend = $this->mapValues($values, $extendMapping);
                     $dirtyProductExtend = $this->app->dbAdapter->select('DirtyProductExtend',
                         ['dirtyProductId' => $res[0]['id'],
-                         'shopId' => $this->getShop()->id])->fetchAll();
+                            'shopId' => $this->getShop()->id])->fetchAll();
                     $this->debug('readMain', 'Loocked for Dirty Product Extend',
                         [['dirtyProductId' => $res[0]['id'],'shopId' => $this->getShop()->id],
-                         $dirtyProductExtend]);
+                            $dirtyProductExtend]);
                     if(count($dirtyProductExtend) == 0) {
                         $this->app->dbAdapter->insert('DirtyProductExtend',
                             $productExtend + [   'dirtyProductId' => $res[0]['id'],
@@ -197,7 +197,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     } else {
                         $this->app->dbAdapter->update('DirtyProductExtend',
                             $productExtend, ['dirtyProductId' => $res[0]['id'],
-                                                    'shopId' => $this->getShop()->id]);
+                                'shopId' => $this->getShop()->id]);
                         $this->debug('readMain','updating Dirty',$productExtend);
                     }
 
