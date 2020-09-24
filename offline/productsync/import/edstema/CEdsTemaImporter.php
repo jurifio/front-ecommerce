@@ -253,46 +253,6 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 $sku = $this->mapValues($values, $valuesMapping);
                 $sku['text'] = implode($separator, $values);
                 $sku['checksum'] = md5($sku['text']);
-                $sku['price'] = str_replace('.', '', $sku['price']);
-                $sku['salePrice'] = str_replace('.', '', $sku['salePrice']);
-                $sku['value'] = str_replace('.', '', $sku['value']);
-                $sku['price'] = str_replace(',', '.', $sku['price']);
-                $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
-                $sku['value'] = str_replace(',', '.', $sku['value']);
-                $sku['storeHouseId'] = str_replace('0','',$values[8]);
-                $sku['shopId'] = $this->getShop()->id;
-
-                $match = $this->mapKeys($sku, $keysMapping);
-                $match['shopId'] = $this->getShop()->id;
-                $dirtyProductFind = $this->app->dbAdapter->select('DirtyProduct', ['shopId'=>$thisShopExtId])->fetchAll();
-                if(count($dirtyProductFind)!=0){
-                    foreach($dirtyProductFind as $dpfi) {
-                        $resi = $this->app->dbAdapter->select('DirtySku',['dirtyProductId' => $dpfi['id'],'size' => $sku['size'],'shopId' => $thisShopExtId])->fetchAll();
-                        if (count($resi) != 0) {
-                            $idFind = $resi[0]['id'];
-                            $findDirtyHasStoreHouse = \Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
-                                'shopId' => $this->getShop()->id,
-                                'size' => $sku['size'],
-                                'dirtySkuId' => $idFind,
-                                'storeHouseId' => $sku['storeHouseId']
-                            ]);
-                            if ($findDirtyHasStoreHouse) {
-                                $insertDirtySkuHasStoreHouse = \Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
-                                $insertDirtySkuHasStoreHouse->shopId = $thisShopExtId;
-                                $insertDirtySkuHasStoreHouse->dirtySkuId = $idFind;
-                                $insertDirtySkuHasStoreHouse->storeHouseId = str_replace('0','',$values[8]);
-                                $insertDirtySkuHasStoreHouse->size = $sku['size'];
-                                $insertDirtySkuHasStoreHouse->dirtyProductId = $dpfi['id'];
-                                $insertDirtySkuHasStoreHouse->qty = $values[3];
-                                $insertDirtySkuHasStoreHouse->barcode = $value[11];
-                                $insertDirtySkuHasStoreHouse->productSizeId = $resi[0]['productSizeId'];
-                                $insertDirtySkuHasStoreHouse->insert();
-                            }
-
-                        }
-                    }
-                }
-
 
                 $this->debug('Read Sku','Reading Sku',$sku);
 
@@ -301,18 +261,21 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     continue;
                 }
                 $this->debug('Read Sku','Checksum not found',$sku);
-                if (!in_array(($sku['shopId']), $thisShopExtId)) {
-                    $this->debug('readSkus', 'Skipped product with shopId: ' . $sku['shopId']);
-                    $shopKo++;
-                    continue;
-                } else {
-                    $shopOk++;
-                }
+
+                $sku['shopId'] = $this->getShop()->id;
+
+                $match = $this->mapKeys($sku, $keysMapping);
+                $match['shopId'] = $this->getShop()->id;
 
 
 
-
-
+                $sku['price'] = str_replace('.', '', $sku['price']);
+                $sku['salePrice'] = str_replace('.', '', $sku['salePrice']);
+                $sku['value'] = str_replace('.', '', $sku['value']);
+                $sku['price'] = str_replace(',', '.', $sku['price']);
+                $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
+                $sku['value'] = str_replace(',', '.', $sku['value']);
+                $sku['storeHouseId'] = str_replace('0','',$values[8]);
 
 
                 $dirtyProduct = $this->app->dbAdapter->select('DirtyProduct', $match)->fetchAll();
@@ -330,7 +293,29 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 if (count($res) == 1) {
                     $sku['changed'] = 1;
                     $id = $res[0]['id'];
-
+                    $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
+                        'shopId'=> $this->getShop()->id,
+                        'size'=>$sku['size'],
+                        'dirtySkuId'=>$id,
+                        'dirtyProductId' =>$dirtyProduct['id'],
+                        'storeHouseId'=> $sku['storeHouseId']
+                    ]);
+                    if(count($findDirtyHasStoreHouse)==0){
+                        $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
+                        $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
+                        $insertDirtySkuHasStoreHouse->dirtySkuId=$id;
+                        $insertDirtySkuHasStoreHouse->storeHouseId= str_replace('0','',$values[8]);
+                        $insertDirtySkuHasStoreHouse->size=$sku['size'];
+                        $insertDirtySkuHasStoreHouse->dirtyProduct=$dirtyProduct['id'];
+                        $insertDirtySkuHasStoreHouse->qty=$values[3];
+                        $insertDirtySkuHasStoreHouse->barcode=$values[11];
+                        $insertDirtySkuHasStoreHouse->productSizeId= $res[0]['productSizeId'];
+                        $insertDirtySkuHasStoreHouse->insert();
+                    }else{
+                        $findDirtyHasStoreHouse->qty=$values[3];
+                        $findDirtyHasStoreHouse->barcode=$values[11];
+                        $findDirtyHasStoreHouse->update();
+                    }
 
                     $this->debug('Read Sku','Updating Sku',$sku);
                     $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$id]);
@@ -357,6 +342,31 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     $sku['changed'] = 1;
                     $new = $this->app->dbAdapter->insert('DirtySku', $sku);
                     $seenSkus[] = $new;
+                    $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
+                        'shopId'=> $this->getShop()->id,
+                        'size'=>$sku['size'],
+                        'dirtySkuId'=>$id,
+                        'dirtyProductId' =>$dirtyProduct['id'],
+                        'storeHouseId'=> $sku['storeHouseId']
+                    ]);
+                    if(count($findDirtyHasStoreHouse)==0){
+                        $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
+                        $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
+                        $insertDirtySkuHasStoreHouse->dirtySkuId=$id;
+                        $insertDirtySkuHasStoreHouse->storeHouseId= str_replace('0','',$values[8]);
+                        $insertDirtySkuHasStoreHouse->size=$sku['size'];
+                        $insertDirtySkuHasStoreHouse->dirtyProduct=$dirtyProduct['id'];
+                        $insertDirtySkuHasStoreHouse->qty=$values[3];
+                        $insertDirtySkuHasStoreHouse->barcode=$values[11];
+                        $insertDirtySkuHasStoreHouse->productSizeId= $res[0]['productSizeId'];
+                        $insertDirtySkuHasStoreHouse->insert();
+                    }else{
+                        $findDirtyHasStoreHouse->qty=$values[3];
+                        $findDirtyHasStoreHouse->barcode=$values[11];
+                        $findDirtyHasStoreHouse->update();
+                    }
+
+
                 } else {
                     //error
                     continue;
