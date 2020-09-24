@@ -302,7 +302,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         'dirtyProductId' =>$dirtyProduct['id'],
                         'storeHouseId'=> $sku['storeHouseId']
                     ]);
-                    if(count($findDirtyHasStoreHouse)==0){
+                    if(count($findDirtyHasStoreHouse)!=1){
                         /* @var $insertDirtySkuHasStoreHouse CDirtySkuHasStoreHouse **/
                         $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
                         $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
@@ -353,7 +353,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         'storeHouseId'=> $sku['storeHouseId']
                     ]);
                     /* @var $FindDirtyHasStoreHouse CDirtySkuHasStoreHouse **/
-                    if(count($findDirtyHasStoreHouse)==0){
+                    if(count($findDirtyHasStoreHouse)!=1){
                         /* @var $insertDirtySkuHasStoreHouse CDirtySkuHasStoreHouse **/
                         $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
                         $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
