@@ -14,7 +14,6 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  *
  * @since ${VERSION}
  *
- * @property CDirtySkuHasStoreHouse $dirtySkuHasStoreHouse
  *
  */
 class CDirtySkuHasStoreHouse extends AEntity
