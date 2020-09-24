@@ -256,10 +256,10 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
                 $this->debug('Read Sku','Reading Sku',$sku);
 
-               /* if (isset($checksums[$sku['checksum']])) {
+                if (isset($checksums[$sku['checksum']])) {
                     $seenSkus[] = $checksums[$sku['checksum']];
                     continue;
-                }*/
+                }
                 $this->debug('Read Sku','Checksum not found',$sku);
                 if (!in_array(($sku['shopId']), $thisShopExtId)) {
                     $this->debug('readSkus', 'Skipped product with shopId: ' . $sku['shopId']);
