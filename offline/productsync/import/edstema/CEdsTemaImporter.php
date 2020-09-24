@@ -276,7 +276,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                                 'dirtySkuId' => $idFind,
                                 'storeHouseId' => $sku['storeHouseId']
                             ]);
-                            if (count($findDirtyHasStoreHouse) == 0) {
+                            if (count($findDirtyHasStoreHouse) ==null) {
                                 $insertDirtySkuHasStoreHouse = \Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
                                 $insertDirtySkuHasStoreHouse->shopId = $thisShopExtId;
                                 $insertDirtySkuHasStoreHouse->dirtySkuId = $idfind;
