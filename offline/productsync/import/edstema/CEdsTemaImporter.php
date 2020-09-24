@@ -294,7 +294,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 if (count($res) == 1) {
                     $sku['changed'] = 1;
                     $id = $res[0]['id'];
-                    /* @var $FindDirtyHasStoreHouse CDirtySkuHasStoreHouse **/
+                    /* @var CDirtySkuHasStoreHouse $FindDirtyHasStoreHouse  **/
                     $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
                         'shopId'=> $this->getShop()->id,
                         'size'=>$sku['size'],
@@ -303,7 +303,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         'storeHouseId'=> $sku['storeHouseId']
                     ]);
                     if(!$findDirtyHasStoreHouse){
-                        /* @var $insertDirtySkuHasStoreHouse CDirtySkuHasStoreHouse **/
+                        /* @var CDirtySkuHasStoreHouse $insertDirtySkuHasStoreHouse  **/
                         $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
                         $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
                         $insertDirtySkuHasStoreHouse->dirtySkuId=$id;
@@ -345,6 +345,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     $sku['changed'] = 1;
                     $new = $this->app->dbAdapter->insert('DirtySku', $sku);
                     $seenSkus[] = $new;
+                    /* @var  CDirtySkuHasStoreHouse $findDirtyHasStoreHouse **/
                     $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
                         'shopId'=> $this->getShop()->id,
                         'size'=>$sku['size'],
@@ -352,7 +353,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         'dirtyProductId' =>$dirtyProduct['id'],
                         'storeHouseId'=> $sku['storeHouseId']
                     ]);
-                    /* @var $FindDirtyHasStoreHouse CDirtySkuHasStoreHouse **/
+
                     if(!$findDirtyHasStoreHouse){
                         /** @var $insertDirtySkuHasStoreHouse CDirtySkuHasStoreHouse **/
                         $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
