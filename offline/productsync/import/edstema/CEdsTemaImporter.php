@@ -294,7 +294,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
                 $dirtyProduct = $dirtyProduct[0];
 
-                $res = $this->app->dbAdapter->select('DirtySku', ['dirtyProductId' => $dirtyProduct['id'], 'size' => $sku['size'],'storeHouseId'=>$sku['storeHouseId']])->fetchAll();
+                $res = $this->app->dbAdapter->select('DirtySku', ['dirtyProductId' => $dirtyProduct['id'], 'size' => $sku['size']])->fetchAll();
                 /** Update */
                 if (count($res) == 1) {
                     $sku['changed'] = 1;
