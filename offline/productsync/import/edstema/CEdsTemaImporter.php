@@ -305,6 +305,8 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     $dirtySkuUpdate->salePrice=$sku['salePrice'];
                     $dirtySkuUpdate->price=$sku['price'];
                     $dirtySkuUpdate->storeHouseId=$sku['storeHouseId'];
+                    $dirtySkuUpdate->text=$sku['text'];
+                    $dirtySkuUpdate->checksum=$sku['checksum'];
                     $dirtySkuUpdate->update();
                     /*$sku['dirtyProductId'] = $dirtyProduct['id'];
                     $sku['storeHouseId'] = str_replace('0','',$values[8]);*/
