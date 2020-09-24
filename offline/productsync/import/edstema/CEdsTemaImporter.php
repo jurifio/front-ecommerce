@@ -5,6 +5,7 @@ namespace bamboo\offline\productsync\import\edstema;
 use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooFileException;
 use bamboo\core\exceptions\BambooOutOfBoundException;
+use bamboo\core\domain\entities\CDirtySkuHasStoreHouse;
 use bamboo\core\exceptions\RedPandaException;
 use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
@@ -293,6 +294,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 if (count($res) == 1) {
                     $sku['changed'] = 1;
                     $id = $res[0]['id'];
+                    /* @var $FindDirtyHasStoreHouse CDirtySkuHasStoreHouse **/
                     $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
                         'shopId'=> $this->getShop()->id,
                         'size'=>$sku['size'],
@@ -301,6 +303,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         'storeHouseId'=> $sku['storeHouseId']
                     ]);
                     if(count($findDirtyHasStoreHouse)==0){
+                        /* @var $insertDirtySkuHasStoreHouse CDirtySkuHasStoreHouse **/
                         $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
                         $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
                         $insertDirtySkuHasStoreHouse->dirtySkuId=$id;
@@ -349,7 +352,9 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         'dirtyProductId' =>$dirtyProduct['id'],
                         'storeHouseId'=> $sku['storeHouseId']
                     ]);
+                    /* @var $FindDirtyHasStoreHouse CDirtySkuHasStoreHouse **/
                     if(count($findDirtyHasStoreHouse)==0){
+                        /* @var $insertDirtySkuHasStoreHouse CDirtySkuHasStoreHouse **/
                         $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
                         $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
                         $insertDirtySkuHasStoreHouse->dirtySkuId=$id;
