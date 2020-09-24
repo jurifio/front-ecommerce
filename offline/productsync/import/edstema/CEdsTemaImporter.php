@@ -310,11 +310,16 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         $insertDirtySkuHasStoreHouse->storeHouseId= str_replace('0','',$values[8]);
                         $insertDirtySkuHasStoreHouse->size=$sku['size'];
                         $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                        $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                         $insertDirtySkuHasStoreHouse->qty=$values[3];
                         $insertDirtySkuHasStoreHouse->barcode=$values[11];
                         $insertDirtySkuHasStoreHouse->productSizeId= $res[0]['productSizeId'];
                         $insertDirtySkuHasStoreHouse->insert();
                     }else{
+                        $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                        $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
+                        $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                        $findDirtyHasStoreHouse->productSizeId=$res[0]['productSizeId'];
                         $findDirtyHasStoreHouse->qty=$values[3];
                         $findDirtyHasStoreHouse->barcode=$values[11];
                         $findDirtyHasStoreHouse->update();
@@ -362,11 +367,17 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         $insertDirtySkuHasStoreHouse->storeHouseId= str_replace('0','',$values[8]);
                         $insertDirtySkuHasStoreHouse->size=$sku['size'];
                         $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                        $insertDirtySkuHasStoreHouse->productId=$dirtyProduct['productId'];
+                        $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                         $insertDirtySkuHasStoreHouse->qty=$values[3];
                         $insertDirtySkuHasStoreHouse->barcode=$values[11];
                         $insertDirtySkuHasStoreHouse->productSizeId= $res[0]['productSizeId'];
                         $insertDirtySkuHasStoreHouse->insert();
                     }else{
+                        $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                        $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
+                        $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                        $findDirtyHasStoreHouse->productSizeId=$res[0]['productSizeId'];
                         $findDirtyHasStoreHouse->qty=$values[3];
                         $findDirtyHasStoreHouse->barcode=$values[11];
                         $findDirtyHasStoreHouse->update();
