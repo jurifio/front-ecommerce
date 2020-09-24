@@ -266,28 +266,30 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 $match['shopId'] = $this->getShop()->id;
                 $dirtyProductFind = $this->app->dbAdapter->select('DirtyProduct', ['shopId'=>$thisShopExtId])->fetchAll();
                 if(count($dirtyProductFind)!=0){
-                    foreach($dirtyProductFind as $dpfi){
-                        $resi = $this->app->dbAdapter->select('DirtySku', ['dirtyProductId' => $dpfi['id'], 'size' => $sku['size']])->fetchAll();
-                        $idfind = $resi[0]['id'];
-                        $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
-                            'shopId'=> $this->getShop()->id,
-                            'size'=>$sku['size'],
-                            'dirtySkuId'=>$id,
-                            'storeHouseId'=> $sku['storeHouseId']
-                        ]);
-                        if(count($findDirtyHasStoreHouse)==0){
-                            $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
-                            $insertDirtySkuHasStoreHouse->shopId=$thisShopExtId;
-                            $insertDirtySkuHasStoreHouse->dirtySkuId=$idfind;
-                            $insertDirtySkuHasStoreHouse->storeHouseId= str_replace('0','',$values[8]);
-                            $insertDirtySkuHasStoreHouse->size=$sku['size'];
-                            $insertDirtySkuHasStoreHouse->dirtyProductId=$dpfi['id'];
-                            $insertDirtySkuHasStoreHouse->qty=$values[3];
-                            $insertDirtySkuHasStoreHouse->barcode=$value[11];
-                            $insertDirtySkuHasStoreHouse->productSizeId= $resi[0]['productSizeId'];
-                            $insertDirtySkuHasStoreHouse->insert();
-                        }
+                    foreach($dirtyProductFind as $dpfi) {
+                        $resi = $this->app->dbAdapter->select('DirtySku',['dirtyProductId' => $dpfi['id'],'size' => $sku['size'],'shopId' => $thisShopExtId])->fetchAll();
+                        if (count($dirtyProductFind) != 0) {
+                            $idfind = $resi[0]['id'];
+                            $findDirtyHasStoreHouse = \Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
+                                'shopId' => $this->getShop()->id,
+                                'size' => $sku['size'],
+                                'dirtySkuId' => $id,
+                                'storeHouseId' => $sku['storeHouseId']
+                            ]);
+                            if (count($findDirtyHasStoreHouse) == 0) {
+                                $insertDirtySkuHasStoreHouse = \Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
+                                $insertDirtySkuHasStoreHouse->shopId = $thisShopExtId;
+                                $insertDirtySkuHasStoreHouse->dirtySkuId = $idfind;
+                                $insertDirtySkuHasStoreHouse->storeHouseId = str_replace('0','',$values[8]);
+                                $insertDirtySkuHasStoreHouse->size = $sku['size'];
+                                $insertDirtySkuHasStoreHouse->dirtyProductId = $dpfi['id'];
+                                $insertDirtySkuHasStoreHouse->qty = $values[3];
+                                $insertDirtySkuHasStoreHouse->barcode = $value[11];
+                                $insertDirtySkuHasStoreHouse->productSizeId = $resi[0]['productSizeId'];
+                                $insertDirtySkuHasStoreHouse->insert();
+                            }
 
+                        }
                     }
                 }
 
