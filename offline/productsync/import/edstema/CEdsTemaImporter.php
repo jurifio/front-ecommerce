@@ -300,7 +300,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     $sku['changed'] = 1;
                     $id = $res[0]['id'];
                     $this->debug('Read Sku','Updating Sku',$sku);
-                    $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$exist[0]['id']]);
+                    $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$id]);
                     $dirtySkuUpdate->value=$sku['price'];
                     $dirtySkuUpdate->salePrice=$sku['salePrice'];
                     $dirtySkuUpdate->price=$sku['price'];
