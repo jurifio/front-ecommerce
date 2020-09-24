@@ -312,7 +312,6 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
                         $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                         $insertDirtySkuHasStoreHouse->qty=$values[3];
-                        $insertDirtySkuHasStoreHouse->barcode=$values[11];
                         $insertDirtySkuHasStoreHouse->productSizeId= $res[0]['productSizeId'];
                         $insertDirtySkuHasStoreHouse->insert();
                     }else{
@@ -370,7 +369,6 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         $insertDirtySkuHasStoreHouse->productId=$dirtyProduct['productId'];
                         $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                         $insertDirtySkuHasStoreHouse->qty=$values[3];
-                        $insertDirtySkuHasStoreHouse->barcode=$values[11];
                         $insertDirtySkuHasStoreHouse->productSizeId= $res[0]['productSizeId'];
                         $insertDirtySkuHasStoreHouse->insert();
                     }else{
@@ -379,7 +377,6 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                         $findDirtyHasStoreHouse->productSizeId=$res[0]['productSizeId'];
                         $findDirtyHasStoreHouse->qty=$values[3];
-                        $findDirtyHasStoreHouse->barcode=$values[11];
                         $findDirtyHasStoreHouse->update();
                     }
 
