@@ -329,6 +329,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 /** Update */
                 if (count($res) == 1) {
                     $sku['changed'] = 1;
+                    $id = $res[0]['id'];
 
 
                     $this->debug('Read Sku','Updating Sku',$sku);
