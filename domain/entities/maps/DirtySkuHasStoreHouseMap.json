@@ -1,0 +1,44 @@
+{
+    "entity": {
+        "name": "DirtySkuHasStoreHouse",
+        "keys": ["id", "storeHouseId","shopId", "productSizeId", "dirtyProductId"],
+        "cacheable" : "false",
+        "children": [
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "dirtyProduct",
+                "entity": "DirtyProduct",
+                "parentKeys": ["dirtyProductId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productSize",
+                "entity": "ProductSize",
+                "parentKeys": ["productSizeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "storeHouseId",
+                "entity": "StoreHouseId",
+                "parentKeys": ["storeHouseId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": ["dirtyProductId","shopId","productSizeId"],
+                "type": "OneToOneCustom",
+                "query": "SELECT dp.productId, dp.productVariantId, ds.productSizeId, ds.shopId FROM DirtyProduct dp, DirtySku ds WHERE dp.id = ds.dirtyProductId AND dp.id = ? and dp.shopId and ds.productSizeId = ? LIMIT 1"
+            }
+        ]
+    }
+}
