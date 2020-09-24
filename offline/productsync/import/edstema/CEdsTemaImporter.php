@@ -279,7 +279,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                             if (count($findDirtyHasStoreHouse) ==null) {
                                 $insertDirtySkuHasStoreHouse = \Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
                                 $insertDirtySkuHasStoreHouse->shopId = $thisShopExtId;
-                                $insertDirtySkuHasStoreHouse->dirtySkuId = $idfind;
+                                $insertDirtySkuHasStoreHouse->dirtySkuId = $idFind;
                                 $insertDirtySkuHasStoreHouse->storeHouseId = str_replace('0','',$values[8]);
                                 $insertDirtySkuHasStoreHouse->size = $sku['size'];
                                 $insertDirtySkuHasStoreHouse->dirtyProductId = $dpfi['id'];
