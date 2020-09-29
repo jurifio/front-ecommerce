@@ -320,7 +320,6 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                         $findDirtyHasStoreHouse->productSizeId=$res[0]['productSizeId'];
                         $findDirtyHasStoreHouse->qty=$values[3];
-                        $findDirtyHasStoreHouse->barcode=$values[11];
                         $findDirtyHasStoreHouse->update();
                     }
 
