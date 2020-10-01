@@ -201,7 +201,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                 $dirtySku['size'] = $assoc['size'];
                 $dirtySku['qty'] = $assoc['qty'];
                 $dirtySku['barcode'] = $assoc['barcode'];
-                $dirtySku['extSkuId'] = $assoc['itemno'];
+                $dirtySku['extSkuId'] = $assoc['extSkuId'];
                 // $dirtySku['value'] = $this->calculateValue($assoc['price'],$assoc['brand']);
                 $dirtySku['price'] = $assoc['price'];
                 $dirtySku['value'] = $assoc['value'];
