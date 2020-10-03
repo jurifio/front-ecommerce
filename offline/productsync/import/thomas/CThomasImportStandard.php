@@ -226,7 +226,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                         $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
                             'shopId'=> "58",
                             'size'=>$dirtySku['size'],
-                            'dirtySkuId'=>$dirtySku['id'],
+                            'dirtySkuId'=>$existingSku[0]['id'],
                             'dirtyProductId' =>$findDirtyProductId->id,
                             'storeHouseId'=> "1"
                         ]);
@@ -235,7 +235,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                             /** @var $insertDirtySkuHasStoreHouse CDirtySkuHasStoreHouse **/
                             $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
                             $insertDirtySkuHasStoreHouse->shopId="58";
-                            $insertDirtySkuHasStoreHouse->dirtySkuId=$dirtySku['id'];
+                            $insertDirtySkuHasStoreHouse->$existingSku[0]['id'];
                             $insertDirtySkuHasStoreHouse->storeHouseId= "1";
                             $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
                             $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
@@ -267,7 +267,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                             /* @var CDirtySkuHasStoreHouse $insertDirtySkuHasStoreHouse  **/
                             $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
                             $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
-                            $insertDirtySkuHasStoreHouse->dirtySkuId=$dirtySku['id'];
+                            $insertDirtySkuHasStoreHouse->dirtySkuId=$existingSku[0]['id'];
                             $insertDirtySkuHasStoreHouse->storeHouseId= "1";
                             $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
                             $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
