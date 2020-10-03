@@ -197,7 +197,7 @@ class CThomasImportStandard extends ABluesealProductImporter
             }
             try {
                 $dirtySku = [];
-                $dirtySku['dirtyProductId'] = $findDirtyProductId->id;
+                $dirtySku['dirtyProductId'] = $dirtyProduct['id'];
                 $dirtySku['shopId'] = $this->getShop()->id;
                 $dirtySku['size'] = $assoc['size'];
                 $dirtySku['qty'] = $assoc['qty'];
@@ -227,7 +227,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                             'shopId'=> "58",
                             'size'=>$dirtySku['size'],
                             'dirtySkuId'=>$existingSku[0]['id'],
-                            'dirtyProductId' =>$findDirtyProductId->id,
+                            'dirtyProductId' =>$dirtyProduct['id'],
                             'storeHouseId'=> "1"
                         ]);
 
