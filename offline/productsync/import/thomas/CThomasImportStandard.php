@@ -197,7 +197,7 @@ class CThomasImportStandard extends ABluesealProductImporter
             }
             try {
                 $dirtySku = [];
-                $dirtySku['dirtyProductId'] = $dirtyProduct['id'];
+                $dirtySku['dirtyProductId'] = $findDirtyProductId->id;
                 $dirtySku['shopId'] = $this->getShop()->id;
                 $dirtySku['size'] = $assoc['size'];
                 $dirtySku['qty'] = $assoc['qty'];
@@ -224,17 +224,17 @@ class CThomasImportStandard extends ABluesealProductImporter
                         $dirtySku['id'] = \Monkey::app()->dbAdapter->insert('DirtySku',$dirtySku);
                         /* @var  CDirtySkuHasStoreHouse $findDirtyHasStoreHouse **/
                         $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
-                            'shopId'=> $this->getShop()->id,
+                            'shopId'=> "58",
                             'size'=>$dirtySku['size'],
                             'dirtySkuId'=>$dirtySku['id'],
-                            'dirtyProductId' =>$dirtyProduct['id'],
+                            'dirtyProductId' =>$findDirtyProductId->id,
                             'storeHouseId'=> "1"
                         ]);
 
                         if(!$findDirtyHasStoreHouse){
                             /** @var $insertDirtySkuHasStoreHouse CDirtySkuHasStoreHouse **/
                             $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
-                            $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
+                            $insertDirtySkuHasStoreHouse->shopId="58";
                             $insertDirtySkuHasStoreHouse->dirtySkuId=$dirtySku['id'];
                             $insertDirtySkuHasStoreHouse->storeHouseId= "1";
                             $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
@@ -260,7 +260,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                             'shopId'=> $this->getShop()->id,
                             'size'=>$dirtySku['size'],
                             'dirtySkuId'=>$dirtySku['id'],
-                            'dirtyProductId' =>$dirtyProduct['id'],
+                            'dirtyProductId' =>$findDirtyProductId['id'],
                             'storeHouseId'=>  $dirtySku['storeHouseId']
                         ]);
                         if(!$findDirtyHasStoreHouse){
