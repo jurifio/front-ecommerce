@@ -259,7 +259,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                             'shopId'=> $this->getShop()->id,
                             'size'=>$dirtySku['size'],
                             'dirtySkuId'=>$existingSku[0]['id'],
-                            'dirtyProductId' =>$existingSku[0]['dirtyProductId'],
+                            'dirtyProductId' =>$dirtyProduct['productVariantId'],
                             'storeHouseId'=>  $dirtySku['storeHouseId']
                         ]);
                         if(!$findDirtyHasStoreHouse){
@@ -270,14 +270,12 @@ class CThomasImportStandard extends ABluesealProductImporter
                             $insertDirtySkuHasStoreHouse->storeHouseId= "1";
                             $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
                             $insertDirtySkuHasStoreHouse->dirtyProductId=$existingSku[0]['dirtyProductId'];
-                            $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                             $insertDirtySkuHasStoreHouse->qty=$assoc['qty'];
                             $insertDirtySkuHasStoreHouse->productSizeId= $existingSku[0]['productSizeId'];
                             $insertDirtySkuHasStoreHouse->insert();
                         }else{
                             $findDirtyHasStoreHouse->dirtyProductId=$existingSku[0]['dirtyProductId'];
                             $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
-                            $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                             $findDirtyHasStoreHouse->productSizeId=$existingSku[0]['productSizeId'];
                             $findDirtyHasStoreHouse->qty=$assoc['qty'];
                             $findDirtyHasStoreHouse->update();
