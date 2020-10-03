@@ -222,11 +222,12 @@ class CThomasImportStandard extends ABluesealProductImporter
 
                     if(count($existingSku) == 0) {
                         $dirtySku['id'] = \Monkey::app()->dbAdapter->insert('DirtySku',$dirtySku);
+                        $this->debug('processFile','Sku don\'t Exist, insert',$dirtySku);
                         /* @var  CDirtySkuHasStoreHouse $findDirtyHasStoreHouse **/
                         $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
                             'shopId'=> "58",
                             'size'=>$dirtySku['size'],
-                            'dirtySkuId'=>$existingSku[0]['id'],
+                            'dirtySkuId'=>$dirtySku['id'],
                             'dirtyProductId' =>$dirtyProduct['id'],
                             'storeHouseId'=> "1"
                         ]);
@@ -235,20 +236,18 @@ class CThomasImportStandard extends ABluesealProductImporter
                             /** @var $insertDirtySkuHasStoreHouse CDirtySkuHasStoreHouse **/
                             $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
                             $insertDirtySkuHasStoreHouse->shopId="58";
-                            $insertDirtySkuHasStoreHouse->$existingSku[0]['id'];
+                            $insertDirtySkuHasStoreHouse->dirtySkuId=$dirtySku['id'];
                             $insertDirtySkuHasStoreHouse->storeHouseId= "1";
                             $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
                             $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
                             $insertDirtySkuHasStoreHouse->productId=$dirtyProduct['productId'];
                             $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                             $insertDirtySkuHasStoreHouse->qty=$assoc['qty'];
-                            $insertDirtySkuHasStoreHouse->productSizeId= $existingSku[0]['productSizeId'];
                             $insertDirtySkuHasStoreHouse->insert();
                         }else{
                             $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
                             $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
                             $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
-                            $findDirtyHasStoreHouse->productSizeId=$existingSku[0]['productSizeId'];
                             $findDirtyHasStoreHouse->qty=$assoc['qty'];
                             $findDirtyHasStoreHouse->update();
                         }
@@ -270,13 +269,13 @@ class CThomasImportStandard extends ABluesealProductImporter
                             $insertDirtySkuHasStoreHouse->dirtySkuId=$existingSku[0]['id'];
                             $insertDirtySkuHasStoreHouse->storeHouseId= "1";
                             $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
-                            $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                            $insertDirtySkuHasStoreHouse->dirtyProductId=$existingSku[0]['dirtyProductId'];
                             $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                             $insertDirtySkuHasStoreHouse->qty=$assoc['qty'];
                             $insertDirtySkuHasStoreHouse->productSizeId= $existingSku[0]['productSizeId'];
                             $insertDirtySkuHasStoreHouse->insert();
                         }else{
-                            $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                            $findDirtyHasStoreHouse->dirtyProductId=$existingSku[0]['dirtyProductId'];
                             $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
                             $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                             $findDirtyHasStoreHouse->productSizeId=$existingSku[0]['productSizeId'];
