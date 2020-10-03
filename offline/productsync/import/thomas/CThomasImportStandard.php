@@ -283,8 +283,19 @@ class CThomasImportStandard extends ABluesealProductImporter
                             $findDirtyHasStoreHouse->qty=$assoc['qty'];
                             $findDirtyHasStoreHouse->update();
                         }
-                        \Monkey::app()->dbAdapter->update('DirtySku',$dirtySku,['id'=>$existingSku[0]['id']]);
+                        //\Monkey::app()->dbAdapter->update('DirtySku',$dirtySku,['id'=>$existingSku[0]['id']]);
                         $dirtySku['id'] = $existingSku[0]['id'];
+                        $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$existingSku[0]['id']]);
+                        $dirtySkuUpdate->value=$dirtySku['price'];
+                        $dirtySkuUpdate->qty=$dirtySku['qty'];
+                        $dirtySkuUpdate->shopId=58;
+                        $dirtySkuUpdate->value=$dirtySku['value'];
+                        $dirtySkuUpdate->barcode=$dirtySku['barcode'];
+                        $dirtySkuUpdate->storeHouseId="1";
+                        $dirtySkuUpdate->extSkuId= $dirtySku['extSkuId'];
+                        $dirtySkuUpdate->text=$dirtySku['text'];
+                        $dirtySkuUpdate->checksum=$dirtySku['checksum'];
+                        $dirtySkuUpdate->update();
                         $this->debug('processFile','Sku Exist, update',$dirtySku);
 
                     } else throw new BambooException('More than 1 sku found to update');
