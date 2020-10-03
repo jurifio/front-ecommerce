@@ -259,7 +259,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                             'shopId'=> $this->getShop()->id,
                             'size'=>$dirtySku['size'],
                             'dirtySkuId'=>$existingSku[0]['id'],
-                            'dirtyProductId' =>$findDirtyProductId['id'],
+                            'dirtyProductId' =>$existingSku[0]['dirtyProductId'],
                             'storeHouseId'=>  $dirtySku['storeHouseId']
                         ]);
                         if(!$findDirtyHasStoreHouse){
