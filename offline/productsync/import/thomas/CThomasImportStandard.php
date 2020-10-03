@@ -259,7 +259,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                         $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
                             'shopId'=> $this->getShop()->id,
                             'size'=>$dirtySku['size'],
-                            'dirtySkuId'=>$dirtySku['id'],
+                            'dirtySkuId'=>$existingSku[0]['id'],
                             'dirtyProductId' =>$findDirtyProductId['id'],
                             'storeHouseId'=>  $dirtySku['storeHouseId']
                         ]);
