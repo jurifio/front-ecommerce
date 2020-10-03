@@ -4,6 +4,7 @@ namespace bamboo\offline\productsync\import\thomas;
 
 use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooLogicException;
+use bamboo\domain\entities\CDirtySkuHasStoreHouse;
 use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
@@ -202,6 +203,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                 $dirtySku['qty'] = $assoc['qty'];
                 $dirtySku['barcode'] = $assoc['barcode'];
                 $dirtySku['extSkuId'] = $assoc['extSkuId'];
+                $dirtySku['storeHouseId'] ="1";
                 // $dirtySku['value'] = $this->calculateValue($assoc['price'],$assoc['brand']);
                 $dirtySku['price'] = $assoc['price'];
                 $dirtySku['value'] = $assoc['value'];
@@ -220,9 +222,67 @@ class CThomasImportStandard extends ABluesealProductImporter
 
                     if(count($existingSku) == 0) {
                         $dirtySku['id'] = \Monkey::app()->dbAdapter->insert('DirtySku',$dirtySku);
+                        /* @var  CDirtySkuHasStoreHouse $findDirtyHasStoreHouse **/
+                        $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
+                            'shopId'=> $this->getShop()->id,
+                            'size'=>$dirtySku['size'],
+                            'dirtySkuId'=>$dirtySku['id'],
+                            'dirtyProductId' =>$dirtyProduct['id'],
+                            'storeHouseId'=> "1"
+                        ]);
+
+                        if(!$findDirtyHasStoreHouse){
+                            /** @var $insertDirtySkuHasStoreHouse CDirtySkuHasStoreHouse **/
+                            $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
+                            $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
+                            $insertDirtySkuHasStoreHouse->dirtySkuId=$dirtySku['id'];
+                            $insertDirtySkuHasStoreHouse->storeHouseId= "1";
+                            $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
+                            $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                            $insertDirtySkuHasStoreHouse->productId=$dirtyProduct['productId'];
+                            $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                            $insertDirtySkuHasStoreHouse->qty=$assoc['qty'];
+                            $insertDirtySkuHasStoreHouse->productSizeId= $existingSku[0]['productSizeId'];
+                            $insertDirtySkuHasStoreHouse->insert();
+                        }else{
+                            $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                            $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
+                            $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                            $findDirtyHasStoreHouse->productSizeId=$existingSku[0]['productSizeId'];
+                            $findDirtyHasStoreHouse->qty=$assoc['qty'];
+                            $findDirtyHasStoreHouse->update();
+                        }
                         $this->debug('processFile','Sku don\'t Exist, insert',$dirtySku);
 
                     } elseif(count($existingSku) == 1) {
+                        /* @var CDirtySkuHasStoreHouse $FindDirtyHasStoreHouse  **/
+                        $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
+                            'shopId'=> $this->getShop()->id,
+                            'size'=>$dirtySku['size'],
+                            'dirtySkuId'=>$dirtySku['id'],
+                            'dirtyProductId' =>$dirtyProduct['id'],
+                            'storeHouseId'=>  $dirtySku['storeHouseId']
+                        ]);
+                        if(!$findDirtyHasStoreHouse){
+                            /* @var CDirtySkuHasStoreHouse $insertDirtySkuHasStoreHouse  **/
+                            $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
+                            $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
+                            $insertDirtySkuHasStoreHouse->dirtySkuId=$dirtySku['id'];
+                            $insertDirtySkuHasStoreHouse->storeHouseId= "1";
+                            $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
+                            $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                            $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                            $insertDirtySkuHasStoreHouse->qty=$assoc['qty'];
+                            $insertDirtySkuHasStoreHouse->productSizeId= $existingSku[0]['productSizeId'];
+                            $insertDirtySkuHasStoreHouse->insert();
+                        }else{
+                            $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                            $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
+                            $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                            $findDirtyHasStoreHouse->productSizeId=$existingSku[0]['productSizeId'];
+                            $findDirtyHasStoreHouse->qty=$assoc['qty'];
+                            $findDirtyHasStoreHouse->update();
+                        }
                         \Monkey::app()->dbAdapter->update('DirtySku',$dirtySku,['id'=>$existingSku[0]['id']]);
                         $dirtySku['id'] = $existingSku[0]['id'];
                         $this->debug('processFile','Sku Exist, update',$dirtySku);
@@ -233,7 +293,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                 }
 
             } catch (\Throwable $e) {
-                $this->error('ProductCycke','Error while working sku',$e);
+                $this->error('ProductCycle','Error while working sku',$e);
                 continue;
             }
         }
