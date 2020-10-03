@@ -107,7 +107,7 @@ class CThomasImportStandard extends ABluesealProductImporter
 
                         $dirtyProduct['id'] = $keysChecksums[$dirtyProduct['keysChecksum']];
                     } else {
-                        $dirtyProduct['shopId'] = $this->getShop()->id;
+                        $dirtyProduct['shopId'] = 58;
                         $dirtyProduct['dirtyStatus'] = 'F';
                         $dirtyProduct['id'] = \Monkey::app()->dbAdapter->insert('DirtyProduct', $dirtyProduct);
 
