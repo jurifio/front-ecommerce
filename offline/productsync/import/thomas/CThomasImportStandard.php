@@ -289,7 +289,6 @@ class CThomasImportStandard extends ABluesealProductImporter
                         $dirtySkuUpdate->barcode=$dirtySku['barcode'];
                         $dirtySkuUpdate->storeHouseId="1";
                         $dirtySkuUpdate->extSkuId= $dirtySku['extSkuId'];
-                        $dirtySkuUpdate->text=$dirtySku['text'];
                         $dirtySkuUpdate->checksum=$dirtySku['checksum'];
                         $dirtySkuUpdate->update();
                         $this->debug('processFile','Sku Exist, update',$dirtySku);
