@@ -72,6 +72,7 @@ class CBarbagalloImporter extends ABluesealProductImporter
                 $newDirtyProductExtend["audience"] = $one["reparto"];
                 $newDirtyProductExtend["cat1"] = $one["categoria"];
                 $newDirtyProductExtend["generalColor"] = $one["colore"];
+                $newDirtyProductExtend["colorDescription"] = $one["colore"];
 
 
                 $existingDirtyProduct = \Monkey::app()->dbAdapter->selectCount("DirtyProduct", ['checksum' => $newDirtyProduct['checksum']]);
