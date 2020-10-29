@@ -132,7 +132,9 @@ class CEdsTemaImporter extends ABluesealProductImporter
         $this->debug('readMain', 'Supplier Blacklist read', $supplierBlacklist);
 
         //read main
+        $lineCount=0;
         while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
+            $lineCount++;
             try {
                 if ($values[0][0] == '"') {
                     $values[0] = substr($values[0], 1);
@@ -140,7 +142,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
                 /** Count columns */
                 if (count($values) != $columnNumbers) {
-                    $this->error('readMain', 'Columns dosn\'t match with specifics');
+                    $this->error('readMain', 'Columns dosn\'t match with specifics jump Line '.$lineCount);
                     $this->error('countValue',count($values).'-'.$columnNumbers);
                     continue;
                 }

@@ -11,7 +11,7 @@
     "files": {
         "main": {
             "location": "main.csv",
-            "columns":  29,
+            "columns":  28,
             "extKeys": ["extId","var"]
         },
         "skus": {
