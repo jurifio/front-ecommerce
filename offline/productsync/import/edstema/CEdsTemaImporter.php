@@ -141,6 +141,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 /** Count columns */
                 if (count($values) != $columnNumbers) {
                     $this->error('readMain', 'Columns dosn\'t match with specifics');
+                    $this->error('countValue',count($values).'-'.$columnNumbers);
                     continue;
                 }
 
