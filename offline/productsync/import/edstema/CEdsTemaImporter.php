@@ -353,36 +353,6 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     $sku['changed'] = 1;
                     $new = $this->app->dbAdapter->insert('DirtySku', $sku);
                     $seenSkus[] = $new;
-                    /* @var  CDirtySkuHasStoreHouse $findDirtyHasStoreHouse **/
-                    $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
-                        'shopId'=> $this->getShop()->id,
-                        'size'=>$sku['size'],
-                        'dirtySkuId'=>$id,
-                        'dirtyProductId' =>$dirtyProduct['id'],
-                        'storeHouseId'=> $sku['storeHouseId']
-                    ]);
-
-                    if(!$findDirtyHasStoreHouse){
-                        /** @var $insertDirtySkuHasStoreHouse CDirtySkuHasStoreHouse **/
-                        $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
-                        $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
-                        $insertDirtySkuHasStoreHouse->dirtySkuId=$id;
-                        $insertDirtySkuHasStoreHouse->storeHouseId= str_replace('0','',$values[8]);
-                        $insertDirtySkuHasStoreHouse->size=$sku['size'];
-                        $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
-                        $insertDirtySkuHasStoreHouse->productId=$dirtyProduct['productId'];
-                        $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
-                        $insertDirtySkuHasStoreHouse->qty=$values[3];
-                        $insertDirtySkuHasStoreHouse->productSizeId= $res[0]['productSizeId'];
-                        $insertDirtySkuHasStoreHouse->insert();
-                    }else{
-                        $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
-                        $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
-                        $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
-                        $findDirtyHasStoreHouse->productSizeId=$res[0]['productSizeId'];
-                        $findDirtyHasStoreHouse->qty=$values[3];
-                        $findDirtyHasStoreHouse->update();
-                    }
 
 
                 } else {
