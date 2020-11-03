@@ -37,17 +37,6 @@
             "shopId" : 8,
             "size" : 2,
             "qty" : 3,
-            "barcode": 11
-        },
-        "storehouse": {
-            "var" : 10,
-            "extId": 9,
-            "price": 5,
-            "salePrice": 6,
-            "value" : 7,
-            "shopId" : 8,
-            "size" : 2,
-            "qty" : 3,
             "storeHouseId" : 8,
             "barcode": 11
         }
