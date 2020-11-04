@@ -4,6 +4,7 @@ namespace bamboo\offline\productsync\import\barbagallo;
 
 use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooLogicException;
+use bamboo\domain\entities\CDirtySkuHasStoreHouse;
 use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
@@ -183,9 +184,11 @@ class CBarbagalloImporter extends ABluesealProductImporter
                             'size' => $existDirtySkuWithMainKey["size"]
                         ]);
 
+
                         $dirtySku["id"] = $existDirtySkuWithMainKey["id"];
                         $seenSkus[] = $dirtySku['id'];
                         $countUpdatedDirtySku++;
+
                     } else {
                         //INSERT
                         $dirtySku["id"] = \Monkey::app()->dbAdapter->insert('DirtySku', $newDirtySku);
@@ -199,6 +202,34 @@ class CBarbagalloImporter extends ABluesealProductImporter
                 } else if ($existDirtySku == 1){
                     $noChangedSku = \Monkey::app()->dbAdapter->select('DirtySku', ['checksum' => $newDirtySku["checksum"]])->fetch();
                     $seenSkus[] = $noChangedSku['id'];
+                    /* @var CDirtySkuHasStoreHouse $FindDirtyHasStoreHouse  **/
+                    $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
+                        'shopId'=> $this->getShop()->id,
+                        'size'=>$noChangedSku["size"],
+                        'dirtySkuId'=>$noChangedSku['id'],
+                        'dirtyProductId' =>$noChangedSku["dirtyProductId"],
+                        'storeHouseId'=> 1
+                    ]);
+                    if(!$findDirtyHasStoreHouse){
+                        /* @var CDirtySkuHasStoreHouse $insertDirtySkuHasStoreHouse  **/
+                        $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
+                        $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
+                        $insertDirtySkuHasStoreHouse->dirtySkuId=$noChangedSku["id"];
+                        $insertDirtySkuHasStoreHouse->storeHouseId= 1;
+                        $insertDirtySkuHasStoreHouse->size=$noChangedSku['size'];
+                        $insertDirtySkuHasStoreHouse->dirtyProductId=$noChangedSku['dirtyProductId'];
+                        $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                        $insertDirtySkuHasStoreHouse->qty=$one["esistenza"];
+                        $insertDirtySkuHasStoreHouse->productSizeId= $noChangedSku['productSizeId'];
+                        $insertDirtySkuHasStoreHouse->insert();
+                    }else{
+                        $findDirtyHasStoreHouse->dirtyProductId=$noChangedSku['id'];
+                        $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
+                        $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                        $findDirtyHasStoreHouse->productSizeId=$noChangedSku['productSizeId'];
+                        $findDirtyHasStoreHouse->qty=$one["esistenza"];
+                        $findDirtyHasStoreHouse->update();
+                    }
                 }
 
 
