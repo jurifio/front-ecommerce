@@ -188,6 +188,34 @@ class CBarbagalloImporter extends ABluesealProductImporter
                         $dirtySku["id"] = $existDirtySkuWithMainKey["id"];
                         $seenSkus[] = $dirtySku['id'];
                         $countUpdatedDirtySku++;
+                        /* @var CDirtySkuHasStoreHouse $FindDirtyHasStoreHouse  **/
+                        $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
+                            'shopId'=> $this->getShop()->id,
+                            'size'=>$existDirtySkuWithMainKey["size"],
+                            'dirtySkuId'=>$existDirtySkuWithMainKey['id'],
+                            'dirtyProductId' =>$existDirtySkuWithMainKey["dirtyProductId"],
+                            'storeHouseId'=> 1
+                        ]);
+                        if(!$findDirtyHasStoreHouse){
+                            /* @var CDirtySkuHasStoreHouse $insertDirtySkuHasStoreHouse  **/
+                            $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
+                            $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
+                            $insertDirtySkuHasStoreHouse->dirtySkuId=$existDirtySkuWithMainKey["id"];
+                            $insertDirtySkuHasStoreHouse->storeHouseId= 1;
+                            $insertDirtySkuHasStoreHouse->size=$existDirtySkuWithMainKey['size'];
+                            $insertDirtySkuHasStoreHouse->dirtyProductId=$existDirtySkuWithMainKey['dirtyProductId'];
+                            $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                            $insertDirtySkuHasStoreHouse->qty=$one["esistenza"];
+                            $insertDirtySkuHasStoreHouse->productSizeId= $existDirtySkuWithMainKey['productSizeId'];
+                            $insertDirtySkuHasStoreHouse->insert();
+                        }else{
+                            $findDirtyHasStoreHouse->dirtyProductId=$existDirtySkuWithMainKey['id'];
+                            $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
+                            $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                            $findDirtyHasStoreHouse->productSizeId=$existDirtySkuWithMainKey['productSizeId'];
+                            $findDirtyHasStoreHouse->qty=$one["esistenza"];
+                            $findDirtyHasStoreHouse->update();
+                        }
 
                     } else {
                         //INSERT
