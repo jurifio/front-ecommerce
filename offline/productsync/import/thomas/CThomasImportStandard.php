@@ -303,7 +303,7 @@ class CThomasImportStandard extends ABluesealProductImporter
                 }
 
             } catch (\Throwable $e) {
-                $this->error('ProductCycle','Error while working sku',$e->getLine());
+                $this->error('ProductCycle','Error while working sku',$e->getLine().'-'.$e->getMessage());
                 continue;
             }
         }
