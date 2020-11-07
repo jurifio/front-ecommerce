@@ -119,6 +119,8 @@ class CAmazonVideoSender extends ACronJob
             $this->report('codeProduct',$futureName['code']);
             $this->report('extension',$futureName['extension']);
             $findpr=explode('-',$futureName['code']);
+            $this->report('productId',$findpr[0]);
+            $this->report('productVariantId',$findpr[1]);
 
             $localName = $this->localTempFolder . $names['basename'];
             $this->report('localname',$localName);
@@ -128,28 +130,31 @@ class CAmazonVideoSender extends ACronJob
             $res=$this->imageManager->processVideoUploadProduct($localName,$futureName,'iwes',$product->productBrand->slug);
             $this->report('slug',$product->productBrand->slug);
 
-
-            switch (true) {
-                case $position="1":
-                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[1]]);
-                    $insertVideo->dummyVideo = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
-                    $insertVideo->update();
-                    break;
-                case $position="2":
-                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[1]]);
-                    $insertVideo->dummyVideo2 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
-                    $insertVideo->update();
-                    break;
-                case $position="3":
-                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[1]]);
-                    $insertVideo->dummyVideo3 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
-                    $insertVideo->update();
-                    break;
-                case $position="4":
-                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[1]]);
-                    $insertVideo->dummyVideo4 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
-                    $insertVideo->update();
-                    break;
+            try {
+                switch ($position) {
+                    case "1":
+                        $insertVideo = \Monkey::app()->repoFactory->create('Product')->findOneBy(['id' => $findpr[0],'productVariantId' => $findpr[1]]);
+                        $insertVideo->dummyVideo = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'] . '.' . $futureName['extension'];
+                        $insertVideo->update();
+                        break;
+                    case "2":
+                        $insertVideo = \Monkey::app()->repoFactory->create('Product')->findOneBy(['id' => $findpr[0],'productVariantId' => $findpr[1]]);
+                        $insertVideo->dummyVideo2 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'] . '.' . $futureName['extension'];
+                        $insertVideo->update();
+                        break;
+                    case "3":
+                        $insertVideo = \Monkey::app()->repoFactory->create('Product')->findOneBy(['id' => $findpr[0],'productVariantId' => $findpr[1]]);
+                        $insertVideo->dummyVideo3 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'] . '.' . $futureName['extension'];
+                        $insertVideo->update();
+                        break;
+                    case "4":
+                        $insertVideo = \Monkey::app()->repoFactory->create('Product')->findOneBy(['id' => $findpr[0],'productVariantId' => $findpr[1]]);
+                        $insertVideo->dummyVideo4 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'] . '.' . $futureName['extension'];
+                        $insertVideo->update();
+                        break;
+                }
+            }catch(\Throwable $e){
+                $this->report('error',$e->getLine().' '.$e->getMessage());
             }
             $this->report('videoUrl','https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension']);
 
