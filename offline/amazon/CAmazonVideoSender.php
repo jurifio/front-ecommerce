@@ -83,7 +83,9 @@ class CAmazonVideoSender extends ACronJob
             try {
                 set_time_limit(120);
                 $this->debug('Work Cycle', 'Working Video '.$file);
-                if($this->doFile($file)==1) $done++;
+                if($this->doFile($file)=="1") {
+                    $done++;
+                }
                 $this->debug('Work Cycle', 'Done Video' . $file);
             } catch (\Throwable $e) {
                 $this->error('Work Cycle', 'Failed Working Video' . $file,$e);
