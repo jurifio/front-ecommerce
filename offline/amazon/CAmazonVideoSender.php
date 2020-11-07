@@ -134,22 +134,22 @@ class CAmazonVideoSender extends ACronJob
                 switch ($position) {
                     case "1":
                         $insertVideo = \Monkey::app()->repoFactory->create('Product')->findOneBy(['id' => $findpr[0],'productVariantId' => $findpr[1]]);
-                        $insertVideo->dummyVideo = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'] . '.' . $futureName['extension'];
+                        $insertVideo->dummyVideo = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'];
                         $insertVideo->update();
                         break;
                     case "2":
                         $insertVideo = \Monkey::app()->repoFactory->create('Product')->findOneBy(['id' => $findpr[0],'productVariantId' => $findpr[1]]);
-                        $insertVideo->dummyVideo2 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'] . '.' . $futureName['extension'];
+                        $insertVideo->dummyVideo2 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'];
                         $insertVideo->update();
                         break;
                     case "3":
                         $insertVideo = \Monkey::app()->repoFactory->create('Product')->findOneBy(['id' => $findpr[0],'productVariantId' => $findpr[1]]);
-                        $insertVideo->dummyVideo3 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'] . '.' . $futureName['extension'];
+                        $insertVideo->dummyVideo3 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'];
                         $insertVideo->update();
                         break;
                     case "4":
                         $insertVideo = \Monkey::app()->repoFactory->create('Product')->findOneBy(['id' => $findpr[0],'productVariantId' => $findpr[1]]);
-                        $insertVideo->dummyVideo4 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'] . '.' . $futureName['extension'];
+                        $insertVideo->dummyVideo4 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name'];
                         $insertVideo->update();
                         break;
                 }
