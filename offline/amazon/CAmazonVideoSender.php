@@ -122,6 +122,11 @@ class CAmazonVideoSender extends ACronJob
 
             $localName = $this->localTempFolder . $names['basename'];
             $this->report('localname',$localName);
+            if (!$this->ftp->get($localName,$file,false)) {
+                throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
+            }
+            $res=$this->imageManager->processVideoUploadProduct($localName,$futureName,'iwes',$product->productBrand->slug);
+            $this->report('slug',$product->productBrand->slug);
 
 
             switch (true) {
@@ -148,11 +153,7 @@ class CAmazonVideoSender extends ACronJob
             }
             $this->report('videoUrl','https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension']);
 
-            if (!$this->ftp->get($localName,$file,false)) {
-                throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
-            }
-            $res=$this->imageManager->processVideoUploadProduct($localName,$futureName,'iwes',$product->productBrand->slug);
-            $this->report('slug',$product->productBrand->slug);
+
 
 
 
