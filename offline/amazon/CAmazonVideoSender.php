@@ -123,7 +123,7 @@ class CAmazonVideoSender extends ACronJob
             $this->report('localname',$localName);
 
 
-            switch ($true) {
+            switch (true) {
                 case $position="1":
                     $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[0]]);
                     $insertVideo->dummyVideo = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
