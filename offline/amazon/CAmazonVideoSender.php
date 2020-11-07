@@ -156,7 +156,7 @@ class CAmazonVideoSender extends ACronJob
             }catch(\Throwable $e){
                 $this->report('error',$e->getLine().' '.$e->getMessage());
             }
-            $this->report('videoUrl','https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension']);
+            $this->report('videoUrl','https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['name']);
 
 
 
