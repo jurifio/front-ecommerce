@@ -105,14 +105,15 @@ class CAmazonVideoSender extends ACronJob
         preg_match('/([0-9]{1,7}-[0-9]{1,8})( - |_|__)/u', $file, $match);
         $this->debug('doFile','Match: '.json_encode($match).' on file: '.$file);
         $names = pathinfo($file);
+        $fileProduct=$names['basename'];
+        $position=substr($fileProduct, -5, 1);
+        $this->report('fileProduct','name '. $fileProduct);
         if (!$this->ftp->fileExist($file)) return 0;
         $product = \Monkey::app()->repoFactory->create('Product')->findOneByStringId($match[1]);
         if($product == null) throw new BambooException('Product not found for: '.$match[1]);
-        $futureName = $this->calculatePhotoNameStandard($product, $file);
+        $futureName = $this->calculatePhotoNameStandard($product, $file,$position);
 
-        $fileProduct=$names['basename'];
-        $this->report('fileProduct','name '. $fileProduct);
-        $position=substr($fileProduct, -5, 1);
+
         $this->report('position','number '. $position);
         $localName = $this->localTempFolder . $names['basename'];
         if (!$this->ftp->get($localName, $file, false)) {
@@ -126,16 +127,16 @@ class CAmazonVideoSender extends ACronJob
 
         switch($position){
             case "1":
-                $product->dummyVideo='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$fileProduct;
+                $product->dummyVideo='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].$futureName['extension'];
                 break;
             case "2":
-                $product->dummyVideo2='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$fileProduct;
+                $product->dummyVideo2='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].$futureName['extension'];
                 break;
             case "3":
-                $product->dummyVideo3='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$fileProduct;
+                $product->dummyVideo3='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].$futureName['extension'];
                 break;
             case "4":
-                $product->dummyVideo3='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$fileProduct;
+                $product->dummyVideo3='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].$futureName['extension'];
                 break;
         }
         $product->update();
@@ -199,15 +200,15 @@ class CAmazonVideoSender extends ACronJob
     /**
      * @param CProduct $product
      * @param $origin
+     * @parma $position
      * @return array
      * @throws BambooException
      */
-    public function calculatePhotoNameStandard(CProduct $product, $origin){
+    public function calculatePhotoNameStandard(CProduct $product, $origin, $position){
         $futureName = [];
-        $names = pathinfo($origin);
+        $names1 = pathinfo($origin);
 
-        $futureName['name'] = substr($names['basename'],0,-4);
-
+        $futureName['name'] = $product->printId().'_v_00'.$position;
         $pieces = explode(".",$origin);
         $futureName['extension'] = $pieces[(count($pieces)-1)];
         unset($pieces[(count($pieces)-1)]);
