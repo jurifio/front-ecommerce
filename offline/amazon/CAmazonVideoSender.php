@@ -105,17 +105,20 @@ class CAmazonVideoSender extends ACronJob
         preg_match('/([0-9]{1,7}-[0-9]{1,8})( - |_|__)/u', $file, $match);
         $this->debug('doFile','Match: '.json_encode($match).' on file: '.$file);
         $names = pathinfo($file);
+        $this->report('nome file','name '. $file);
         $fileProduct=$names['basename'];
-        $position=substr($fileProduct, -5, 1);
         $this->report('fileProduct','name '. $fileProduct);
+        $position=substr($fileProduct, -5, 1);
+        $this->report('position','number '. $position);
         if (!$this->ftp->fileExist($file)) return 0;
         $product = \Monkey::app()->repoFactory->create('Product')->findOneByStringId($match[1]);
         if($product == null) throw new BambooException('Product not found for: '.$match[1]);
         $futureName = $this->calculatePhotoNameStandard($product, $file,$position);
 
 
-        $this->report('position','number '. $position);
+
         $localName = $this->localTempFolder . $names['basename'];
+        $this->report('localname',$localName);
         if (!$this->ftp->get($localName, $file, false)) {
             throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
         }
