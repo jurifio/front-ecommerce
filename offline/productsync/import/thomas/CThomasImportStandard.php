@@ -239,9 +239,6 @@ class CThomasImportStandard extends ABluesealProductImporter
                             $insertDirtySkuHasStoreHouse->dirtySkuId=$dirtySku['id'];
                             $insertDirtySkuHasStoreHouse->storeHouseId= "1";
                             $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
-                            $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
-                            $insertDirtySkuHasStoreHouse->productId=$dirtyProduct['productId'];
-                            $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                             $insertDirtySkuHasStoreHouse->qty=$assoc['qty'];
                             $insertDirtySkuHasStoreHouse->insert();
                         }else{
