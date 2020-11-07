@@ -53,7 +53,7 @@ class CAmazonVideoSender extends ACronJob
     {
         $this->amazonCredentials = $this->getCredential();
         $this->ftpCredentials = $this->app->cfg()->fetch('miscellaneous', 'photoFTPClient');
-        $this->localTempFolder = $this->app->rootPath() . $this->app->cfg()->fetch('paths', 'tempFolder') . "/";
+        $this->localTempFolder = $this->app->rootPath() . $this->app->cfg()->fetch('paths', 'tempFolder') . "-remaster/";
         $this->app->vendorLibraries->load("amazon2723");
 
         $this->imageManager = new ImageManager(new S3Manager($this->amazonCredentials), $this->app, $this->localTempFolder);
@@ -123,6 +123,7 @@ class CAmazonVideoSender extends ACronJob
             throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
         }
         $res = $this->imageManager->processVideoUploadProduct($localName, $futureName, 'iwes', $product->productBrand->slug);
+        $this->report('slug',$product->productBrand->slug);
         $this->debug('doFile','Processed: '.count($res),$res);
 
 
