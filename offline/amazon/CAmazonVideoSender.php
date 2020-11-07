@@ -163,8 +163,11 @@ class CAmazonVideoSender extends ACronJob
 
 
 
-
+        try {
             $this->ftp->move($file,$this->calcRemoteFolder());
+        }catch(\Throwable $e){
+            $this->report('error',$e->getLine().' '.$e->getMessage());
+        }
             unlink($this->localTempFolder . $names['basename']);
 
             return "1";
