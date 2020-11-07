@@ -113,7 +113,7 @@ class CAmazonVideoSender extends ACronJob
         if (!$this->ftp->fileExist($file)) return 0;
         $product = \Monkey::app()->repoFactory->create('Product')->findOneByStringId($match[1]);
         if($product == null) throw new BambooException('Product not found for: '.$match[1]);
-        $futureName = $this->calculatePhotoNameStandard($product, $file,$position);
+        $futureName = $this->calculatePhotoNameStandard($product, $file);
         $this->report('extension',$futureName['extension']);
 
 
@@ -130,18 +130,19 @@ class CAmazonVideoSender extends ACronJob
 
         switch($position){
             case "1":
-                $product->dummyVideo='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].$futureName['extension'];
+                $product->dummyVideo='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].'.'.$futureName['extension'];
                 break;
             case "2":
-                $product->dummyVideo2='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].$futureName['extension'];
+                $product->dummyVideo2='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].'.'.$futureName['extension'];
                 break;
             case "3":
-                $product->dummyVideo3='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].$futureName['extension'];
+                $product->dummyVideo3='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].'.'.$futureName['extension'];
                 break;
             case "4":
-                $product->dummyVideo3='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].$futureName['extension'];
+                $product->dummyVideo4='https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].'.'.$futureName['extension'];
                 break;
         }
+        $this->report('videoUrl','https://cdn.iwes.it/'.$product->productBrand->slug.'/'.$futureName['fileName'].'.'.$futureName['extension']);
         $product->update();
 
         $this->ftp->move($file, $this->calcRemoteFolder());
@@ -203,11 +204,10 @@ class CAmazonVideoSender extends ACronJob
     /**
      * @param CProduct $product
      * @param $origin
-     * @parma $position
      * @return array
      * @throws BambooException
      */
-    public function calculatePhotoNameStandard(CProduct $product, $origin, $position){
+    public function calculatePhotoNameStandard(CProduct $product, $origin){
         $futureName = [];
         $names = pathinfo($origin);
 
