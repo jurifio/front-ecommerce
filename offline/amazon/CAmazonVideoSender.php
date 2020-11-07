@@ -81,7 +81,6 @@ class CAmazonVideoSender extends ACronJob
         $i = 0;
         foreach ($files as $file) {
             try {
-                set_time_limit(120);
                 $this->debug('Work Cycle', 'Working Video '.$file);
                 if($this->doFile($file)=="1") {
                     $done++;
