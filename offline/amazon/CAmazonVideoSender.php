@@ -115,6 +115,7 @@ class CAmazonVideoSender extends ACronJob
             $product = \Monkey::app()->repoFactory->create('Product')->findOneByStringId($match[1]);
             if ($product == null) throw new BambooException('Product not found for: ' . $match[1]);
             $futureName = $this->calculatePhotoNameStandard($product,$file);
+            $this->report('codeProduct',$futureName['code']);
             $this->report('extension',$futureName['extension']);
 
 
@@ -215,7 +216,7 @@ class CAmazonVideoSender extends ACronJob
     public function calculatePhotoNameStandard(CProduct $product, $origin){
         $futureName = [];
         $names = pathinfo($origin);
-
+        $futureName['code'] = $product->printId();
         $futureName['name'] = $names['basename'];
 
         $pieces = explode(".",$origin);
