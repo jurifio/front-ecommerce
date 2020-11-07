@@ -83,7 +83,7 @@ class CAmazonVideoSender extends ACronJob
             try {
                 set_time_limit(120);
                 $this->debug('Work Cycle', 'Working Video '.$file);
-                if($this->doFile($file)==true) $done++;
+                if($this->doFile($file)) $done++;
                 $this->debug('Work Cycle', 'Done Video' . $file);
             } catch (\Throwable $e) {
                 $this->error('Work Cycle', 'Failed Working Video' . $file,$e);
@@ -124,28 +124,29 @@ class CAmazonVideoSender extends ACronJob
             if (!$this->ftp->get($localName,$file,false)) {
                 throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
             }
-            $this->imageManager->processVideoUploadProduct($localName,$futureName,'iwes',$product->productBrand->slug);
-            $this->report('slug',$product->productBrand->slug);
-
-
-            $ids = [];
-
+            $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$product->id,'productVariantId'=>$product->productVariantId]);
             switch ($position) {
                 case "1":
-                    $product->dummyVideo = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
+                    $insertVideo->dummyVideo = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
                     break;
                 case "2":
-                    $product->dummyVideo2 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
+                    $insertVideo->dummyVideo2 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
                     break;
                 case "3":
-                    $product->dummyVideo3 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
+                    $insertVideo->dummyVideo3 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
                     break;
                 case "4":
-                    $product->dummyVideo4 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
+                    $insertVideo->dummyVideo4 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
                     break;
             }
             $this->report('videoUrl','https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension']);
-            $product->update();
+            $insertVideo->update();
+            $res=$this->imageManager->processVideoUploadProduct($localName,$futureName,'iwes',$product->productBrand->slug);
+            $this->report('slug',$product->productBrand->slug);
+
+
+
+
 
             $this->ftp->move($file,$this->calcRemoteFolder());
             unlink($this->localTempFolder . $names['basename']);
