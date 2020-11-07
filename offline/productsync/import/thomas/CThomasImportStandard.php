@@ -244,8 +244,8 @@ class CThomasImportStandard extends ABluesealProductImporter
                         }else{
                             $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
                             $findProductId=\Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['id'=>$dirtyProduct['id']]);
-                            $findDirtyHasStoreHouse->productId=$findProductId['productId'];
-                            $findDirtyHasStoreHouse->productVariantId=$findProductId['productVariantId'];
+                            $findDirtyHasStoreHouse->productId=$findProductId->productId;
+                            $findDirtyHasStoreHouse->productVariantId=$findProductId->productVariantId;
                             $findDirtyHasStoreHouse->qty=$assoc['qty'];
                             $findDirtyHasStoreHouse->update();
                         }
@@ -269,16 +269,16 @@ class CThomasImportStandard extends ABluesealProductImporter
                             $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
                             $insertDirtySkuHasStoreHouse->dirtyProductId=$existingSku[0]['dirtyProductId'];
                             $findProductId=\Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['id'=>$existingSku[0]['dirtyProductId']]);
-                            $insertDirtySkuHasStoreHouse->productId=$findProductId['productId'];
-                            $insertDirtySkuHasStoreHouse->productVariantId=$findProductId['productVariantId'];
+                            $insertDirtySkuHasStoreHouse->productId=$findProductId->productId;
+                            $insertDirtySkuHasStoreHouse->productVariantId=$findProductId->productVariantId;
                             $insertDirtySkuHasStoreHouse->qty=$assoc['qty'];
                             $insertDirtySkuHasStoreHouse->productSizeId= $existingSku[0]['productSizeId'];
                             $insertDirtySkuHasStoreHouse->insert();
                         }else{
                             $findDirtyHasStoreHouse->dirtyProductId=$existingSku[0]['dirtyProductId'];
                             $findProductId=\Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['id'=>$existingSku[0]['dirtyProductId']]);
-                            $findDirtyHasStoreHouse->productId=$findProductId['productId'];
-                            $findDirtyHasStoreHouse->productVariantId=$findProductId['productVariantId'];
+                            $findDirtyHasStoreHouse->productId=$findProductId->productId;
+                            $findDirtyHasStoreHouse->productVariantId=$findProductId->productVariantId;
                             $findDirtyHasStoreHouse->productSizeId=$existingSku[0]['productSizeId'];
                             $findDirtyHasStoreHouse->qty=$assoc['qty'];
                             $findDirtyHasStoreHouse->update();
