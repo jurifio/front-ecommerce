@@ -118,7 +118,7 @@ class CAmazonVideoSender extends ACronJob
         if (!$this->ftp->get($localName, $file, false)) {
             throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
         }
-        $res = $this->imageManager->processVideoUploadProduct($names['basename'].'.mp4', $futureName, 'iwes', $product->productBrand->slug);
+        $res = $this->imageManager->processVideoUploadProduct($names['basename'], $futureName, 'iwes', $product->productBrand->slug);
         $this->debug('doFile','Processed: '.count($res),$res);
 
 
@@ -141,7 +141,7 @@ class CAmazonVideoSender extends ACronJob
         $product->update();
 
         $this->ftp->move($file, $this->calcRemoteFolder());
-        unlink($this->localTempFolder. $names['basename'].'.mp4');
+        unlink($this->localTempFolder. $names['basename']);
 
         return count($res);
     }
