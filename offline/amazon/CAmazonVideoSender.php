@@ -125,22 +125,22 @@ class CAmazonVideoSender extends ACronJob
 
             switch (true) {
                 case $position="1":
-                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[0]]);
+                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[1]]);
                     $insertVideo->dummyVideo = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
                     $insertVideo->update();
                     break;
                 case $position="2":
-                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[0]]);
+                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[1]]);
                     $insertVideo->dummyVideo2 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
                     $insertVideo->update();
                     break;
                 case $position="3":
-                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[0]]);
+                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[1]]);
                     $insertVideo->dummyVideo3 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
                     $insertVideo->update();
                     break;
                 case $position="4":
-                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[0]]);
+                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[1]]);
                     $insertVideo->dummyVideo4 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
                     $insertVideo->update();
                     break;
@@ -160,9 +160,9 @@ class CAmazonVideoSender extends ACronJob
             $this->ftp->move($file,$this->calcRemoteFolder());
             unlink($this->localTempFolder . $names['basename']);
 
-            return 1;
+            return "1";
         }catch(\Throwable $e){
-            return 2;
+            return "2";
 
         }
     }
