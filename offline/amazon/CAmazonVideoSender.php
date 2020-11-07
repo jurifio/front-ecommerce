@@ -123,7 +123,7 @@ class CAmazonVideoSender extends ACronJob
             if (!$this->ftp->get($localName,$file,false)) {
                 throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
             }
-            $res = $this->imageManager->processVideoUploadProduct($localName,$futureName,'iwes',$product->productBrand->slug);
+            $this->imageManager->processVideoUploadProduct($localName,$futureName,'iwes',$product->productBrand->slug);
             $this->report('slug',$product->productBrand->slug);
 
 
