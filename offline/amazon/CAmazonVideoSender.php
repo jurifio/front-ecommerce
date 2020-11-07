@@ -109,6 +109,7 @@ class CAmazonVideoSender extends ACronJob
         $product = \Monkey::app()->repoFactory->create('Product')->findOneByStringId($match[1]);
         if($product == null) throw new BambooException('Product not found for: '.$match[1]);
         $futureName = $this->calculatePhotoNameStandard($product, $file);
+
         $fileProduct=$names['basename'];
         $this->report('fileProduct','name '. $fileProduct);
         $position=substr($fileProduct, -5, 1);
@@ -117,7 +118,7 @@ class CAmazonVideoSender extends ACronJob
         if (!$this->ftp->get($localName, $file, false)) {
             throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
         }
-        $res = $this->imageManager->processVideoUploadProduct($names['basename'], $fileProduct, 'iwes', $product->productBrand->slug);
+        $res = $this->imageManager->processVideoUploadProduct($names['basename'], $futureName, 'iwes', $product->productBrand->slug);
         $this->debug('doFile','Processed: '.count($res),$res);
 
 
@@ -203,7 +204,9 @@ class CAmazonVideoSender extends ACronJob
      */
     public function calculatePhotoNameStandard(CProduct $product, $origin){
         $futureName = [];
-        $futureName['name'] = $product->printId();
+        $names = pathinfo($origin);
+
+        $futureName['name'] = substr($names['basename'],0,-4);
 
         $pieces = explode(".",$origin);
         $futureName['extension'] = $pieces[(count($pieces)-1)];
