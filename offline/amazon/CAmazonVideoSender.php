@@ -117,28 +117,36 @@ class CAmazonVideoSender extends ACronJob
             $futureName = $this->calculatePhotoNameStandard($product,$file);
             $this->report('codeProduct',$futureName['code']);
             $this->report('extension',$futureName['extension']);
-            $findpr=implode('-',$futureName['code']);
+            $findpr=explode('-',$futureName['code']);
 
             $localName = $this->localTempFolder . $names['basename'];
             $this->report('localname',$localName);
 
-            $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[0]]);
-            switch ($position) {
-                case "1":
+
+            switch ($true) {
+                case $position="1":
+                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[0]]);
                     $insertVideo->dummyVideo = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
+                    $insertVideo->update();
                     break;
-                case "2":
+                case $position="2":
+                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[0]]);
                     $insertVideo->dummyVideo2 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
+                    $insertVideo->update();
                     break;
-                case "3":
+                case $position="3":
+                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[0]]);
                     $insertVideo->dummyVideo3 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
+                    $insertVideo->update();
                     break;
-                case "4":
+                case $position="4":
+                    $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[0]]);
                     $insertVideo->dummyVideo4 = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
+                    $insertVideo->update();
                     break;
             }
             $this->report('videoUrl','https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension']);
-            $insertVideo->update();
+
             if (!$this->ftp->get($localName,$file,false)) {
                 throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
             }
