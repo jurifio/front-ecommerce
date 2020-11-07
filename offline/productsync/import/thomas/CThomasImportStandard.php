@@ -243,8 +243,8 @@ class CThomasImportStandard extends ABluesealProductImporter
                             $insertDirtySkuHasStoreHouse->insert();
                         }else{
                             $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
-                            $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
-                            $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                            $findDirtyHasStoreHouse->productId=$findDirtyProductId['productId'];
+                            $findDirtyHasStoreHouse->productVariantId=$findDirtyProductId['productVariantId'];
                             $findDirtyHasStoreHouse->qty=$assoc['qty'];
                             $findDirtyHasStoreHouse->update();
                         }
@@ -272,6 +272,8 @@ class CThomasImportStandard extends ABluesealProductImporter
                             $insertDirtySkuHasStoreHouse->insert();
                         }else{
                             $findDirtyHasStoreHouse->dirtyProductId=$existingSku[0]['dirtyProductId'];
+                            $findDirtyHasStoreHouse->productId=$findDirtyProductId['productId'];
+                            $findDirtyHasStoreHouse->productVariantId=$findDirtyProductId['productVariantId'];
                             $findDirtyHasStoreHouse->productSizeId=$existingSku[0]['productSizeId'];
                             $findDirtyHasStoreHouse->qty=$assoc['qty'];
                             $findDirtyHasStoreHouse->update();
