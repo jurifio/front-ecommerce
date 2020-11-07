@@ -110,7 +110,9 @@ class CAmazonVideoSender extends ACronJob
         if($product == null) throw new BambooException('Product not found for: '.$match[1]);
         $futureName = $this->calculatePhotoNameStandard($product, $file);
         $fileProduct=$names['basename'];
+        $this->report('fileProduct','name '. $fileProduct);
         $position=substr($fileProduct, -5, 1);
+        $this->report('position','number '. $position);
         $localName = $this->localTempFolder . $names['basename'];
         if (!$this->ftp->get($localName, $file, false)) {
             throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
