@@ -83,7 +83,7 @@ class CAmazonVideoSender extends ACronJob
             try {
                 set_time_limit(120);
                 $this->debug('Work Cycle', 'Working Video '.$file);
-                if($this->doFile($file)) $done++;
+                if($this->doFile($file)==1) $done++;
                 $this->debug('Work Cycle', 'Done Video' . $file);
             } catch (\Throwable $e) {
                 $this->error('Work Cycle', 'Failed Working Video' . $file,$e);
@@ -117,14 +117,12 @@ class CAmazonVideoSender extends ACronJob
             $futureName = $this->calculatePhotoNameStandard($product,$file);
             $this->report('codeProduct',$futureName['code']);
             $this->report('extension',$futureName['extension']);
-
+            $findpr=implode('-',$futureName['code']);
 
             $localName = $this->localTempFolder . $names['basename'];
             $this->report('localname',$localName);
-            if (!$this->ftp->get($localName,$file,false)) {
-                throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
-            }
-            $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$product->id,'productVariantId'=>$product->productVariantId]);
+
+            $insertVideo=\Monkey::app()->repoFactory->create('Product')->findOneBy(['id'=>$findpr[0],'productVariantId'=>$findpr[0]]);
             switch ($position) {
                 case "1":
                     $insertVideo->dummyVideo = 'https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension'];
@@ -141,6 +139,9 @@ class CAmazonVideoSender extends ACronJob
             }
             $this->report('videoUrl','https://cdn.iwes.it/' . $product->productBrand->slug . '/' . $futureName['fileName'] . '.' . $futureName['extension']);
             $insertVideo->update();
+            if (!$this->ftp->get($localName,$file,false)) {
+                throw new BambooFTPClientException('Errore nell\'ottenere il file' . $file);
+            }
             $res=$this->imageManager->processVideoUploadProduct($localName,$futureName,'iwes',$product->productBrand->slug);
             $this->report('slug',$product->productBrand->slug);
 
@@ -151,9 +152,9 @@ class CAmazonVideoSender extends ACronJob
             $this->ftp->move($file,$this->calcRemoteFolder());
             unlink($this->localTempFolder . $names['basename']);
 
-            return true;
+            return 1;
         }catch(\Throwable $e){
-            return false;
+            return 2;
 
         }
     }
