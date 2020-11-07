@@ -44,7 +44,7 @@ class CAmazonVideoSender extends ACronJob
     protected $fileList;
     protected $localTempFolder;
     protected $remoteTodo = "/shootImport/newage2/todoVideo";
-    protected $remoteDone = "/shootImport/newage2/doneVideo";
+    protected $remoteDone = "/shootImport/newage2/done";
 
     /**
      * @param null $args
