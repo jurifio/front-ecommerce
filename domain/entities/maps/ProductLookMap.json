@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "ProductLook",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "productHasProductLook",
+                "entity": "ProductHasProductLook",
+                "parentKeys": ["id"],
+                "childKeys": ["productLookId"],
+                "type": "OneToMany",
+                "lang": true
+            }
+        ]
+    }
+}

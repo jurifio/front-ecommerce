@@ -1,0 +1,63 @@
+{
+    "entity": {
+        "name": "ProductHasProductLook",
+        "keys": [
+            "id"
+        ],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": [
+                    "productId","productVariantId"
+                ],
+                "childKeys": [
+                    "id","productVariantId"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId",
+                    "shopId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId",
+                    "shopId"
+                ],
+                "type": "OneToMany"
+            },
+            {
+                "name": "shopHasProduct",
+                "entity": "ShopHasProduct",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId",
+                    "shopId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId",
+                    "shopId"
+                ],
+                "type": "OneToOne"
+            },{
+                "name": "productLook",
+                "entity": "ProductLook",
+                "parentKeys": [
+                    "productLookId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "ManyToOne"
+            }
+
+        ]
+    }
+}
