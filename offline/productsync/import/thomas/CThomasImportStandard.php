@@ -110,7 +110,6 @@ class CThomasImportStandard extends ABluesealProductImporter
                         $dirtyProduct['shopId'] = 58;
                         $dirtyProduct['dirtyStatus'] = 'F';
                         $dirtyProduct['id'] = \Monkey::app()->dbAdapter->insert('DirtyProduct', $dirtyProduct);
-
                         $dirtyProductExtend['dirtyProductId'] = $dirtyProduct['id'];
                         $dirtyProductExtend['shopId'] = $dirtyProduct['shopId'];
 

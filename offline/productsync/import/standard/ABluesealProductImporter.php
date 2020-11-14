@@ -392,6 +392,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         if (count($seenSkus) == 0) {
             throw new BambooLogicException('seenSkus contains 0 elements');
         }
+
         $res = $this->app->dbAdapter->query("SELECT ds.id
                                                       FROM DirtySku ds 
                                                         JOIN DirtyProduct dp on ds.dirtyProductId = dp.id
