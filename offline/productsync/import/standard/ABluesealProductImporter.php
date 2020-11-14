@@ -616,16 +616,14 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         foreach ($dps as $dpId) {
             $this->report('createProducts', 'working for ' . $dpId['id']);
             try {
-                $dirtyProduct = $dpEm->findOne($dpId);
+                $dirtyProduct = $dpEm->findOneBy(['id'=>$dpId]);
                 $sheetPrototype->productDetailLabel->rewind();
 
                 \Monkey::app()->repoFactory->beginTransaction();
                 /** Inserisco la variante*/
                 $variant = $variantFactory->getEmptyEntity();
                 $variant->name = $dirtyProduct->var;
-                if( $dirtyProduct->extend->colorDescription!=null) {
-                    $variant->description = $dirtyProduct->extend->colorDescription;
-                }
+                $variant->description = $dirtyProduct->extend->colorDescription;
 
 
                 /** Inserisco il prodotto */
