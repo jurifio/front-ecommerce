@@ -169,9 +169,9 @@ class CThomasImportStandard extends ABluesealProductImporter
                          ]);
                      }*/
                 }
-                $findDirtyProductId=\Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['extId'=>$assoc['extId'],'shopId'=>58]);
+                $findDirtyProductId=\Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['itemno'=>$assoc['itemno'],'shopId'=>58]);
                 $findDirtyProductExtend=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$findDirtyProductId->id,'shopId'=>58]);
-                if($findDirtyProductExtend==null){
+                if(!$findDirtyProductExtend){
                     $dirtyProductExtendOne['dirtyProductId'] = $findDirtyProductId->id;
                     $dirtyProductExtendOne['shopId'] = 58;
                     $dirtyProductExtendOne['name'] = $assoc['name'];
