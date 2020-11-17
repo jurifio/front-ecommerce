@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "ShopRules",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "shop",
+                "entity": "shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

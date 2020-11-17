@@ -52,6 +52,12 @@
                 "parentKeys": ["id"],
                 "childKeys": ["shopId"],
                 "type": "OneToMany"
+            },{
+                "name": "shopRules",
+                "entity": "ShopRules",
+                "parentKeys": ["id"],
+                "childKeys": ["shopId"],
+                "type": "OneToOne"
             }
         ]
     }
