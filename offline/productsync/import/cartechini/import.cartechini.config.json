@@ -26,7 +26,8 @@
             "var" : 5,
             "extId": 4,
             "price": 18,
-            "salePrice": 25
+            "salePrice": 25,
+            "colorDescription": 5
         },
         "skus": {
             "var" : 10,
