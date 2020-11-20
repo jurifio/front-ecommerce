@@ -99,6 +99,12 @@
                 "parentKeys": ["id"],
                 "childKeys": ["userId"],
                 "type": "OneToOne"
+            },{
+                "name": "userHasShop",
+                "entity": "UserHasShop",
+                "parentKeys": ["id"],
+                "childKeys": ["userId"],
+                "type": "OneToOne"
             }
         ]
     }

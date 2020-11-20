@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "UserHasShop",
+        "keys": ["userId", "shopId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "user",
+                "entity": "User",
+                "parentKeys": ["userId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

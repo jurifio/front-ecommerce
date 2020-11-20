@@ -58,6 +58,12 @@
                 "parentKeys": ["id"],
                 "childKeys": ["shopId"],
                 "type": "OneToOne"
+            },{
+                "name": "userHasShop",
+                "entity": "userHasShop",
+                "parentKeys": ["id"],
+                "childKeys": ["shopId"],
+                "type": "OneToMany"
             }
         ]
     }
