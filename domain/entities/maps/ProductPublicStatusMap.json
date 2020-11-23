@@ -1,0 +1,29 @@
+{
+    "entity": {
+        "name": "ProductPublicStatus",
+        "keys": ["productId", "productVariantId","shopId"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["id","productVariantId"],
+                "type": "OneToOne"
+            },{
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productStatus",
+                "entity": "ProductStatus",
+                "parentKeys": ["productStatusId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}
