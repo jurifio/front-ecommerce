@@ -50,10 +50,27 @@ class CMarketplaceAccountHasProductRepo extends ARepo
 
                 $marketplaceAccountHasProduct -> priceModifier = $config['priceModifier'];
                 if ($marketplaceAccount -> marketplace -> type == 'cpc') {
-                    $marketplaceAccountHasProduct -> fee = $config['defaultCpcF'];
-                    $marketplaceAccountHasProduct->feeMobile=$config['defaultCpcFM'];
-                    $marketplaceAccountHasProduct -> feeCustomer = $config['defaultCpc'];
-                    $marketplaceAccountHasProduct->feeCustomerMobile=$config['defaultCpcM'];
+                    if(isset($config['defaultCpcF'])) {
+                        $marketplaceAccountHasProduct->fee = $config['defaultCpcF'];
+                    }else{
+                        $marketplaceAccountHasProduct->fee = 0;
+                    }
+                    if(isset($config['defaultCpcFM'])) {
+                        $marketplaceAccountHasProduct->feeMobile=$config['defaultCpcFM'];
+                    }else{
+                        $marketplaceAccountHasProduct->feeMobile = 0.25;
+                    }
+                    if(isset($config['defaultCpc'])) {
+                        $marketplaceAccountHasProduct -> feeCustomer=$config['defaultCpc'];
+                    }else{
+                        $marketplaceAccountHasProduct -> feeCustomer = 0.25;
+                    }
+                    if(isset($config['defaultCpcM'])) {
+                        $marketplaceAccountHasProduct->feeCustomerMobile=$config['defaultCpcM'];
+                    }else{
+                        $marketplaceAccountHasProduct->feeCustomerMobile = 0.25;
+                    }
+
                 }
 
                 if ($marketplaceAccountHasProduct -> isDeleted) {
