@@ -64,6 +64,12 @@
                 "parentKeys": ["id"],
                 "childKeys": ["shopId"],
                 "type": "OneToMany"
+            },{
+                "name": "ticket",
+                "entity": "Ticket",
+                "parentKeys": ["id"],
+                "childKeys": ["shopId"],
+                "type": "OneToMany"
             }
         ]
     }

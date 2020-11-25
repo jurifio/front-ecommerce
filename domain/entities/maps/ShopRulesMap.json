@@ -6,7 +6,7 @@
         "children": [
             {
                 "name": "shop",
-                "entity": "shop",
+                "entity": "Shop",
                 "parentKeys": ["shopId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"

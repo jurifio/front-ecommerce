@@ -45,6 +45,13 @@
                 "parentKeys": ["id"],
                 "childKeys": ["billRegistryClientId"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "ticket",
+                "entity": "Ticket",
+                "parentKeys": ["id"],
+                "childKeys": ["billRegistryClientId"],
+                "type": "OneToMany"
             }
         ]
     }

@@ -1,0 +1,44 @@
+{
+    "entity": {
+        "name": "Ticket",
+        "keys": [
+            "id"
+        ],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "ticketStatus",
+                "entity": "TicketStatus",
+                "parentKeys": [
+                    "statusTicketId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": [
+                    "shopId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "ManyToOne"
+            },
+            {
+                "name": "billRegistryClient",
+                "entity": "BillRegistryClient",
+                "parentKeys": [
+                    "billRegistryClientId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "ManyToOne"
+            }
+        ]
+    }
+}
