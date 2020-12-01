@@ -1133,6 +1133,9 @@ class COrderLineRepo extends ARepo
             case 51:
                 $filterUserAddress = 17668;
                 break;
+            case 58:
+                $filterUserAddress = 25251;
+                break;
         }
 
         //definzione dello shop seller al fine di reperire l'id utente che lo gestisce
