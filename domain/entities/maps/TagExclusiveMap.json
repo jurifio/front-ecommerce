@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "TagExclusive",
+        "keys": ["id"],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "tagExclusiveTranslation",
+                "entity": "TagExclusiveTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["tagExclusiveId"],
+                "type": "OneToMany",
+                "lang": true
+            }
+        ]
+    }
+}

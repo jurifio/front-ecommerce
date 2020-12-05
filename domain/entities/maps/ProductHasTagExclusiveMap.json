@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "name": "ProductHasTagExclusive",
+        "keys": ["productId", "productVariantId", "tagExclusiveId"],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "tagExclusive",
+                "entity": "TagExclusive",
+                "parentKeys": ["tagExclusiveId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

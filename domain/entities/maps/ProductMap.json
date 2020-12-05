@@ -212,8 +212,29 @@
                 "childKeys": ["productId","productVariantId"],
                 "type": "OneToMany"
             },{
+                "name" : "tagExclusive",
+                "entity" : "TagExclusive",
+                "parentKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "childKeys" : ["id"],
+                "joinOn" :
+                {
+                    "table": "ProductHasTagExclusive",
+                    "childKeys": ["tagExclusiveId"],
+                    "parentKeys" : ["productId","productVariantId"]
+                },
+                "type" : "ManyToMany"
+            },{
                 "name": "shopHasProduct",
                 "entity": "ShopHasProduct",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name": "productHasTagExclusive",
+                "entity": "ProductHasTagExclusive",
                 "parentKeys": ["id","productVariantId"],
                 "childKeys": ["productId","productVariantId"],
                 "type": "OneToMany"
