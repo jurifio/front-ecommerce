@@ -34,17 +34,20 @@ class CProductRepo extends ARepo
         $query = $this->app->dbAdapter->quote(urldecode($this->app->router->getMatchedRoute()->getComputedFilter('query')));
 
         $sql = "select id,productVariantId from 
-          (SELECT p.id, p.productVariantId, group_concat(distinct t.sortingPriorityId order by t.sortingPriorityId asc) as tagPriority, t.sortingPriorityId as productPriority,max(match(ps.productBrandName, ps.productColorName, ps.productName, ps.productDescription, ps.productItemno, ps.productCategoryName, ps.productCode) against($query IN BOOLEAN MODE)) as score
-          FROM Product p, ProductHasTag pht, Tag t, ProductSearch ps
+          (SELECT p.id, p.productVariantId, group_concat(distinct t.sortingPriorityId order by t.sortingPriorityId asc) as tagPriority, t.sortingPriorityId as productPriority,max(match(ps.productBrandName, ps.productColorName, ps.productName, ps.productDescription, ps.productItemno, ps.productCategoryName, ps.productCode) against($string IN BOOLEAN MODE)) as score
+         FROM Product p, ProductHasTag pht,ProductHasTagExclusive phte, Tag t, TagExclusive te, ProductSearch ps
           WHERE p.id = ps.productId AND 
                 p.productVariantId = ps.productVariantId AND
                 p.id = pht.productId AND
                 p.productVariantId = pht.productVariantId AND 
-                pht.tagId = t.id AND p.productStatusId = 6
+                pht.tagId = t.id and
+               p.id = phte.productId AND
+                p.productVariantId = phte.productVariantId AND 
+                phte.tagExclusiveId = te.id AND p.productStatusId in (6,11)
           GROUP BY p.id, p.productVariantId
           ORDER BY score DESC
           LIMIT $limit[0],$limit[1]) q1 where score > 0 order by tagPriority, productPriority";
-
+        //\Monkey::app()->applicationLog('CProductRepo','search','print search',$sql);
         return $this->em()->findBySql($sql);
     }
 
@@ -639,6 +642,9 @@ class CProductRepo extends ARepo
                     }
                     foreach ($product->productHasTag as $productHasTag) {
                         $productHasTag->delete();
+                    }
+                    foreach ($product->productHasTagExclusive as $productHasTagExclusive) {
+                        $productHasTagExclusive->delete();
                     }
 
                     foreach ($product->marketplaceAccountHasProduct as $marketplaceAccountHasProduct) {

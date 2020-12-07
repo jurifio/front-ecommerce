@@ -9,10 +9,12 @@ namespace bamboo\traits;
 trait TCatalogRepoFunctions
 {
     protected $catalogInnerQuery = "
-        SELECT
+       SELECT
          `Product`.`id`                                      AS `product`,
          `Product`.`productVariantId`                        AS `variant`,
          `ProductHasTag`.`tagId`                             AS `tag`,
+         `ProductHasTagExclusive`.`tagExclusiveId`                   AS `tagExclusive`,
+               
          `Product`.`sortingPriorityId`                       AS `productPriority`,
          `Product`.`productBrandId`                          AS `brand`,
          `ProductPublicSku`.`productSizeId`                  AS `size`,
@@ -24,11 +26,14 @@ trait TCatalogRepoFunctions
        FROM
          `Product`
          JOIN `ProductHasTag` ON (`ProductHasTag`.`productId` = `Product`.`id`) AND
-                                 (`ProductHasTag`.`productVariantId` = `Product`.`productVariantId`)
+                                 (`ProductHasTag`.`productVariantId` = `Product`.`productVariantId`)  
+            JOIN `ProductHasTagExclusive` ON (`ProductHasTagExclusive`.`productId` = `Product`.`id`) AND
+                                 (`ProductHasTagExclusive`.`productVariantId` = `Product`.`productVariantId`)
+             
          JOIN `ProductStatus` ON (`Product`.`productStatusId` = `ProductStatus`.`id`)
          JOIN `ProductPublicSku` ON (`Product`.`id` = `ProductPublicSku`.`productId`) AND
                               (`Product`.`productVariantId` = `ProductPublicSku`.`productVariantId`)
-         JOIN `ProductHasProductCategory` ON (`ProductHasProductCategory`.`productId` = `Product`.`id`) AND
+        JOIN `ProductHasProductCategory` ON (`ProductHasProductCategory`.`productId` = `Product`.`id`) AND
                                              (`ProductHasProductCategory`.`productVariantId` =
                                               `Product`.`productVariantId`) AND
                                              ProductHasProductCategory.productCategoryId != 1
@@ -38,11 +43,14 @@ trait TCatalogRepoFunctions
            ON tc.id = ProductHasProductCategory.productCategoryId
          JOIN ProductHasTag pht2 ON (pht2.productId, pht2.productVariantId) = (Product.id,Product.productVariantId)
          JOIN Tag tt ON tt.id = pht2.tagId
+        JOIN ProductHasTagExclusive phte2 ON (phte2.productId, phte2.productVariantId) = (Product.id,Product.productVariantId)
+         JOIN TagExclusive te ON te.id = phte2.tagExclusiveId
        WHERE
          `ProductStatus`.`isVisible` = 1 AND
          `ProductHasProductCategory`.`productCategoryId` <> 1 AND
          `Product`.`qty` > 0 AND
          ProductHasTag.tagId = ifnull(:tag, ProductHasTag.tagId) AND
+         ProductHasTagExclusive.tagExclusiveId = ifnull(:tagExclusive, ProductHasTagExclusive.tagExclusiveId) AND
          ProductPublicSku.productSizeId = ifnull(:size, ProductPublicSku.productSizeId) AND
          Product.productColorGroupId = ifnull(:color, Product.productColorGroupId) AND
          Product.productBrandId = ifnull(:brand, Product.productBrandId)
@@ -60,7 +68,9 @@ trait TCatalogRepoFunctions
             ':tag' => $params['tag'] ?? null,
             ':size' => $params['size'] ?? null,
             ':color' => $params['color'] ?? null,
-            ':brand' => $params['brand'] ?? null
+            ':brand' => $params['brand'] ?? null,
+            ':tagExclusive' =>$params['tagExclusive'] ?? null
+
         ];
         return $fullParams;
     }

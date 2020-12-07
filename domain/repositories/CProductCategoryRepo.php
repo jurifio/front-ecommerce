@@ -6,7 +6,9 @@ namespace bamboo\domain\repositories;
 use Aws\Common\Enum;
 use bamboo\core\base\CObjectCollection;
 use bamboo\core\db\pandaorm\repositories\ARepo;
+use bamboo\core\exceptions\BambooDBALException;
 use bamboo\core\exceptions\BambooException;
+use bamboo\core\exceptions\RedPandaORMException;
 use bamboo\core\theming\nestedCategory\CCategoryManager;
 use bamboo\domain\entities\CDictionaryCategory;
 use bamboo\domain\entities\CProduct;
@@ -15,6 +17,8 @@ use bamboo\domain\entities\CProductCategoryHasMarketplaceAccountCategory;
 use bamboo\domain\entities\CProductCategoryTranslation;
 use bamboo\domain\entities\CProductHasProductCategory;
 use bamboo\domain\entities\CProductSheetModelPrototypeHasProductCategory;
+use Monkey;
+use Throwable;
 use function PHPSTORM_META\type;
 
 /**
@@ -63,8 +67,8 @@ class CProductCategoryRepo extends ARepo
 					WHERE 
 					  ps.isVisible = 1 AND
                       father.id = :category
-					GROUP BY parent.id
-					HAVING parent.depth BETWEEN 1 AND 3
+					GROUP BY parent.slug
+					HAVING parent.depth BETWEEN 1 AND 4
 					ORDER BY parent.lft";
         $tree = [];
         $categoryPath = $categoryPath[0];
@@ -143,6 +147,9 @@ class CProductCategoryRepo extends ARepo
         if (!isset($params['tag'])) {
             $params['tag'] = null;
         }
+        if (!isset($params['TagExclusive'])) {
+            $params['tagExclusive'] = null;
+        }
 
         $sql = "SELECT
 				  parent.id AS id,
@@ -159,7 +166,8 @@ class CProductCategoryRepo extends ARepo
 				      phpc.brand = IFNULL(:brand, phpc.brand) AND
 				      phpc.color = IFNULL(:color, phpc.color) AND
 				      phpc.size = IFNULL(:size, phpc.size) AND
-				      phpc.tag = IFNULL(:tag, phpc.tag)
+				      phpc.tag = IFNULL(:tag, phpc.tag) and 
+				       phpc.tagExclusive = IFNULL(:tagExclusive, phpc.tagExclusive) 
 				GROUP BY parent.id
 				HAVING depth BETWEEN :depthStart AND :depthEnd
 				ORDER BY parent.lft";
@@ -170,22 +178,24 @@ class CProductCategoryRepo extends ARepo
                   parent.depth
                 FROM ProductCategory AS node
                   JOIN ProductCategory AS parent ON node.lft BETWEEN parent.lft AND parent.rght
-                  JOIN ProductCategory AS father ON parent.lft BETWEEN father.lft AND father.rght
+                  JOIN ProductCategory AS father on parent.lft BETWEEN father.lft AND father.rght
                   JOIN (
                     SELECT
-                      DISTINCT phpc.productCategoryId
+                      distinct phpc.productCategoryId
                     FROM Product p
                       JOIN ProductStatus pst ON p.productStatusId = pst.id
                       JOIN ProductPublicSku psk ON (p.id, p.productVariantId) = (psk.productId, psk.productVariantId)
                       JOIN ProductHasTag pht ON (p.id, p.productVariantId) = (pht.productId, pht.productVariantId)
+                      JOIN ProductHasTagExclusive phte ON (p.id, p.productVariantId) = (phte.productId, phte.productVariantId)
                       JOIN ProductHasProductCategory phpc
                         ON (p.id, p.productVariantId) = (phpc.productId, phpc.productVariantId)
                     WHERE pst.isVisible = 1 AND
                           p.productBrandId = IFNULL(:brand, p.productBrandId) AND
                           p.productColorGroupId = IFNULL(:color, p.productColorGroupId) AND
                           psk.productSizeId = IFNULL(:size, psk.productSizeId) AND
-                          pht.tagId = IFNULL(:tag, pht.tagId)
-                    ) innerQ ON innerQ.productCategoryId = node.id
+                          pht.tagId = IFNULL(:tag, pht.tagId) and 
+                           phte.tagExclusiveId = IFNULL(:tagExclusive, phte.tagExclusiveId)
+                    ) innerQ on innerQ.productCategoryId = node.id
                 WHERE
                   father.id = IFNULL(:category, 1) AND
                   parent.lft BETWEEN father.lft AND father.rght
@@ -242,7 +252,7 @@ class CProductCategoryRepo extends ARepo
      * @param $orderBy
      * @param $params
      * @return CObjectCollection
-     * @throws \bamboo\core\exceptions\RedPandaORMException
+     * @throws RedPandaORMException
      */
     public function listByCategoryPath($limit, $orderBy, $params)
     {
@@ -268,7 +278,7 @@ class CProductCategoryRepo extends ARepo
      * @param $params
      * @param $args
      * @return CObjectCollection
-     * @throws \bamboo\core\exceptions\RedPandaORMException
+     * @throws RedPandaORMException
      */
     public function listByMainCategories($limit, $orderBy, $params, $args)
     {
@@ -276,7 +286,7 @@ class CProductCategoryRepo extends ARepo
         foreach ($this->app->categoryManager->categories()->childrenIds(1) as $catId) {
             $cat = $this->findOne([$catId]);
             $cats->add($cat);
-        };
+        }
 
         return $cats;
     }
@@ -292,7 +302,7 @@ class CProductCategoryRepo extends ARepo
         $cats = [];
         if ($productVariant) {
             if (is_int($productVariant)) {
-                $catEm = \Monkey::app()->repoFactory->create('Product')->findOneBy(['productVariantId' => $productVariant])->productCategory;
+                $catEm = Monkey::app()->repoFactory->create('Product')->findOneBy(['productVariantId' => $productVariant])->productCategory;
             } elseif (is_object($productVariant)) {
                 $catEm = $productVariant->productCategory;
             }
@@ -339,12 +349,12 @@ class CProductCategoryRepo extends ARepo
         if (!$productCategory instanceof CProductCategory) {
             $productCategory = $this->findOneByStringId($productCategory);
         }
-        \Monkey::app()->repoFactory->beginTransaction();
-        $products = \Monkey::app()->repoFactory->create('Product')->getProductsByCategoryFullTree($productCategory->id);
+        Monkey::app()->repoFactory->beginTransaction();
+        $products = Monkey::app()->repoFactory->create('Product')->getProductsByCategoryFullTree($productCategory->id);
         if ($deleteProductAssociation) {
             foreach ($products as $product) {
                 /** @var CProduct $product */
-                \Monkey::app()->dbAdapter->delete('ProductHasProductCategory',
+                Monkey::app()->dbAdapter->delete('ProductHasProductCategory',
                     ['productCategoryId' => $productCategory->id,
                         'productId' => $product->id,
                         'productVariantId' => $product->productVariantId
@@ -353,9 +363,9 @@ class CProductCategoryRepo extends ARepo
         } else if (count($products) > 0) return false;
 
         if ($deleteExternalAssociation) {
-            $categoriesId = \Monkey::app()->categoryManager->categories()->nestedSet()->getDescendantsByNodeId($productCategory->id);
+            $categoriesId = Monkey::app()->categoryManager->categories()->nestedSet()->getDescendantsByNodeId($productCategory->id);
             foreach ($categoriesId as $category) {
-                $dictionaryCategories = \Monkey::app()->repoFactory->create('DictionaryCategory')->findBy(['productCategoryId' => $category['id']]);
+                $dictionaryCategories = Monkey::app()->repoFactory->create('DictionaryCategory')->findBy(['productCategoryId' => $category['id']]);
                 foreach ($dictionaryCategories as $dictionaryCategory) {
                     $dictionaryCategory->productCategoryId = null;
                     $dictionaryCategory->update();
@@ -363,17 +373,17 @@ class CProductCategoryRepo extends ARepo
             }
 
             foreach ($categoriesId as $category) {
-                \Monkey::app()->dbAdapter->delete('ProductCategoryHasMarketplaceAccountCategory', ['productCategoryId' => $category['id']]);
+                Monkey::app()->dbAdapter->delete('ProductCategoryHasMarketplaceAccountCategory', ['productCategoryId' => $category['id']]);
             }
         }
 
-        if (\Monkey::app()->categoryManager->categories()->removeNodeAndDescendants($productCategory->id)) {
+        if (Monkey::app()->categoryManager->categories()->removeNodeAndDescendants($productCategory->id)) {
             //ProductCategoryTranslation
-            \Monkey::app()->cacheService->getCache("misc")->delete("FullCategoryTreeAsJSON");
-            \Monkey::app()->repoFactory->commit();
+            Monkey::app()->cacheService->getCache("misc")->delete("FullCategoryTreeAsJSON");
+            Monkey::app()->repoFactory->commit();
             return true;
         } else {
-            \Monkey::app()->router->response()->raiseProcessingError();
+            Monkey::app()->router->response()->raiseProcessingError();
             return false;
         }
     }
@@ -384,12 +394,12 @@ class CProductCategoryRepo extends ARepo
 
     /**
      * @return bool
-     * @throws \bamboo\core\exceptions\BambooDBALException
+     * @throws BambooDBALException
      */
     public function indexCategoryFix()
     {
 
-        $cats = \Monkey::app()->dbAdapter->query('SELECT id FROM ProductCategory WHERE id > 50 ORDER BY id', [])->fetchAll();
+        $cats = Monkey::app()->dbAdapter->query('SELECT id FROM ProductCategory WHERE id > 50 ORDER BY id', [])->fetchAll();
 
         for ($i = 0; $i < count($cats); $i++) {
 
@@ -398,9 +408,9 @@ class CProductCategoryRepo extends ARepo
             }
 
             try {
-                \Monkey::app()->repoFactory->beginTransaction();
+                Monkey::app()->repoFactory->beginTransaction();
 
-                \Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 0', []);
+                Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 0', []);
 
                 $rightCatId = $cats[$i - 1]['id'] + 1;
 
@@ -408,15 +418,15 @@ class CProductCategoryRepo extends ARepo
 
                 $cats[$i]['id'] = $rightCatId;
 
-                \Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 1', []);
-                \Monkey::app()->dbAdapter->commit();
+                Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 1', []);
+                Monkey::app()->dbAdapter->commit();
 
 
-            } catch (\Throwable $e) {
-                \Monkey::app()->repoFactory->rollback();
-                \Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 1', []);
+            } catch (Throwable $e) {
+                Monkey::app()->repoFactory->rollback();
+                Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 1', []);
 
-                \Monkey::app()->applicationLog('ProductCategoryRepo', 'Error', 'Error while fixing ids', $e->getMessage());
+                Monkey::app()->applicationLog('ProductCategoryRepo', 'Error', 'Error while fixing ids', $e->getMessage());
                 return false;
             }
         }
@@ -428,22 +438,22 @@ class CProductCategoryRepo extends ARepo
 
     /**
      * @return bool
-     * @throws \bamboo\core\exceptions\BambooDBALException
+     * @throws BambooDBALException
      */
     private function fixCategoryOrders()
     {
 
         /** @var CCategoryManager $catManager */
-        $catManager = \Monkey::app()->categoryManager;
+        $catManager = Monkey::app()->categoryManager;
 
         $cats = $this->findAll();
 
 
         /** @var CProductCategoryRepo $pcR */
-        $pcR = \Monkey::app()->repoFactory->create('ProductCategory');
+        $pcR = Monkey::app()->repoFactory->create('ProductCategory');
 
         try {
-            \Monkey::app()->repoFactory->beginTransaction();
+            Monkey::app()->repoFactory->beginTransaction();
             /** @var CProductCategory $cat */
 
             $updatedCats = [];
@@ -467,11 +477,11 @@ class CProductCategoryRepo extends ARepo
 
 
                     $this->managePrimaryKeys('drop');
-                    \Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 0', []);
+                    Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 0', []);
 
                     $this->fixIds($cat->id, $catFatId);
 
-                    \Monkey::app()->dbAdapter->query('
+                    Monkey::app()->dbAdapter->query('
                         UPDATE ProductCategory pc
                           LEFT JOIN DictionaryCategory dc ON pc.id = dc.productCategoryId
                             LEFT JOIN ProductCategoryHasMarketplaceAccountCategory pcm ON pc.id = pcm.productCategoryId
@@ -488,20 +498,20 @@ class CProductCategoryRepo extends ARepo
                         WHERE pc.id >= ? AND pc.id < ? AND (pc.slug <> ? AND pc.lft <> ? AND pc.rght <> ? AND pc.depth <> ?)
                         ORDER BY pc.id', [$cat->id, $catFatId, $fatSlug, $fatLft, $fatRght, $fatDepth]);
 
-                    \Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 1', []);
+                    Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 1', []);
                     $this->managePrimaryKeys('set');
 
                 }
             }
 
-            \Monkey::app()->repoFactory->commit();
+            Monkey::app()->repoFactory->commit();
             return true;
 
-        } catch (\Throwable $e) {
-            \Monkey::app()->repoFactory->rollback();
-            \Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 1', []);
+        } catch (Throwable $e) {
+            Monkey::app()->repoFactory->rollback();
+            Monkey::app()->dbAdapter->query('SET FOREIGN_KEY_CHECKS = 1', []);
 
-            \Monkey::app()->applicationLog('ProductCategoryRepo', 'error', 'error while fixing order', $e->getMessage());
+            Monkey::app()->applicationLog('ProductCategoryRepo', 'error', 'error while fixing order', $e->getMessage());
             return false;
         }
     }
@@ -510,7 +520,7 @@ class CProductCategoryRepo extends ARepo
      * @param $rightCatId
      * @param $actualCat
      * @return bool
-     * @throws \bamboo\core\exceptions\BambooDBALException
+     * @throws BambooDBALException
      */
     private function fixIds($rightCatId, $actualCat)
     {
@@ -518,7 +528,7 @@ class CProductCategoryRepo extends ARepo
         $tables = ['DictionaryCategory','ProductCategoryHasMarketplaceAccountCategory','ProductCategoryTranslation','ProductHasProductCategory','ProductSheetModelPrototypeHasProductCategory','ProductCategory'];
 
         foreach($tables as $table){
-            \Monkey::app()->dbAdapter->query('UPDATE ' . $table . ' SET productcategoryId = ? WHERE `productCategoryId` = ?', [$rightCatId, $actualCat]);
+            Monkey::app()->dbAdapter->query('UPDATE ' . $table . ' SET productcategoryId = ? WHERE `productCategoryId` = ?', [$rightCatId, $actualCat]);
         }
 
         return true;
@@ -527,7 +537,7 @@ class CProductCategoryRepo extends ARepo
     /**
      * @param $type
      * @throws BambooException
-     * @throws \bamboo\core\exceptions\BambooDBALException
+     * @throws BambooDBALException
      */
     private function managePrimaryKeys($type){
 
@@ -558,9 +568,9 @@ class CProductCategoryRepo extends ARepo
         switch ($type){
             case 'drop':
                 foreach ($tables as $tableName => $primaryKey){
-                    \Monkey::app()->dbAdapter->query(
+                    Monkey::app()->dbAdapter->query(
                         'ALTER TABLE `' . $tableName . '` DROP PRIMARY KEY;',
-                               []);
+                        []);
                 }
                 break;
             case 'set':
@@ -568,11 +578,11 @@ class CProductCategoryRepo extends ARepo
 
                     $primaryKeyString = implode(',', $primaryKey);
 
-                    \Monkey::app()->dbAdapter->query(
-                                'ALTER TABLE `' . $tableName . '`
+                    Monkey::app()->dbAdapter->query(
+                        'ALTER TABLE `' . $tableName . '`
                                           ADD CONSTRAINT ' . $tableName . '_pk
                                         PRIMARY KEY (?);'
-                    ,[$primaryKeyString]);
+                        ,[$primaryKeyString]);
                 }
                 break;
             default:

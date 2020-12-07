@@ -121,6 +121,12 @@ class CWidgetCatalogHelper extends CWidgetHelper
                     $pre = "/tag-";
                     $localArgs[$key . 'Id'] = '-t' . ($size);
                     break;
+                case 'tagExclusive':
+                    $size = $type == $key ? $id : $localArgs[$key . 'Id'];
+                    if (empty($size)) break;
+                    $pre = "/";
+                    $localArgs[$key . 'Id'] = '-w' . ($size);
+                    break;
                 default:
                     $default = $type == $key ? $id : $localArgs[$key . 'Id'];
                     if (empty($default)) break;
@@ -190,6 +196,10 @@ class CWidgetCatalogHelper extends CWidgetHelper
                 case 'tag':
                     $suffix = "/tag-";
                     $postfix = "-t";
+                    break;
+                case 'tagExclusive':
+                    $suffix = "/tagExclusive-";
+                    $postfix = "-w";
                     break;
             }
 
@@ -277,6 +287,15 @@ class CWidgetCatalogHelper extends CWidgetHelper
                     } elseif (!empty($localArgs[$key]) && !empty($localArgs[$key . 'Id'])) {
                         $pre = "/tag";
                         $link .= $pre . $localArgs[$key] . '-t' . $localArgs[$key . 'Id'];
+                    }
+                    break;
+                case 'tagExclusive':
+                    if (!empty($filter)) {
+                        $pre = "/tagExclusive";
+                        $link .= $pre . $filter['slug'] . '-w' . $filter['id'];
+                    } elseif (!empty($localArgs[$key]) && !empty($localArgs[$key . 'Id'])) {
+                        $pre = "/tagExclusive";
+                        $link .= $pre . $localArgs[$key] . '-w' . $localArgs[$key . 'Id'];
                     }
                     break;
                 default:
