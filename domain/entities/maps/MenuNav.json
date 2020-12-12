@@ -1,0 +1,32 @@
+{
+    "entity": {
+        "name": "MenuNav",
+        "keys": ["id"],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "menu",
+                "entity": "Menu",
+                "parentKeys": ["menuId"],
+                "childKeys": ["menu"],
+                "type": "ManyToOne",
+                "lang": false
+            },
+            {
+                "name": "menuNavTranslation",
+                "entity": "MenuNavTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["menuNavTranslationId"],
+                "type": "OneToMany",
+                "lang": true
+            },{
+                "name": "menuType",
+                "entity": "MenuType",
+                "parentKeys": ["typeId"],
+                "childKeys": ["id"],
+                "type": "OneToOne",
+                "lang": false
+            }
+        ]
+    }
+}

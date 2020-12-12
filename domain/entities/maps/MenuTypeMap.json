@@ -1,0 +1,18 @@
+{
+    "entity": {
+        "name": "MenuType",
+        "keys": ["id"],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "menuNav",
+                "entity": "MenuNav",
+                "parentKeys": ["id"],
+                "childKeys": ["typeId"],
+                "type": "OneToMany",
+                "lang": false
+            }
+
+        ]
+    }
+}
