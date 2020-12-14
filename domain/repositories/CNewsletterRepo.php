@@ -145,12 +145,12 @@ class CNewsletterRepo extends ARepo
                 $res = true;
                 //$message = str_replace('emailunsuscriber', $val["email"], $preCompiledTemplate);
                 //if ($withEvents) {
-                    //$args = [$from, [$val["email"]], [], [], $subject, $message, null,$newsletterId, $newsletterCloneId, 'mailGun', false];
-                    //\Monkey::app()->eventManager->triggerEvent('newEmail',$args);
-                    // $res = true;
-               // } else {
-                 //   $res = $emailRepo->newMail($from, [$val["email"]], [], [], $subject, $message, null, $newsletterId, $newsletterCloneId, 'mailGun', false);
-               // }
+                //$args = [$from, [$val["email"]], [], [], $subject, $message, null,$newsletterId, $newsletterCloneId, 'mailGun', false];
+                //\Monkey::app()->eventManager->triggerEvent('newEmail',$args);
+                // $res = true;
+                // } else {
+                //   $res = $emailRepo->newMail($from, [$val["email"]], [], [], $subject, $message, null, $newsletterId, $newsletterCloneId, 'mailGun', false);
+                // }
 
             } catch (\Throwable $e) {
                 $res = false;
@@ -161,15 +161,6 @@ class CNewsletterRepo extends ARepo
 
         if (count($indirizzi) === $verificafineciclo) {
             $res = "Email Generate $verificafineciclo";
-            /** @var CEmailRepo $emailRepo */
-            $emailRepo = \Monkey::app()->repoFactory->create('Email');
-
-            $subject = "Termine del ciclo per invio newsletter " . $newsletterId;
-
-            $body = "Son State inviate per questo ciclo della newsletter numero".$verificafineciclo;
-
-            $emailRepo->newMail('gianluca@iwes.it', ['gianluca@iwes.it'], [], [], $subject, $body, null, null, null, 'mailGun', false,null);
-            $emailRepo->newMail('lorella@iwes.it', ['lorella@iwes.it'], [], [], $subject, $body, null, null, null, 'mailGun', false,null);
             return $res;
         } else return 'errore, numero email sbagliato';
 
