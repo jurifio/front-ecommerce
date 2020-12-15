@@ -126,7 +126,7 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
 
             $writer->writeElement('g:product_type',implode('; ',$product_type));
 
-            $categories = $product->getMarketplaceAccountCategoryIds($this->marketplaceAccount);
+            $categories = $product->getMarketplaceAccountCategoryIdsFacebook($this->marketplaceAccount);
 
                 $writer->writeElement('g:google_product_category',$categories[0]);
 
