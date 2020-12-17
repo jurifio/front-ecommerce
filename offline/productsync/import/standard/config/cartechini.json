@@ -14,12 +14,12 @@
     "files": {
         "main": {
             "location": "local",
-            "columns":  28,
+            "columns":  29,
             "extKeys": ["extId","var"]
         },
         "skus": {
             "location": "local",
-            "columns":  13,
+            "columns":  12,
             "extKeys": ["extId","var"]
         }
     },
