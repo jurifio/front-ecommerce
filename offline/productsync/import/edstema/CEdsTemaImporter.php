@@ -253,10 +253,10 @@ $linecountRow=0;
                 if($linecountRow==1){
                     continue;
                 }
-               /* if (count($values) != 12) {
+                if (count($values) != 12) {
                     $this->warning('Columns Count', count($values) . ' columns find, expecting ' . $columnNumbers, $values);
                     continue;
-                }*/
+                }
 
 
 
@@ -286,6 +286,8 @@ $linecountRow=0;
                 $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
                 $sku['value'] = str_replace(',', '.', $sku['value']);
                 $sku['storeHouseId'] = str_replace('0','',$values[8]);
+                $sku['qty'] = str_replace('0','',$values[3]);
+
 
 
                 $dirtyProduct = $this->app->dbAdapter->select('DirtyProduct', $match)->fetchAll();
@@ -322,7 +324,7 @@ $linecountRow=0;
                         $insertDirtySkuHasStoreHouse->size=$sku['size'];
                         $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
                         $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
-                        $insertDirtySkuHasStoreHouse->qty=$values[3];
+                        $insertDirtySkuHasStoreHouse->qty=$sku['qty'];
                         $insertDirtySkuHasStoreHouse->productSizeId= $res[0]['productSizeId'];
                         $insertDirtySkuHasStoreHouse->insert();
                     }else{
@@ -330,7 +332,7 @@ $linecountRow=0;
                         $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
                         $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                         $findDirtyHasStoreHouse->productSizeId=$res[0]['productSizeId'];
-                        $findDirtyHasStoreHouse->qty=$values[3];
+                        $findDirtyHasStoreHouse->qty=$sku['qty'];
                         $findDirtyHasStoreHouse->update();
                     }
 
@@ -340,6 +342,7 @@ $linecountRow=0;
                     $dirtySkuUpdate->salePrice=$sku['salePrice'];
                     $dirtySkuUpdate->price=$sku['price'];
                     $dirtySkuUpdate->storeHouseId=$sku['storeHouseId'];
+                    $dirtySkuUpdate->qty=$sku['qty'];
                     $dirtySkuUpdate->text=$sku['text'];
                     $dirtySkuUpdate->checksum=$sku['checksum'];
                     $dirtySkuUpdate->update();
