@@ -19,7 +19,7 @@
         },
         "skus": {
             "location": "local",
-            "columns":  12,
+            "columns":  13,
             "extKeys": ["extId","var"]
         }
     },
