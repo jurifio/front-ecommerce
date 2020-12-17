@@ -139,7 +139,9 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 if ($values[0][0] == '"') {
                     $values[0] = substr($values[0], 1);
                 }
-
+                if($lineCount==1){
+                    continue;
+                }
                 /** Count columns */
                 if (count($values) != $columnNumbers) {
                     $this->error('readMain', 'Columns dosn\'t match with specifics jump Line '.$lineCount);
@@ -241,16 +243,20 @@ class CEdsTemaImporter extends ABluesealProductImporter
         //read SKUS ------------------
         $shopOk = 0;
         $shopKo = 0;
-
+$linecountRow=0;
         $seenSkus = [];
         fgets($file);
         while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
             $this->debug('Read Sku','Cycle skus', $values);
+            $linecountRow++;
             try {
-                if (count($values) != 13) {
-                    $this->warning('Columns Count', count($values) . ' columns find, expecting ' . $columnNumbers, $values);
+                if($linecountRow==1){
                     continue;
                 }
+               /* if (count($values) != 12) {
+                    $this->warning('Columns Count', count($values) . ' columns find, expecting ' . $columnNumbers, $values);
+                    continue;
+                }*/
 
 
 
