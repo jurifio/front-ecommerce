@@ -297,11 +297,11 @@ class CNewsletterRepo extends ARepo
             if (!$isExternal) {
                 /** @var CEmailRepo $emailRepo */
                 $emailRepo = \Monkey::app()->repoFactory->create('Email');
-                $emailRepo->newBatchMail($from, $to, $subject, $body, $newsletterId, $newsletterCloneId);
+                $emailRepo->newBatchMail($from, $to, $subject, $body, $newsletterId, $newsletterCloneId,'MailGun',false,null);
             } else {
                 /** @var CExternalEmailRepo $externalEmailRepo */
                 $externalEmailRepo = \Monkey::app()->repoFactory->create('ExternalEmail');
-                $externalEmailRepo->newExternalMail($from, $to, $subject, $body, $newsletterId, $newsletterCloneId);
+                $externalEmailRepo->newExternalMail($from, $to, $subject, $body, $newsletterId, $newsletterCloneId,'MailGun',false,null);
             }
 
         } catch (\Throwable $e) {
