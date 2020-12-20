@@ -2,7 +2,7 @@
     "entity": {
         "name": "BillRegistryTimeTable",
         "keys": ["id"],
-        "cacheable" : "true",
+        "cacheable" : "false",
         "children": [
             {
                 "name": "billRegistryInvoice",

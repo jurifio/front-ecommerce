@@ -2,7 +2,8 @@
     "entity": {
         "name": "BillRegistryInvoice",
         "keys": ["id"],
-        "cacheable" : "true",
+        "cacheable" : "false",
+        "cacheExpiration": 86400,
         "children": [
             {
                 "name": "billRegistryClient",

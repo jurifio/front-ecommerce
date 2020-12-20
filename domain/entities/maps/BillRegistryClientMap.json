@@ -3,6 +3,7 @@
         "name": "BillRegistryClient",
         "keys": ["id"],
         "cacheable" : "true",
+        "cacheExpiration": 86400,
         "children": [
             {
                 "name": "billRegistryClientAccount",

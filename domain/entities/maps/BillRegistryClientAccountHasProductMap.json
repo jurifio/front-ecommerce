@@ -3,6 +3,7 @@
         "name": "BillRegistryClientAccountHasProduct",
         "keys": ["id"],
         "cacheable" : "true",
+        "cacheExpiration": 86400,
         "children": [
             {
                 "name": "billRegistryGroupProduct",
