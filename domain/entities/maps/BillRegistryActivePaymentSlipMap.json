@@ -2,7 +2,7 @@
     "entity": {
         "name": "BillRegistryActivePaymentSlip",
         "keys": ["id"],
-        "cacheable" : "true",
+        "cacheable" : "false",
         "children": [
             {
                 "name": "billRegistryTimeTable",
