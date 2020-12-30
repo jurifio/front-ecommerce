@@ -1,7 +1,7 @@
 {
     "entity": {
-        "name": "ProductHasShopDestination",
-        "keys": ["id"],
+        "name": "ProductShareHasShopDestination",
+        "keys": ["productId","productVariantId","shopId"],
         "cacheable" : "true",
         "cacheExpiration": 86400,
         "children": [
@@ -216,11 +216,11 @@
                 "type": "OneToOne"
             },
             {
-                "name": "productShareHasShopDestination",
-                "entity": "ProductShareHasShopDestination",
+                "name": "productHasShopDestination",
+                "entity": "ProductHasShopDestination",
                 "parentKeys": ["productId","productVariantId","shopId"],
                 "childKeys": ["productId","productVariantId","shopId"],
-                "type": "ManyToOne"
+                "type": "OneToMany"
             }
         ]
     }

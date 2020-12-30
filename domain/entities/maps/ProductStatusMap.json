@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "ProductStatus",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": ["id"],
+                "childKeys": ["productStatusId"],
+                "type": "OneToMany"
+            },{
+                "name": "productHasShopDestination",
+                "entity": "ProductHasShopDestination",
+                "parentKeys": ["id"],
+                "childKeys": ["statusId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}
