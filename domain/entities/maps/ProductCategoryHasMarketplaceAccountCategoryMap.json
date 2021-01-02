@@ -1,0 +1,94 @@
+{
+    "entity": {
+        "name": "ProductCategoryHasMarketplaceAccountCategory",
+        "keys": [
+            "productCategoryId",
+            "marketplaceId",
+            "marketplaceAccountId",
+            "marketplaceAccountCategoryId"
+        ],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "productCategory",
+                "entity": "ProductCategory",
+                "parentKeys": [
+                    "productCategoryId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productCategoryTranslation",
+                "entity": "ProductCategoryTranslation",
+                "parentKeys": [
+                    "productCategoryId"
+                ],
+                "childKeys": [
+                    "productCategoryId"
+                ],
+                "type": "OneToMany",
+                "lang": true
+            },
+            {
+                "name": "productHasProductCategory",
+                "entity": "ProductHasProductCategory",
+                "parentKeys": [
+                    "productCategoryId"
+                ],
+                "childKeys": [
+                    "productCategoryId"
+                ],
+                "type": "OneToMany"
+            },
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": "productCategoryId",
+                "childKeys": [
+                    "id",
+                    "productVariantId"
+                ],
+                "joinOn": {
+                    "table": "ProductHasProductCategory",
+                    "parentKeys": [
+                        "productCategoryId"
+                    ],
+                    "childKeys": [
+                        "productId",
+                        "productCategoryId"
+                    ]
+                },
+                "type": "ManyToMany"
+            },
+            {
+                "name": "marketplaceAccountCategory",
+                "table": "MarketplaceAccountCategory",
+                "parentKeys": [
+                    "marketplaceId",
+                    "marketplaceAccountId",
+                    "marketplaceAccountCategoryId"
+                ],
+                "childKeys": [
+                    "marketplaceId",
+                    "marketplaceAccountId",
+                    "marketplaceAccountCategoryId"
+                ],
+                "type": "ManyToMany"
+            },
+            {
+                "name": "productCategoryHasPrestashopCategory",
+                "entity": "ProductCategoryHasPrestashopCategory",
+                "parentKeys": [
+                    "productCategory"
+                ],
+                "childKeys": [
+                    "productCategoryId"
+                ],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

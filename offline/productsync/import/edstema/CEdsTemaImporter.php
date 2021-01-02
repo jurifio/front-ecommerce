@@ -338,7 +338,7 @@ $linecountRow=0;
 
                     $this->debug('Read Sku','Updating Sku',$sku);
                     $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$id]);
-                    $dirtySkuUpdate->value=$sku['price'];
+                    $dirtySkuUpdate->value=$sku['value'];
                     $dirtySkuUpdate->salePrice=$sku['salePrice'];
                     $dirtySkuUpdate->price=$sku['price'];
                     $dirtySkuUpdate->storeHouseId=$sku['storeHouseId'];
