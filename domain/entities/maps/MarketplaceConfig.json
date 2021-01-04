@@ -1,0 +1,22 @@
+{
+    "entity": {
+        "name": "MarketplaceConfig",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "marketplaceAccount",
+                "entity": "MarketplaceAccount",
+                "parentKeys": ["marketplaceId","marketplaceAccountId"],
+                "childKeys": ["marketplaceId","id"],
+                "type": "ManyToOne"
+            },{
+                "name": "marketplace",
+                "entity": "Marketplace",
+                "parentKeys": ["marketplaceId"],
+                "childKeys": ["id"],
+                "type": "ManyToOne"
+            }
+        ]
+    }
+}

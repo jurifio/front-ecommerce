@@ -22,6 +22,12 @@
                 "parentKeys": ["id","marketplaceId"],
                 "childKeys": ["marketplaceAccountId","marketplaceId"],
                 "type": "OneToMany"
+            },{
+                "name": "marketplaceConfig",
+                "entity": "MarketplaceConfig",
+                "parentKeys": ["id","marketplaceId"],
+                "childKeys": ["marketplaceId","marketplaceAccountId"],
+                "type": "OneToMany"
             }
         ]
     }

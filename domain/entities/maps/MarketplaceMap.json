@@ -10,6 +10,12 @@
                 "parentKeys": ["id"],
                 "childKeys": ["marketplaceId"],
                 "type": "OneToMany"
+            },{
+                "name": "marketplaceConfig",
+                "entity": "MarketplaceConfig",
+                "parentKeys": ["id"],
+                "childKeys": ["marketplaceId"],
+                "type": "OneToMany"
             }
         ]
     }
