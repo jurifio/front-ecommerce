@@ -48,7 +48,7 @@ class CPrestashopHasProductRepo extends ARepo
                 'productVariantId' => $productVariantId
             ]);
 
-        $prestashopHasProduct->statusPublished = $status;
+        $prestashopHasProduct->status = $status;
         $prestashopHasProduct->update();
 
         return $prestashopHasProduct;
