@@ -26,8 +26,10 @@ use bamboo\core\db\pandaorm\entities\AEntity;
 class CPrestashopHasProduct extends AEntity
 {
 
-    CONST UPDATED = 'Aggiornato';
+    CONST UPDATED = 'Inserito';
     CONST TOUPDATE = 'Da aggiornare';
+    CONST TOINSERT = 'Da Inserire';
+
 
     protected $entityTable = 'PrestashopHasProduct';
     protected $primaryKeys = ['productId','productVariantId'];
