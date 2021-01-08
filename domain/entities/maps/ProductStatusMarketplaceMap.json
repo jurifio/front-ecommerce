@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "ProductStatusMarketplace",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "prestashopHasProduct",
+                "entity": "PrestashopHasProduct",
+                "parentKeys": ["id"],
+                "childKeys": ["productStatusMarketplaceId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

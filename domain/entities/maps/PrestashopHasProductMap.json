@@ -40,6 +40,13 @@
                 "parentKeys": ["productId","productVariantId"],
                 "childKeys": ["productId","productVariantId"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "productStatusMarketplace",
+                "entity": "ProductStatusMarketplace",
+                "parentKeys": ["productStatusMarketplaceId"],
+                "childKeys": ["id"],
+                "type": "ManyToOne"
             }
         ]
     }

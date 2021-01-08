@@ -21,7 +21,7 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  * @property CProduct $product
  * @property CObjectCollection $marketplaceHasShop
  * @property CObjectCollection $prestashopHasProductHasMarketplaceHasShop
- *
+ * @property CObjectCollection $productStatusMarketplace
  */
 class CPrestashopHasProduct extends AEntity
 {
