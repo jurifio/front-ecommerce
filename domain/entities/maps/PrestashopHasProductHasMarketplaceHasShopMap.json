@@ -17,6 +17,13 @@
                 "parentKeys": ["productId","productVariantId"],
                 "childKeys": ["id","productVariantId"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "prestashopHasProduct",
+                "entity": "PrestashopHasProduct",
+                "parentKeys": ["productId","productVariantId","marketplaceHasShopId"],
+                "childKeys": ["productId","productVariantId","marketplaceHasShopId"],
+                "type": "OneToOne"
             }
         ]
     }
