@@ -28,7 +28,8 @@ class CPrestashopHasProduct extends AEntity
 
     CONST UPDATED = 'Inserito';
     CONST TOUPDATE = 'Da aggiornare';
-    CONST TOINSERT = 'Da Inserire';
+    CONST TOBOOKINGDELETE = 'Da Cancellare';
+    CONST DELETED ="Cancellato";
 
 
     protected $entityTable = 'PrestashopHasProduct';
