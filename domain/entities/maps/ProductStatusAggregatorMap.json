@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "ProductStatusAggregator",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "aggregatorHasProduct",
+                "entity": "AggregatorHasProduct",
+                "parentKeys": ["id"],
+                "childKeys": ["productStatusAggregatorId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

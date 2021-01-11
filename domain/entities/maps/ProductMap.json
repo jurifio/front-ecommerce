@@ -286,6 +286,13 @@
                 "type": "OneToOne"
             },
             {
+                "name": "aggregatorHasProduct",
+                "entity": "AggregatorHasProduct",
+                "parentKeys": ["id","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToOne"
+            },
+            {
                 "name": "productEan",
                 "entity": "ProductEan",
                 "parentKeys": ["id","productVariantId"],

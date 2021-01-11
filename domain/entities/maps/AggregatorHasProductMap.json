@@ -1,0 +1,65 @@
+{
+    "entity": {
+        "name": "AggregatorHasProduct",
+        "keys": [
+            "productId",
+            "productVariantId"
+        ],
+        "cacheable": "false",
+        "children": [
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["id","productVariantId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "aggregatorHasShop",
+                "entity": "AggregatorHasShop",
+                "parentKeys": ["aggregatorHasShopId"],
+                "childKeys": ["id"],
+                "type": "ManyToOne"
+            },
+            {
+                "name": "marketplaceAccountHasProduct",
+                "entity": "marketplaceAccountHasProduct",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId",
+                    "marketplaceProductId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId",
+                    "marketplaceProductId"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId"
+                ],
+                "type": "OneToMany"
+            },
+            {
+                "name": "productStatusAggregator",
+                "entity": "ProductStatusAggregator",
+                "parentKeys": [
+                    "productStatusAggregatorId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "ManyToOne"
+            }
+        ]
+    }
+}
