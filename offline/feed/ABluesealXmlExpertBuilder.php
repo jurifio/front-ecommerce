@@ -32,7 +32,9 @@ abstract class ABluesealXmlExpertBuilder extends AExpertFeedBuilder
         $writer->writeAttribute('xmlns', 'http://iwes.it/schemas/productsFeed/2.1/');
         $writer->writeAttribute('xsi:schemaLocation', 'http://iwes.it/schemas/productsFeed/2.1/ http://iwes.it/schemas/productsFeed/2.1/');
         $writer->startElement('feed');
-        $writer->writeElement('shop', $this->marketplaceAccount->config['shop']);
+        $shopFind=$this->marketplaceAccount->config['shopId'];
+        $shopName=$shopFind->name;
+        $writer->writeElement('shop', $shopName);
         $writer->writeElement('shopId', $this->marketplaceAccount->config['shopId']);
         $writer->writeElement('date', (new \DateTime())->format(DATE_ATOM));
         $writer->writeElement('action', 'set');
