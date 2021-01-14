@@ -28,12 +28,16 @@ use bamboo\domain\repositories\CProductSkuRepo;
 class CMarketplaceAccountHasProductRepo extends ARepo
 {
 
-    public function addProductToMarketplaceAccount(CProduct $product, CMarketplaceAccount $marketplaceAccount, $cpc = null, $priceModifier = null, $activeAutomatic = null)
+    public function addProductToMarketplaceAccount(CProduct $product, CMarketplaceAccount $marketplaceAccount, $cpc = null, $cpcM=null, $priceModifier = null, $activeAutomatic = null)
     {
         $config = $marketplaceAccount -> config;
         if (!is_null($cpc)) {
             $config['cpc'] = $cpc;
         }
+        if (!is_null($cpcF)) {
+            $config['cpcM'] = $cpcM;
+        }
+
         if (!is_null($priceModifier)) {
             $config['priceModifier'] = $priceModifier;
         }
