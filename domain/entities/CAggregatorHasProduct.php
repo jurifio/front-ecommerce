@@ -22,6 +22,7 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  * @property CObjectCollection $aggregatorHasShop
  * @property CObjectCollection $marketplaceAccountHasProduct
  * @property CObjectCollection $productStatusAggregator
+ * @property CObjectCollection $productSku;
  */
 class CAggregatorHasProduct extends AEntity
 {
