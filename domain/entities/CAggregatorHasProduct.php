@@ -28,6 +28,7 @@ class CAggregatorHasProduct extends AEntity
 {
 
     CONST UPDATED = 'Inserito';
+    const MANUAL ='Inserito Manualmente';
     CONST TOUPDATE = 'Da aggiornare';
     CONST TOBOOKINGDELETE = 'Da Cancellare';
     CONST DELETED ="Cancellato";
