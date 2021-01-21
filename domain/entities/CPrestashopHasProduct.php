@@ -33,7 +33,7 @@ class CPrestashopHasProduct extends AEntity
 
 
     protected $entityTable = 'PrestashopHasProduct';
-    protected $primaryKeys = ['productId','productVariantId'];
+    protected $primaryKeys = ['productId','productVariantId','marketplaceHasShopId'];
 
     public function getShopsForProduct() {
         /** @var CObjectCollection $phphmhsColl */
