@@ -35,7 +35,7 @@ class CAggregatorHasProduct extends AEntity
 
 
     protected $entityTable = 'AggregatorHasProduct';
-    protected $primaryKeys = ['productId','productVariantId'];
+    protected $primaryKeys = ['productId','productVariantId','aggregatorHasShopId'];
 
     public function getShopsForProduct() {
         /** @var CObjectCollection $mahpColl */

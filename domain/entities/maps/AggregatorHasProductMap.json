@@ -3,7 +3,8 @@
         "name": "AggregatorHasProduct",
         "keys": [
             "productId",
-            "productVariantId"
+            "productVariantId",
+            "aggregatorHasShopId"
         ],
         "cacheable": "false",
         "children": [
