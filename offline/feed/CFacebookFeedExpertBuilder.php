@@ -179,7 +179,7 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $productEan =  \Monkey::app()->repoFactory->create('ProductEan')->findOneBy(['productId' => $product->id, 'productVariantId' => $product->productVariantId,'used'=>'1']);
             if ($productEan != null) {
                 $ean = $productEan->ean;
-                if(strlen($sku->ean)==13) {
+                if(strlen($ean)==13) {
                     $writer->writeElement('g:gtin',$ean);
                 }
             }
