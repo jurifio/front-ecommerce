@@ -1,0 +1,53 @@
+{
+    "entity": {
+        "name": "ShopHasProduct",
+        "keys": ["productId", "productVariantId","shopId","shopIdDestination"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["id","productVariantId"],
+                "type": "OneToOne"
+            },{
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "dirtyProduct",
+                "entity": "DirtyProduct",
+                "parentKeys": ["productId","productVariantId","shopId"],
+                "childKeys": ["productId","productVariantId","shopId"],
+                "type": "OneToMany"
+            },{
+                "name": "productHasProductCorrelation",
+                "entity": "ProductHasProductCorrelation",
+                "parentKeys": ["productId","productVariantId","shopId"],
+                "childKeys": ["productId","productVariantId","shopId"],
+                "type": "OneToMany"
+            },{
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": ["productId", "productVariantId", "shopId"],
+                "childKeys": ["productId", "productVariantId", "shopId"],
+                "type": "OneToMany"
+            },{
+                "name": "productSizeGroup",
+                "entity": "ProductSizeGroup",
+                "parentKeys": ["productSizeGroupId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+                "name": "productHasShopDestination",
+                "entity": "ProductHasShopDestination",
+                "parentKeys": ["productId","productVariantId","shopId","shopIdDestination"],
+                "childKeys": ["productId","productVariantId","shopIdOrigin","shopIdDestination"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}
