@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "PlanningWorkStatus",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "planningWorkStatus",
+                "entity": "PlanningWorkStatus",
+                "parentKeys": ["id"],
+                "childKeys": ["planningWorkStatusId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

@@ -1,14 +1,14 @@
 {
     "entity": {
-        "name": "Ticket",
+        "name": "PlanningWork",
         "keys": [
             "id"
         ],
-        "cacheable": "true",
+        "cacheable": "false",
         "children": [
             {
-                "name": "ticketStatus",
-                "entity": "TicketStatus",
+                "name": "planningWorkStatus",
+                "entity": "PlanningWorkStatus",
                 "parentKeys": [
                     "statusTicketId"
                 ],
@@ -38,6 +38,28 @@
                     "id"
                 ],
                 "type": "ManyToOne"
+            },
+            {
+                "name": "billRegistryInvoice",
+                "entity": "BillRegistryInvoice",
+                "parentKeys": [
+                    "billRegistryInvoiceId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "billRegistryInvoiceRow",
+                "entity": "BillRegistryInvoiceRow",
+                "parentKeys": [
+                    "billRegistryInvoiceId","billRegistryInvoiceRowId"
+                ],
+                "childKeys": [
+                    "billRegistryInvoiceId","id"
+                ],
+                "type": "OneToOne"
             }
         ]
     }

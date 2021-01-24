@@ -5,11 +5,11 @@ namespace bamboo\domain\entities;
 use bamboo\core\db\pandaorm\entities\AEntity;
 
 /**
- * Class CTicket
+ * Class CTicketStatus
  * @package bamboo\app\domain\entities
  */
-class CTicket extends AEntity
+class CPlanningWorkStatus extends AEntity
 {
-    protected $entityTable = 'Ticket';
+    protected $entityTable = 'PlanningWorkStatus';
     protected $primaryKeys = ['id'];
 }
