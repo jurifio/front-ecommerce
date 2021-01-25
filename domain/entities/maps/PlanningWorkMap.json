@@ -10,7 +10,18 @@
                 "name": "planningWorkStatus",
                 "entity": "PlanningWorkStatus",
                 "parentKeys": [
-                    "statusTicketId"
+                    "planningWorkStatusId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "planningWorkType",
+                "entity": "PlanningWorkType",
+                "parentKeys": [
+                    "planningWorkTypeId"
                 ],
                 "childKeys": [
                     "id"
