@@ -1,0 +1,45 @@
+{
+    "entity": {
+        "name": "PlanningWorkEvent",
+        "keys": [
+            "id",
+            "planningWorkId"
+        ],
+        "cacheable": "false",
+        "children": [
+            {
+                "name": "planningWorkStatus",
+                "entity": "PlanningWorkStatus",
+                "parentKeys": [
+                    "planningWorkStatusId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "planningWorkType",
+                "entity": "PlanningWorkType",
+                "parentKeys": [
+                    "planningWorkTypeId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "OneToOne"
+            },
+            {
+                "name": "planningWork",
+                "entity": "PlanningWork",
+                "parentKeys": [
+                    "planningWorkId"
+                ],
+                "childKeys": [
+                    "id"
+                ],
+                "type": "ManyToOne"
+            }
+        ]
+    }
+}

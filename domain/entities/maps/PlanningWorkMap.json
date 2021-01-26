@@ -71,6 +71,17 @@
                     "billRegistryInvoiceId","id"
                 ],
                 "type": "OneToOne"
+            },
+            {
+                "name": "planningWorkEvent",
+                "entity": "PlanningWorkEvent",
+                "parentKeys": [
+                    "id"
+                ],
+                "childKeys": [
+                    "planningWorkId"
+                ],
+                "type": "OneToMany"
             }
         ]
     }
