@@ -80,13 +80,19 @@ class CShopALikeNewFeedExportBuilder extends AExpertFeedBuilder
         }
         $name = $product->getName();
         $writer->writeElement('name', $name);
+        $n=1;
         foreach ($product->productCategory as $category) {
             if ($category->id == 1) continue;
-            $writer->writeElement("category", $category->getLocalizedPath("/"));
+             if($n==1) {
+                 $writer->writeElement("category",$category->getLocalizedPath("/"));
+             }
+            $n++;
+
         }
         $categories = $product->getMarketplaceAccountCategoryIds($marketplaceAccountHasProduct->marketplaceAccount);
         $writer->writeElement('category1', $categories[0]);
-        $writer->writeElement('gender', $product->getGender());
+        $categoriesGender = $product->productCategory->getFirst()->getLocalizedPathArray();
+        $writer->writeElement('gender', $categoriesGender[0]);
         $writer->writeElement('color', $product->productColorGroup->productColorGroupTranslation->getFirst()->name);
         $writer->writeElement('brand', $product->productBrand->name);
         $writer->startElement('material');
