@@ -34,7 +34,7 @@ class CMarketplaceAccountHasProductRepo extends ARepo
         if (!is_null($cpc)) {
             $config['cpc'] = $cpc;
         }
-        if (!is_null($cpcF)) {
+        if (!is_null($cpcM)) {
             $config['cpcM'] = $cpcM;
         }
 
