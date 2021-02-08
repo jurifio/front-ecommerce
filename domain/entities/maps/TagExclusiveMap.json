@@ -11,7 +11,24 @@
                 "childKeys": ["tagExclusiveId"],
                 "type": "OneToMany",
                 "lang": true
+            },
+            {
+                "name": "storeHouse",
+                "entity": "StoreHouse",
+                "parentKeys": ["storeHouseId","shopId"],
+                "childKeys": ["id","shopId"],
+                "type": "OneToMany'",
+                "lang": true
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToMany'",
+                "lang": true
             }
+
         ]
     }
 }
