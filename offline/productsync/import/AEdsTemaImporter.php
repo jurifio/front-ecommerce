@@ -1,14 +1,11 @@
 <?php
-
 namespace bamboo\ecommerce\offline\productsync\import;
-
 use bamboo\core\exceptions\RedPandaException;
-
 /**
  * Class AEdsTemaImporter
  * @package bamboo\ecommerce\offline\productsync\import
- * @author Bambooshoot Team <emanuele@bambooshoot.agency>, ${DATE}
- * @copyright (c) Bambooshoot snc - All rights reserved
+ * @author Iwes snc <juri@iwes.ir>, ${DATE}
+ * @copyright (c) Iwes snc - All rights reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  *
@@ -21,36 +18,30 @@ abstract class AEdsTemaImporter extends AProductImporter
     protected $main;
     protected $mainF;
     protected $err = false;
-
     protected $seenSkus = [];
-
     /**
      * @param null $args
      */
     public function run($args = null)
     {
         $this->report( "Run", "Import START", "Inizio importazione " . $this->shop->name);
-
-        $this->report( "Run", "Fetch Filse", "Carico i files");
+        $this->report( "Run", "Fetch Files", "Get  files");
         $this->fetchFiles();
-        $this->report( "Run", "Read Files", "Leggo i files");
+        $this->report( "Run", "Read Files", "Reading  files");
         $this->readFiles();
         sleep(2);
-        $this->report( "Run", "Read Main", "Leggo il file Main cercando Prodotti");
+        $this->report( "Run", "Read Main", "Reading  Main File  and Finding  Parent Products");
         sleep(2);
         $this->readMain();
-        $this->report( "Run", "Read Sku", "Leggo il file degli Sku");
+        $this->report( "Run", "Read Sku", "Reading  Sku file and Finding Child products");
         sleep(2);
         $this->readSku();
-        $this->report( "Run", "Find Zero Skus", "Azzero le quantità dei prodotti non elaborati");
+        $this->report( "Run", "Find Zero Skus", "keep dirty Products with zero quantity");
         sleep(2);
         $this->findZeroSkus();
         $this->saveFiles();
-        $this->report( "Run", "Import END", "Inizio importazione " . $this->shop->name);
-
-        echo 'done';
+        $this->report( "Run", "Import END", "Fine importazione " . $this->shop->name);
     }
-
     /**
      *
      */
@@ -59,7 +50,6 @@ abstract class AEdsTemaImporter extends AProductImporter
         /** PRODUCTS */
         $files = glob($this->app->rootPath().$this->app->cfg()->fetch('paths', 'productSync') . '/' . $this->shop->name . '/PRODUCTS_*.CSV');
         $products = $files[count($files) - 1];
-
         $size = filesize($products);
         while ($size != filesize($products)) {
             sleep(2);
