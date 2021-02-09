@@ -39,6 +39,7 @@ use bamboo\domain\repositories\CProductHistoryRepo;
  * @property CObjectCollection $productNameTranslation
  * @property CProductSizeGroup $productSizeGroup
  * @property CObjectCollection $tag
+ *  * @property CObjectCollection $tagExclusive
  * @property CProductStatus $productStatus
  * @property CObjectCollection $shopHasProduct
  * @property CObjectCollection $productDescriptionTranslation
@@ -381,6 +382,20 @@ class CProduct extends AEntity
     {
         $tags = [];
         foreach ($this->tag as $tag) {
+            if ($onlyPublics && $tag->isPublic == 0) continue;
+            $tags[] = $tag->getLocalizedName();
+        }
+        return implode($separator1, $tags);
+    }
+    /**
+     * @param string $separator1
+     * @param bool $onlyPublics
+     * @return string
+     */
+    public function getLocalizedTagsExclusive($separator1 = " ", $onlyPublics = true)
+    {
+        $tags = [];
+        foreach ($this->tagExclusive as $tag) {
             if ($onlyPublics && $tag->isPublic == 0) continue;
             $tags[] = $tag->getLocalizedName();
         }
