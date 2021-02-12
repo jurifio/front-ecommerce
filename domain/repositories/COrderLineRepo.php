@@ -1060,6 +1060,28 @@ class COrderLineRepo extends ARepo
         } else return false;
         return true;
     }
+    /**
+     * cambia la friendRevenue
+     * @param $price
+     * @return bool
+     */
+    public
+    function changeCost(COrderLine $orderLine,$price)
+    {
+        if (is_string($price)) {
+            $price = floatval($price);
+        }
+        if (is_float($price)) {
+            try {
+                $orderLine->cost = round($price,2);
+                $orderLine->update();
+
+            } catch (\Throwable $e) {
+                $this->app->router->response()->raiseUnauthorized();
+            }
+        } else return false;
+        return true;
+    }
 
     /**
      * @param COrderLine $orderLine
