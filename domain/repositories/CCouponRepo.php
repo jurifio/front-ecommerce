@@ -62,4 +62,31 @@ class CCouponRepo extends ARepo
         $coupon->smartInsert();
         return $coupon;
     }
+    public   function createCouponFromTypeSpecial($couponType,$netTotal, $userId = null) {
+        if(!$couponType instanceof CCouponType) {
+            $couponType = \Monkey::app()->repoFactory->create('CouponType')->findOneByStringId($couponType);
+        }
+
+        $coupon = $this->getEmptyEntity();
+
+        $serial = new CSerialNumber();
+        $serial->generate();
+
+        $today = new \DateTime();
+        $coupon->issueDate = $today->format('Y-m-d');
+
+        $coupon->validThru = STimeToolbox::DbFormattedDateTime($today->add(new \DateInterval($couponType->validity)));
+
+        $coupon->code = $serial->__toString();
+        $amount=($netTotal/100) * $couponType->amount;
+        $coupon->amount = round($amount,0,PHP_ROUND_HALF_UP);
+        $coupon->couponTypeId = $couponType->id;
+
+        if ($userId != 0) {
+            $coupon->userId = $userId;
+        }
+
+        $coupon->smartInsert();
+        return $coupon;
+    }
 }
