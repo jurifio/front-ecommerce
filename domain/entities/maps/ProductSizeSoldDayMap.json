@@ -1,9 +1,10 @@
 {
     "entity": {
-        "name": "ProductSoldDay",
+        "name": "ProductSizeSoldDay",
         "keys": [
             "productId",
             "productVariantId",
+            "productSizeId",
             "shopId",
             "day",
             "month",
