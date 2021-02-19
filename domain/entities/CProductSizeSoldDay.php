@@ -20,7 +20,7 @@ use bamboo\core\exceptions\BambooException;
  */
 class CProductSizeSoldDay extends AEntity
 {
-    protected $entityTable = 'ProductSoldDay';
+    protected $entityTable = 'ProductSizeSoldDay';
     protected $primaryKeys = ['productId', 'productVariantId','productSizeId','shopId','day','month','year'];
 
 }
