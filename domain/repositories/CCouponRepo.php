@@ -54,6 +54,7 @@ class CCouponRepo extends ARepo
         $coupon->code = $serial->__toString();
         $coupon->amount = $couponType->amount;
         $coupon->couponTypeId = $couponType->id;
+        $coupon->amountType=$couponType->amountType;
 
         if ($userId != 0) {
             $coupon->userId = $userId;
@@ -81,6 +82,7 @@ class CCouponRepo extends ARepo
         $amount=($netTotal/100) * $couponType->amount;
         $coupon->amount = round($amount,0,PHP_ROUND_HALF_UP);
         $coupon->couponTypeId = $couponType->id;
+        $coupon->amountType=$couponType->amountType;
 
         if ($userId != 0) {
             $coupon->userId = $userId;
