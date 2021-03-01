@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "Banner",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "campaign",
+                "entity": "Campaign",
+                "parentKeys": ["campaignId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

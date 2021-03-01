@@ -70,6 +70,12 @@
                 "parentKeys": ["id"],
                 "childKeys": ["shopId"],
                 "type": "OneToMany"
+            },{
+                "name": "banner",
+                "entity": "Banner",
+                "parentKeys": ["id"],
+                "childKeys": ["shopId"],
+                "type": "OneToMany"
             }
         ]
     }

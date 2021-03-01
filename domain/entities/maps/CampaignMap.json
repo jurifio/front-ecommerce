@@ -17,6 +17,13 @@
                 "parentKeys": ["id"],
                 "childKeys": ["campaignId"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "banner",
+                "entity": "Banner",
+                "parentKeys": ["id"],
+                "childKeys": ["campaignId"],
+                "type": "OneToMany"
             }
         ]
     }
