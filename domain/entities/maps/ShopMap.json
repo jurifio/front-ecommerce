@@ -74,7 +74,7 @@
                 "name": "banner",
                 "entity": "Banner",
                 "parentKeys": ["id"],
-                "childKeys": ["shopId"],
+                "childKeys": ["remoteShopId"],
                 "type": "OneToMany"
             }
         ]

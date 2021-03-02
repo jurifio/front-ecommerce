@@ -14,7 +14,7 @@
             {
                 "name": "shop",
                 "entity": "Shop",
-                "parentKeys": ["shopId"],
+                "parentKeys": ["remoteShopId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"
             }
