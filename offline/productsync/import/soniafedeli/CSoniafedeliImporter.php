@@ -301,11 +301,11 @@ class CSoniafedeliImporter extends ABluesealProductImporter
                     $this->debug('Cycle','product checking item_imgs',$one->sku);
                     $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto',['dirtyProductId' => $dirtyProduct["id"]])->fetchAll();
                     $position = 0;
-                    foreach($one->images as $image) {
-                        foreach ($image->src as $img) {
-                            if (empty(trim($img))) continue;
+                    foreach($one->images as $img) {
+
+                            if (empty(trim($img->src))) continue;
                             foreach ($dirtyPhotos as $exImg) {
-                                if ($exImg['url'] == $img) continue 2;
+                                if ($exImg['url'] == $img->src) continue 2;
                             }
                             $position++;
                             \Monkey::app()->dbAdapter->insert('DirtyPhoto',[
@@ -317,7 +317,7 @@ class CSoniafedeliImporter extends ABluesealProductImporter
                                 'worked' => 0
                             ]);
                         }
-                    }
+
 
 
                 } catch (\Throwable $e) {
