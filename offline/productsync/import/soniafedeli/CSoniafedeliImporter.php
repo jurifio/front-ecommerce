@@ -89,7 +89,6 @@ class CSoniafedeliImporter extends ABluesealProductImporter
                     $newDirtyProduct["itemno"] = $one->sku;
                     $newDirtyProduct["value"] = floatval(str_replace(',','.',$one->price));
                     $newDirtyProduct["price"] = floatval(str_replace(',','.',$one->price));
-                    $newDirtyProduct["salePrice"] = floatval(str_replace(',','.',$one->salePrice));
                     $newDirtyProduct["var"] = $one->slug;
                     $newDirtyProduct["text"] = implode(',',$newDirtyProduct);
 
