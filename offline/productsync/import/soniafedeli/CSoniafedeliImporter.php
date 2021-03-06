@@ -164,7 +164,7 @@ class CSoniafedeliImporter extends ABluesealProductImporter
                     \Monkey::app()->repoFactory->commit();
                 } catch (\Throwable $e) {
                     \Monkey::app()->repoFactory->rollback();
-                    $this->error('processFile','Error reading Product: ' . json_encode($one),$e);
+                    $this->error('processFile','Error reading Product: ' . $one->sku,$e->getLine().'-'.$e->getMessage());
                     continue;
                 }
 
