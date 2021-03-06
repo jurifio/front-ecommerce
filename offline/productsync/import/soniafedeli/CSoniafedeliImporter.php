@@ -62,7 +62,7 @@ class CSoniafedeliImporter extends ABluesealProductImporter
         $page=10;
         $i=1;
         $countProduct=0;
-        $this->report('processFile','Elements: ' . count($rawData));
+        $this->report('processFile','Elements: ' ,'');
         for ($i = 1; $i < $page; $i++) {
             // Array of response results.
             $results = $woocommerce->get('products',array('page' => $i,'per_page' => 100));
