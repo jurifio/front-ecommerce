@@ -311,7 +311,7 @@ class CSoniafedeliImporter extends ABluesealProductImporter
                             \Monkey::app()->dbAdapter->insert('DirtyPhoto',[
                                 'dirtyProductId' => $dirtyProduct["id"],
                                 'shopId' => $this->getShop()->id,
-                                'url' => $img,
+                                'url' => $img->src,
                                 'location' => 'url',
                                 'position' => $position,
                                 'worked' => 0
