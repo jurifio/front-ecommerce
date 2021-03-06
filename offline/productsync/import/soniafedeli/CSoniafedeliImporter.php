@@ -106,9 +106,9 @@ class CSoniafedeliImporter extends ABluesealProductImporter
                         if($z==0){
                             $newDirtyProductExtend["cat2"] = $category->name;
                         }
-                        if($z==1){
+                        /*if($z==1){
                             $newDirtyProductExtend["cat3"] = $category->name;
-                        }
+                        }*/
                         $z++;
                     }
 
