@@ -302,7 +302,7 @@ class CSoniafedeliImporter extends ABluesealProductImporter
                     $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto',['dirtyProductId' => $dirtyProduct["id"]])->fetchAll();
                     $position = 0;
                     foreach($one->images as $image) {
-                        foreach ($image->name as $img) {
+                        foreach ($image->src as $img) {
                             if (empty(trim($img))) continue;
                             foreach ($dirtyPhotos as $exImg) {
                                 if ($exImg['url'] == $img) continue 2;
