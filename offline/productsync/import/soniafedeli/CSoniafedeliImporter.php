@@ -296,7 +296,7 @@ class CSoniafedeliImporter extends ABluesealProductImporter
                             $findDirtyHasStoreHouse->update();
                         }
                     }
-                    $this->debug('Cycle','product checking item_imgs',$one['img']);
+                    $this->debug('Cycle','product checking item_imgs',$one->sku);
                     $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto',['dirtyProductId' => $dirtyProduct["id"]])->fetchAll();
                     $position = 0;
                     foreach($one->images as $image) {
