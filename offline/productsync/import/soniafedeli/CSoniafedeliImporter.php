@@ -98,6 +98,8 @@ class CSoniafedeliImporter extends ABluesealProductImporter
                     $newDirtyProductExtend["name"] = $one->slug;
                     $newDirtyProductExtend["season"] = $productSeasonId;
                     $newDirtyProductExtend["description"] = $one->description;
+                    $newDirtyProductExtend["colorDescription"] = '-';
+                    $newDirtyProductExtend["generalColor"] = '-';
 
 
                     $newDirtyProductExtend["cat1"] = 'beauty Products';
@@ -174,7 +176,6 @@ class CSoniafedeliImporter extends ABluesealProductImporter
 
                     $dirtySku = [];
                     $mainKeyForSku = [];
-                    $mainKeyForSku["extId"] = $one->sku;
                     $mainKeyForSku["itemno"] = $one->sku;
                     $mainKeyForSku["var"] = $one->slug;
                     $mainKeyForSku["shopId"] = $this->getShop()->id;
@@ -188,7 +189,6 @@ class CSoniafedeliImporter extends ABluesealProductImporter
 
 
                     $newDirtySku["size"] = 'PZ';
-                    $newDirtySku["extSkuId"] = $one->sku;
                     $newDirtySku["shopId"] = $this->getShop()->id;
                     $newDirtySku["dirtyProductId"] = $dirtyProduct["id"];
                     $newDirtySku["value"] = floatval(str_replace(',','.',$one->price));
