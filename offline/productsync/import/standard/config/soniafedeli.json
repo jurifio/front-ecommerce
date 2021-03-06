@@ -1,0 +1,20 @@
+{
+    "filesConfig": {
+        "location": "url",
+        "istructions": {
+            "url": "http://www.soniafedeliparrucchieria.it",
+            "root": "__default__",
+            "folder": "import",
+            "glob": "*.json"
+        },
+        "extension": ".json"
+    },
+    "destFTPClient": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "PBYI34nbf",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    }
+}
