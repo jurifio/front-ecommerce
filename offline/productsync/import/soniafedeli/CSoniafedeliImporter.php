@@ -319,7 +319,7 @@ class CSoniafedeliImporter extends ABluesealProductImporter
 
 
                 } catch (\Throwable $e) {
-                    $this->error('processFile','Error reading Product: ' . json_encode($one),$e);
+                    $this->error('processFile','Error reading Product: ' . json_encode($one),$e->getLine().'-'.$e->getMessage());
                     continue;
                 }
 
