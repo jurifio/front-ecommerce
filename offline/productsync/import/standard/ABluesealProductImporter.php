@@ -1072,7 +1072,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 }
 
             } catch (\Throwable $e) {
-                $this->error('Downloading Photo', 'generic error: ' . $e->getMessage(), $e);
+                $this->error('Downloading Photo',  $e->getLine().'-generic error: ' . $e->getMessage());
             }
             $i++;
         }
