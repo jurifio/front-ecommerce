@@ -991,7 +991,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         if (!is_dir(rtrim($destDir, "/"))) if (!mkdir($destDir, 0777, true) && !is_dir($destDir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $destDir));
         }
-        $newMethod = true;
+        $newMethod = false;
         $i = 0;
         foreach ($res as $k => $v) {
             try {
