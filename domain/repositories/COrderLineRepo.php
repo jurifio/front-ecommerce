@@ -350,13 +350,16 @@ class COrderLineRepo extends ARepo
                     } else {
                         $hasInvoice = $cartForRemote->hasInvoice;
                     }
-                    $findIfExistOrder = $db_con->prepare('SELECT count(*) as countOrder, cartId as cartId, id as remoteOrderId from `Order` where remoteIwesOrderId=' . $orderLine->orderId);
+                    $findIfExistOrder = $db_con->prepare('SELECT count(*) as countOrder, cartId as cartId, id as remoteOrderId from `Order` where remoteIwesOrderId=' . $orderLine->orderId. ' limit 1');
                     $findIfExistOrder->execute();
-                    $rowFindIfExistOrder = $findIfExistOrder->fetch(PDO::FETCH_ASSOC);
-                    if ($rowFindIfExistOrder['countOrder'] == 0) {
+                    while($rowFindIfExistOrder = $findIfExistOrder->fetch(PDO::FETCH_ASSOC)){
+                        $countOrder=$rowFindIfExistOrder['countOrder'];
+                        $orderId=$rowFindIfExistOrder['remoteOrderId'];
+                    }
+                    if ($countOrder < 1) {
 
                         try {
-                            $insertRemoteCart = $db_con->prepare("INSERT INTO Cart (orderPaymentMethodId,
+                            $insertRemoteCart = $db_con->prepare(sprintf("INSERT INTO Cart (orderPaymentMethodId,
                                                                           couponId,
                                                                           userId,
                                                                           cartTypeId,  
@@ -368,18 +371,18 @@ class COrderLineRepo extends ARepo
                                                                           isParallel,
                                                                           isImport)
                                                                            VALUES (
-                                                                          " . $orderForRemote->orderPaymentMethodId . ",
+                                                                          %s,
                                                                           null,
-                                                                          " . $userRemoteId . ",
-                                                                          " . $cartForRemote->cartTypeId . ",
-                                                                          " . $billingAddressId . ",
-                                                                          " . $shipmentAddressId . ",
-                                                                          '" . $cartForRemote->lastUpdate . "',
-                                                                          '" . $cartForRemote->creationDate . "',
-                                                                          " . $hasInvoice . "
+                                                                          null,
+                                                                          %s,
+                                                                          %d,
+                                                                          %d,
+                                                                          '%s',
+                                                                          '%s',
+                                                                          %s
                                                                           ,1
                                                                           ,1
-                                                                          )");
+                                                                          )",$orderForRemote->orderPaymentMethodId,$cartForRemote->cartTypeId,$billingAddressId,$shipmentAddressId,$cartForRemote->lastUpdate,$cartForRemote->creationDate,$hasInvoice));
                             $insertRemoteCart->execute();
                         } catch (\Throwable $e) {
                             \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' . $findShopId->id,$e);
@@ -585,7 +588,7 @@ class COrderLineRepo extends ARepo
                         $findLastRemoteOrder = $db_con->prepare("select MAX(id) as orderId from `Order` ");
                         $findLastRemoteOrder->execute();
                         $rowFindLastRemoteOrder = $findLastRemoteOrder->fetch(PDO::FETCH_ASSOC);
-                        $orderId = $rowFindLastRemoteOrder['orderId'];
+                      //  $orderId = $rowFindLastRemoteOrder['orderId'];
                         try {
                             if ($findShopId->id != '1') {
                                 $insertRemoteOrderLine = $db_con->prepare(sprintf("INSERT INTO OrderLine (
