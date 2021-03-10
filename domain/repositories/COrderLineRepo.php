@@ -296,7 +296,6 @@ class COrderLineRepo extends ARepo
      * @param $orderLine
      * @param $newStatus
      * @param null $time
-     * @throws \Throwable
      */
 
     private function updateFriendOrderSending($orderLine,$newStatus,$time = null)
