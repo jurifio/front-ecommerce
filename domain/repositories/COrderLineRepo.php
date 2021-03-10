@@ -399,9 +399,7 @@ class COrderLineRepo extends ARepo
                         }
                         */
 
-                        $productSku = \Monkey::app()->repoFactory->
-                        create('ProductSku')->
-                        findOneBy(
+                        $productSku = \Monkey::app()->repoFactory->create('ProductSku')->findOneBy(
                             ['productId' => $orderLine->productId,
                                 'productVariantId' => $orderLine->productVariantId,
                                 'productSizeId' => $orderLine->productSizeId]);
@@ -583,12 +581,12 @@ class COrderLineRepo extends ARepo
              %s,
              1,        
              null,
-             %s,%s,%s)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto,$orderForRemote->orderIDMarketplace,$orderForRemote->orderTypeId,$orderForRemote->couponGenerateId);
+             null,null,null)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto);
 
                             $insertRemoteOrder->execute();
 
                         } catch (\Throwable $e) {
-                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ',$logsql,'');
+                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Order to Shop ',$logsql,'');
                         }
                         $findLastRemoteOrder = $db_con->prepare("select MAX(id) as orderId from `Order` ");
                         $findLastRemoteOrder->execute();
