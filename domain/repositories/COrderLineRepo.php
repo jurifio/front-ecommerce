@@ -426,7 +426,7 @@ class COrderLineRepo extends ARepo
             couponId,
             userId,
             cartId,
-          `status`,
+           `status`,
            frozenBillingAddress,
            frozenShippingAddress,
            billingAddressId,
@@ -458,7 +458,10 @@ class COrderLineRepo extends ARepo
            marketplaceOrderId,
            isShippingToIwes ,
            isImport,
-           orderIdFather          
+           orderIdFather,
+           orderIDMarketplace,
+             orderTypeId,
+             couponGenerateId        
            ) VALUES (
             6,
             null,
@@ -497,14 +500,15 @@ class COrderLineRepo extends ARepo
              %s,
              %s,
              1,        
-             null )",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto));
+             null,
+             %s,%s,%s)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto,$orderForRemote->orderIDMarketplace,$orderForRemote->orderTypeId,$orderForRemote->couponGenerateId));
                             $logsql = sprintf("INSERT INTO `Order` (
             orderPaymentMethodId,
             orderShippingMethodId,
             couponId,
             userId,
             cartId,
-          `status`,
+           `status`,
            frozenBillingAddress,
            frozenShippingAddress,
            billingAddressId,
@@ -533,10 +537,13 @@ class COrderLineRepo extends ARepo
            remoteSellerId,
            isOrderMarketplace,
            marketplaceId,
-           marketplaceOrderId ,
-           isShippingToIwes,
-           isImport ,
-           orderIdFather
+           marketplaceOrderId,
+           isShippingToIwes ,
+           isImport,
+           orderIdFather,
+           orderIDMarketplace,
+             orderTypeId,
+             couponGenerateId        
            ) VALUES (
             6,
             null,
@@ -574,8 +581,9 @@ class COrderLineRepo extends ARepo
              null,           
              %s,
              %s,
-             1,
-            null)",$userRemoteId,$cartId,$orderForRemote->status,$billingAddress,$orderForRemote->frozenShippingAddress,$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto);
+             1,        
+             null,
+             %s,%s,%s)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto,$orderForRemote->orderIDMarketplace,$orderForRemote->orderTypeId,$orderForRemote->couponGenerateId);
 
                             $insertRemoteOrder->execute();
 
