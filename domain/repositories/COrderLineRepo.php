@@ -503,7 +503,7 @@ class COrderLineRepo extends ARepo
              null,
             null,1,null)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto));
 
-                            $logsql = sprintf(sprintf("INSERT INTO `Order` (
+                       /*     $logsql = sprintf(sprintf("INSERT INTO `Order` (
             orderPaymentMethodId,
             orderShippingMethodId,
             couponId,
@@ -586,12 +586,12 @@ class COrderLineRepo extends ARepo
              %s,
              1,        
              null,
-            null,1,null)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto));
+            null,1,null)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto));*/
                             $insertRemoteOrder->execute();
 
 
                         } catch (\Throwable $e) {
-                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Order to Shop ',$logsql,'');
+                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Order to Shop ',$e->getMessage,$e->getLine());
                         }
                         $findLastRemoteOrder = $db_con->prepare("select MAX(id) as orderId from `Order` ");
                         $findLastRemoteOrder->execute();
