@@ -184,28 +184,28 @@ class COrderLineRepo extends ARepo
         $oldStatus = $orderLine->orderLineStatus;
         $shopRepo = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->remoteShopSellerId]);
         $orderRepo = \Monkey::app()->repoFactory->create('Order')->findOneBy(['id' => $orderLine->orderId,'remoteShopSellerId' => $orderLine->remoteShopSellerId]);
-      if(ENV=="prod") {
-          if ($orderLine->remoteOrderSellerId != null) {
-              $db_host = $shopRepo->dbHost;
-              $db_name = $shopRepo->dbName;
-              $db_user = $shopRepo->dbUsername;
-              $db_pass = $shopRepo->dbPassword;
-              $shop = $shopRepo->id;
-              try {
+        if (ENV == "prod") {
+            if ($orderLine->remoteOrderSellerId != null) {
+                $db_host = $shopRepo->dbHost;
+                $db_name = $shopRepo->dbName;
+                $db_user = $shopRepo->dbUsername;
+                $db_pass = $shopRepo->dbPassword;
+                $shop = $shopRepo->id;
+                try {
 
-                  $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}",$db_user,$db_pass);
-                  $db_con->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-                  $res = ' connessione ok <br>';
-              } catch (PDOException $e) {
-                  $res = $e->getMessage();
-              }
+                    $db_con = new PDO("mysql:host={$db_host};dbname={$db_name}",$db_user,$db_pass);
+                    $db_con->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+                    $res = ' connessione ok <br>';
+                } catch (PDOException $e) {
+                    $res = $e->getMessage();
+                }
 
-              $stmtOrder = $db_con->prepare("UPDATE `Order` SET `status`='" . $orderRepo->status . "' WHERE id=" . $orderRepo->remoteOrderSellerId);
-              $stmtOrder->execute();
-              $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteOrderLineSellerId . " and orderId=" . $orderLine->remoteOrderSellerId);
-              $stmtOrderLine->execute();
-          }
-      }
+                $stmtOrder = $db_con->prepare("UPDATE `Order` SET `status`='" . $orderRepo->status . "' WHERE id=" . $orderRepo->remoteOrderSellerId);
+                $stmtOrder->execute();
+                $stmtOrderLine = $db_con->prepare("UPDATE OrderLine SET `status`='" . $code . "' WHERE id=" . $orderLine->remoteOrderLineSellerId . " and orderId=" . $orderLine->remoteOrderSellerId);
+                $stmtOrderLine->execute();
+            }
+        }
 
 
         switch ($code) {
@@ -499,7 +499,7 @@ class COrderLineRepo extends ARepo
              %s,
              1,        
              null,
-             %s,%s,%s)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto,$orderForRemote->orderIDMarketplace,$orderForRemote->orderTypeId,$orderForRemote->couponGenerateId));
+            null,null,null)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto));
                             $logsql = sprintf("INSERT INTO `Order` (
             orderPaymentMethodId,
             orderShippingMethodId,
@@ -867,7 +867,7 @@ class COrderLineRepo extends ARepo
                     // vecchio inserimento seller
                     try {
 
-                            $stmtWalletMovements = $db_con->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible)
+                        $stmtWalletMovements = $db_con->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible)
                 VALUES (
                 ' . $orderId . ',
                 null,
@@ -880,7 +880,7 @@ class COrderLineRepo extends ARepo
                 \'Ordine Parallelo\',
                 1
                 )');
-                            $stmtWalletMovements->execute();
+                        $stmtWalletMovements->execute();
 
                     } catch (\Throwable $e) {
                         \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet Supplier Shop ','','');
@@ -937,11 +937,10 @@ class COrderLineRepo extends ARepo
                 }
 
             }
+        } catch
+        (\Throwable $e) {
+            \Monkey::app()->applicationLog('COrderLineRepo','Error','cannot work remote insert ',$e,'');
         }
-        catch
-            (\Throwable $e) {
-                \Monkey::app()->applicationLog('COrderLineRepo','Error','cannot work remote insert ',$e,'');
-            }
 
         $orderLine->update();
         return $orderLine;
@@ -1066,6 +1065,7 @@ class COrderLineRepo extends ARepo
         } else return false;
         return true;
     }
+
     /**
      * cambia la friendRevenue
      * @param $price
