@@ -184,7 +184,7 @@ class COrderLineRepo extends ARepo
         $oldStatus = $orderLine->orderLineStatus;
         $shopRepo = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->remoteShopSellerId]);
         $orderRepo = \Monkey::app()->repoFactory->create('Order')->findOneBy(['id' => $orderLine->orderId,'remoteShopSellerId' => $orderLine->remoteShopSellerId]);
-        if (ENV == "prod") {
+        if(ENV=="prod") {
             if ($orderLine->remoteOrderSellerId != null) {
                 $db_host = $shopRepo->dbHost;
                 $db_name = $shopRepo->dbName;
@@ -399,7 +399,9 @@ class COrderLineRepo extends ARepo
                         }
                         */
 
-                        $productSku = \Monkey::app()->repoFactory->create('ProductSku')->findOneBy(
+                        $productSku = \Monkey::app()->repoFactory->
+                        create('ProductSku')->
+                        findOneBy(
                             ['productId' => $orderLine->productId,
                                 'productVariantId' => $orderLine->productVariantId,
                                 'productSizeId' => $orderLine->productSizeId]);
@@ -424,7 +426,7 @@ class COrderLineRepo extends ARepo
             couponId,
             userId,
             cartId,
-           `status`,
+          `status`,
            frozenBillingAddress,
            frozenShippingAddress,
            billingAddressId,
@@ -447,7 +449,6 @@ class COrderLineRepo extends ARepo
            paymentDate,
            lastUpdate,
            creationDate,
-           pickyCoinsMovementAmount,
            hasInvoice,
            remoteIwesOrderId,          
            isParallel,
@@ -455,12 +456,9 @@ class COrderLineRepo extends ARepo
            isOrderMarketplace,
            marketplaceId,
            marketplaceOrderId,
-           isShippingToIwes,
+           isShippingToIwes ,
            isImport,
-           orderIdFather,
-           orderIDMarketplace,
-             orderTypeId,
-             couponGenerateId        
+           orderIdFather          
            ) VALUES (
             6,
             null,
@@ -476,8 +474,8 @@ class COrderLineRepo extends ARepo
             0,
             0,
             0,
-            %s,
-            %s,
+            %d,
+            %d,
             %d,
             0,
             0,
@@ -486,11 +484,10 @@ class COrderLineRepo extends ARepo
             '%s',
             '%s',
             '%s',
-            %s,
+            %d,
              '%s',
             '%s',
             '%s',
-            0,
             1,
             %s,
             1,
@@ -500,16 +497,14 @@ class COrderLineRepo extends ARepo
              %s,
              %s,
              1,        
-             null,
-            null,1,null)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto));
-
-                       /*     $logsql = sprintf(sprintf("INSERT INTO `Order` (
+             null )",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto));
+                            $logsql = sprintf("INSERT INTO `Order` (
             orderPaymentMethodId,
             orderShippingMethodId,
             couponId,
             userId,
             cartId,
-           `status`,
+          `status`,
            frozenBillingAddress,
            frozenShippingAddress,
            billingAddressId,
@@ -532,20 +527,16 @@ class COrderLineRepo extends ARepo
            paymentDate,
            lastUpdate,
            creationDate,
-           pickyCoinsMovementAmount,
            hasInvoice,
            remoteIwesOrderId,          
            isParallel,
            remoteSellerId,
            isOrderMarketplace,
            marketplaceId,
-           marketplaceOrderId,
+           marketplaceOrderId ,
            isShippingToIwes,
-           isImport,
-           orderIdFather,
-           orderIDMarketplace,
-             orderTypeId,
-             couponGenerateId        
+           isImport ,
+           orderIdFather
            ) VALUES (
             6,
             null,
@@ -561,8 +552,8 @@ class COrderLineRepo extends ARepo
             0,
             0,
             0,
-            %s,
-            %s,
+            %d,
+            %d,
             %d,
             0,
             0,
@@ -571,11 +562,10 @@ class COrderLineRepo extends ARepo
             '%s',
             '%s',
             '%s',
-            %s,
+            %d,
              '%s',
             '%s',
             '%s',
-            0,
             1,
             %s,
             1,
@@ -584,14 +574,13 @@ class COrderLineRepo extends ARepo
              null,           
              %s,
              %s,
-             1,        
-             null,
-            null,1,null)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto));*/
+             1,
+            null)",$userRemoteId,$cartId,$orderForRemote->status,$billingAddress,$orderForRemote->frozenShippingAddress,$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto);
+
                             $insertRemoteOrder->execute();
 
-
                         } catch (\Throwable $e) {
-                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Order to Shop ',$e->getMessage,$e->getLine());
+                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ',$logsql,'');
                         }
                         $findLastRemoteOrder = $db_con->prepare("select MAX(id) as orderId from `Order` ");
                         $findLastRemoteOrder->execute();
@@ -913,7 +902,7 @@ class COrderLineRepo extends ARepo
                     $fee = ($activePrice / 100) * $feeSeller;
                     $amount = $activePrice - $fee;
                     $amountForInvoice = -abs($amount);/*
-                    $stmtWalletMovementsSeller = $db_conSeller->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible) 
+                    $stmtWalletMovementsSeller = $db_conSeller->prepare('INSERT INTO ShopMovements (orderId,returnId,shopRefundRequestId,amount,date,valueDate,typeId,shopWalletId,note,isVisible)
                 VALUES (
                 ' . $orderLine->remoteOrderSellerId . ',
                 null,
@@ -942,7 +931,8 @@ class COrderLineRepo extends ARepo
                 }
 
             }
-        } catch
+        }
+        catch
         (\Throwable $e) {
             \Monkey::app()->applicationLog('COrderLineRepo','Error','cannot work remote insert ',$e,'');
         }
@@ -1070,7 +1060,6 @@ class COrderLineRepo extends ARepo
         } else return false;
         return true;
     }
-
     /**
      * cambia la friendRevenue
      * @param $price
