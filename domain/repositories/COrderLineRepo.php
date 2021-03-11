@@ -756,7 +756,7 @@ class COrderLineRepo extends ARepo
                             }
                             $insertRemoteOrderLine->execute();
                         } catch (\Throwable $e) {
-                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ','','');
+                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ',$e->getMessage(),$e->getLine());
                         }
                     } else {
                         $productSku = \Monkey::app()->repoFactory->
@@ -898,7 +898,7 @@ class COrderLineRepo extends ARepo
                             }
                             $insertRemoteOrderLine->execute();
                         } catch (\Throwable $e) {
-                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ','','');
+                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ',$e->getMessage(),$e->getLine());
                         }
 
                     }
@@ -921,7 +921,7 @@ class COrderLineRepo extends ARepo
                         $stmtWalletMovements->execute();
 
                     } catch (\Throwable $e) {
-                        \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet Supplier Shop ','','');
+                        \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Wallet Supplier Shop ',$e->getMessage(),$e->getLine());
                     }
                     /*select  shop seller to udpate Wallet */
                     $remoteOrderSupplierId = $orderId;
@@ -977,7 +977,7 @@ class COrderLineRepo extends ARepo
             }
         } catch
         (\Throwable $e) {
-            \Monkey::app()->applicationLog('COrderLineRepo','Error','cannot work remote insert ',$e,'');
+            \Monkey::app()->applicationLog('COrderLineRepo','Error','cannot work remote insert ',$e->getMessage(),$e->getLine());
         }
 
         $orderLine->update();
