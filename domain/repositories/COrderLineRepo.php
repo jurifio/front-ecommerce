@@ -350,6 +350,8 @@ class COrderLineRepo extends ARepo
                         $hasInvoice = $cartForRemote->hasInvoice;
                     }
                     $findIfExistOrder = $db_con->prepare('SELECT count(*) as countOrder, cartId as cartId, id as remoteOrderId from `Order` where remoteIwesOrderId=' . $orderLine->orderId);
+                    $sql='SELECT count(*) as countOrder, cartId as cartId, id as remoteOrderId from `Order` where remoteIwesOrderId=' . $orderLine->orderId;
+                    \Monkey::app()->applicationLog('orderlinerepo','log','orderlinerepo',$sql,'');
                     $findIfExistOrder->execute();
                     while($rowFindIfExistOrder = $findIfExistOrder->fetch(PDO::FETCH_ASSOC)){
                         $countOrder=$rowFindIfExistOrder['countOrder'];
