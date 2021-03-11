@@ -625,7 +625,7 @@ class COrderLineRepo extends ARepo
 
 
                         } catch (\Throwable $e) {
-                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Order to Shop ',$e->getMessage,$e->getLine());
+                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Order to Shop ',$e->getMessage(),$e->getLine());
                         }
                         $findLastRemoteOrder = $db_con->prepare("select MAX(id) as orderId from `Order` ");
                         $findLastRemoteOrder->execute();
