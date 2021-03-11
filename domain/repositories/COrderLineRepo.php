@@ -387,6 +387,33 @@ class COrderLineRepo extends ARepo
                                                                           1,
                                                                           1
                                                                           )");
+                            $sql="INSERT INTO Cart (orderPaymentMethodId,
+                                couponId,
+                                userId,
+                                cartTypeId,
+                                billingAddressId,
+                                shipmentAddressId,
+                                lastUpdate,
+                                creationDate,
+                                pickyCoinsAmountOnCart,
+                                hasInvoice,
+                                isParallel,
+                                isImport )
+                                                                           VALUES (
+                                                                               " . $orderForRemote->orderPaymentMethodId . ",
+                                                                               null,
+                                                                               null,
+                                                                               " . $cartForRemote->cartTypeId . ",
+                                                                               " . $billingAddressId . ",
+                                                                               " . $shipmentAddressId . ",
+                                                                               '" . $cartForRemote->lastUpdate . "',
+                                                                               '" . $cartForRemote->creationDate . "',
+                                                                               0,
+                                                                               " . $hasInvoice . ",
+                                                                               1,
+                                                                               1
+                                                                           )";
+                            \Monkey::app()->applicationLog('COrderLineRepo','trace','Insert remote Cart to Shop ' . $findShopId->id,$sql);
                             $insertRemoteCart->execute();
                         } catch (\Throwable $e) {
                             \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' . $findShopId->id,$e);
