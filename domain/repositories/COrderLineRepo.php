@@ -416,7 +416,7 @@ class COrderLineRepo extends ARepo
                             \Monkey::app()->applicationLog('COrderLineRepo','trace','Insert remote Cart to Shop ' . $findShopId->id,$sql);
                             $insertRemoteCart->execute();
                         } catch (\Throwable $e) {
-                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' . $findShopId->id,$e);
+                            \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Cart to Shop ' . $findShopId->id,$e->getMessage());
                         }
 
                         $findLastRemoteCart = $db_con->prepare("select MAX(id) as cartId from Cart ");
