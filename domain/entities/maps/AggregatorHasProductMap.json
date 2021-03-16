@@ -28,12 +28,12 @@
                 "parentKeys": [
                     "productId",
                     "productVariantId",
-                    "marketplaceProductId"
+                    "aggregatorHasShopId"
                 ],
                 "childKeys": [
                     "productId",
                     "productVariantId",
-                    "marketplaceProductId"
+                    "aggregatorHasShopId"
                 ],
                 "type": "OneToOne"
             },
