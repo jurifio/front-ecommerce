@@ -26,24 +26,30 @@
                 "name": "marketplaceConfig",
                 "entity": "MarketplaceConfig",
                 "parentKeys": ["id","marketplaceId"],
-                "childKeys": ["marketplaceId","marketplaceAccountId"],
+                "childKeys": ["marketplaceAccountId","marketplaceId",],
                 "type": "OneToMany"
             },{
                 "name": "marketplaceAccountAudience",
                 "entity": "MarketplaceAccountAudience",
                 "parentKeys": ["id","marketplaceId"],
-                "childKeys": ["marketplaceId","marketplaceAccountId"],
+                "childKeys": ["marketplaceAccountId","marketplaceId"],
                 "type": "OneToMany"
             },{
                 "name": "marketplaceAccountColorGroup",
                 "entity": "MarketplaceAccountColorGroup",
-                "parentKeys": ["id","marketplaceId"],
+                "parentKeys": ["marketplaceId","id"],
                 "childKeys": ["marketplaceId","marketplaceAccountId"],
                 "type": "OneToMany"
             },{
                 "name": "marketplaceAccountSize",
                 "entity": "MarketplaceAccountSize",
-                "parentKeys": ["id","marketplaceId"],
+                "parentKeys": ["marketplaceId","id"],
+                "childKeys": ["marketplaceId","marketplaceAccountId"],
+                "type": "OneToMany"
+            },{
+                "name": "productSizeHasMarketplaceAccountSize",
+                "entity": "productSizeHasMarketplaceAccountSize",
+                "parentKeys": ["marketplaceId","id"],
                 "childKeys": ["marketplaceId","marketplaceAccountId"],
                 "type": "OneToMany"
             }
