@@ -1,7 +1,7 @@
 {
     "entity": {
         "name": "ProductSizeHasMarketplaceAccountSize",
-        "keys": ["marketplaceId","marketplaceAccountId","marketplaceSizeId","productType","productSizeId"],
+        "keys": ["marketplaceId","marketplaceAccountId","marketplaceSizeId","productSizeId"],
         "cacheable" : "true",
         "children": [
             {
@@ -27,9 +27,9 @@
             },
             {
                 "name": "marketplaceAccountSize",
-                "entity": "marketplaceAccountSize",
-                "parentKeys": ["marketplaceId","marketplaceAccountId","marketplaceSizeId","productType"],
-                "childKeys": ["marketplaceId","marketplaceAccountId","marketplaceSizeId","productType"],
+                "entity": "MarketplaceAccountSize",
+                "parentKeys": ["marketplaceId","marketplaceAccountId","marketplaceSizeId"],
+                "childKeys": ["marketplaceId","marketplaceAccountId","marketplaceSizeId"],
                 "type": "OneToOne"
             }
         ]

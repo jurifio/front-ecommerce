@@ -1,7 +1,7 @@
 {
     "entity": {
         "name": "MarketplaceAccountSize",
-        "keys": ["marketplaceId","marketplaceAccountId","marketplaceSizeId","productType"],
+        "keys": ["marketplaceId","marketplaceAccountId","marketplaceSizeId"],
         "cacheable" : "true",
         "children": [
             {

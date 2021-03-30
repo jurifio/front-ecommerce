@@ -24,5 +24,5 @@ use bamboo\core\utils\slugify\CSlugify;
 class CMarketplaceAccountSize extends AEntity
 {
     protected $entityTable = 'MarketplaceAccountColorGroup';
-    protected $primaryKeys = ['marketplaceId','marketplaceAccountId','marketplaceSizeId','productType'];
+    protected $primaryKeys = ['marketplaceId','marketplaceAccountId','marketplaceSizeId'];
 }
