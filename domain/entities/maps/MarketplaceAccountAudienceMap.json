@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "MarketplaceAudience",
+        "keys": ["marketplaceId","marketplaceAccountId","marketplaceGenderCode"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "marketplace",
+                "entity": "Marketplace",
+                "parentKeys": "marketplaceId",
+                "childKeys": "id",
+                "type": "OneToOne"
+            },
+            {
+                "name": "marketplaceAccount",
+                "entity": "MarketplaceAccount",
+                "parentKeys": ["marketplaceAccountId","marketplaceId"],
+                "childKeys": ["id","marketplaceId"],
+                "type": "ManyToOne"
+            }
+        ]
+    }
+}

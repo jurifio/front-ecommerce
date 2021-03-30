@@ -31,6 +31,13 @@
                 "parentKeys": ["id"],
                 "childKeys": ["productSizeId"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "productSizeHasMarketplaceAccountSize",
+                "entity": "ProductSizeHasMarketplaceAccountSize",
+                "parentKeys": ["id"],
+                "childKeys": ["productSizeId"],
+                "type": "OneToOne"
             }
         ]
     }

@@ -28,6 +28,24 @@
                 "parentKeys": ["id","marketplaceId"],
                 "childKeys": ["marketplaceId","marketplaceAccountId"],
                 "type": "OneToMany"
+            },{
+                "name": "marketplaceAccountAudience",
+                "entity": "MarketplaceAccountAudience",
+                "parentKeys": ["id","marketplaceId"],
+                "childKeys": ["marketplaceId","marketplaceAccountId"],
+                "type": "OneToMany"
+            },{
+                "name": "marketplaceAccountColorGroup",
+                "entity": "MarketplaceAccountColorGroup",
+                "parentKeys": ["id","marketplaceId"],
+                "childKeys": ["marketplaceId","marketplaceAccountId"],
+                "type": "OneToMany"
+            },{
+                "name": "marketplaceAccountSize",
+                "entity": "MarketplaceAccountSize",
+                "parentKeys": ["id","marketplaceId"],
+                "childKeys": ["marketplaceId","marketplaceAccountId"],
+                "type": "OneToMany"
             }
         ]
     }

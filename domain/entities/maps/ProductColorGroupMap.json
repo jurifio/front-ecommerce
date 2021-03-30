@@ -25,6 +25,13 @@
                 "parentKeys": ["id"],
                 "childKeys": ["productColorGroupId"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "productColorGroupHasMarketplaceAccountColorGroup",
+                "entity": "ProductColorGroupHasMarketplaceAccountColorGroup",
+                "parentKeys": ["id"],
+                "childKeys": ["productColorGroupId"],
+                "type": "OneToOne"
             }
         ]
     }

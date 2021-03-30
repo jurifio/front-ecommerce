@@ -1,0 +1,37 @@
+{
+    "entity": {
+        "name": "ProductColorGroupHasMarketplaceAccountColorGroup",
+        "keys": ["marketplaceId","marketplaceAccountId","marketplaceColorGroupId","productColorGroupId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "productColorGroup",
+                "entity": "ProductColorGroup",
+                "parentKeys": ["productColorGroupId"],
+                "childKeys": ["id"],
+                "type": "ManyToOne"
+            },
+            {
+                "name": "marketplace",
+                "entity": "Marketplace",
+                "parentKeys": "marketplaceId",
+                "childKeys": "id",
+                "type": "OneToOne"
+            },
+            {
+                "name": "marketplaceAccount",
+                "entity": "MarketplaceAccount",
+                "parentKeys": ["marketplaceAccountId","marketplaceId"],
+                "childKeys": ["id","marketplaceId"],
+                "type": "ManyToOne"
+            },
+            {
+                "name": "marketplaceAccountColorGroup",
+                "entity": "marketplaceAccountColorGroup",
+                "parentKeys": ["marketplaceId","marketplaceAccountId","marketplaceColorGroupId"],
+                "childKeys": ["marketplaceId","marketplaceAccountId","marketplaceColorGroupId"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}
