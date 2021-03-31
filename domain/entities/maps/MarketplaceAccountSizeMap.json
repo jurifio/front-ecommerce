@@ -19,8 +19,8 @@
                 "type": "ManyToOne"
             },
             {
-                "name": "productSizeHasMarketplaceProductSize",
-                "entity": "ProductSizeHasMarketplaceProductSize",
+                "name": "productSizeHasMarketplaceAccountSize",
+                "entity": "ProductSizeHasMarketplaceAccountSize",
                 "parentKeys": ["marketplaceId","marketplaceAccountId","marketplaceSizeId"],
                 "childKeys": ["marketplaceId","marketplaceAccountId","marketplaceSizeId"],
                 "type": "OneToOne"
