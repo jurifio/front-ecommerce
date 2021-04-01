@@ -74,7 +74,7 @@
                 "childKeys": [
                     "marketplaceId",
                     "marketplaceAccountId",
-                    "marketplaceAccountCategoryId"
+                    "marketplaceCategoryId"
                 ],
                 "type": "ManyToMany"
             },
