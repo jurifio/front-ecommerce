@@ -1,0 +1,28 @@
+{
+  "filesConfig": {
+    "location": "url",
+    "istructions": {
+      "url": "http://testing.efashion.cloud/api/v3.0/products/condensed?storeCode=N1R3X",
+      "root": "__default__",
+      "folder": "import",
+      "glob": "*.json"
+    },
+    "extension": ".json"
+  },
+  "keys": {
+    "product": [
+      "extId"
+    ],
+    "sku": [
+      "extSkuId"
+    ]
+  },
+  "destFTPClient": {
+    "host": "fiber.office.iwes.it",
+    "user": "shooting",
+    "pass": "PBYI34nbf",
+    "port": "21",
+    "timeout": "10",
+    "mode": "2"
+  }
+}

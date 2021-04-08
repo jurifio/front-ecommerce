@@ -19,6 +19,9 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  *
  * @property CMarketplaceHasShop $marketplaceHasShop
  * @property CProduct $product
+ * @property CMarketplaceAccount $marketplaceAccount
+ * @property CMarketplace $marketplace
+ * @property  CPrestashopHasProduct $prestashopHasProduct
  */
 class CPrestashopHasProductHasMarketplaceHasShop extends AEntity
 {

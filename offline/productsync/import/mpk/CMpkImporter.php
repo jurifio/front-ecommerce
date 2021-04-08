@@ -1,6 +1,6 @@
 <?php
 
-namespace bamboo\offline\productsync\import\gf888;
+namespace bamboo\offline\productsync\import\mpk;
 
 use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooLogicException;
