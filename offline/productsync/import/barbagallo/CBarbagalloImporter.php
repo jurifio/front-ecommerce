@@ -69,7 +69,7 @@ class CBarbagalloImporter extends ABluesealProductImporter
 
                 $newDirtyProduct["dirtyStatus"] = "F";
 
-                $newDirtyProductExtend["season"] = $one["stagione"];
+                $newDirtyProductExtend["season"] = $one["stagione"].' '.$one['anno'];
                 $newDirtyProductExtend["audience"] = $one["reparto"];
                 $newDirtyProductExtend["cat1"] = $one["categoria"];
                 $newDirtyProductExtend["generalColor"] = $one["colore"];
