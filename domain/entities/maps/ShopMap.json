@@ -76,6 +76,18 @@
                 "parentKeys": ["id"],
                 "childKeys": ["remoteShopId"],
                 "type": "OneToMany"
+            },{
+                "name": "productCorrelation",
+                "entity": "ProductCorrelation",
+                "parentKeys": ["remoteShopId"],
+                "childKeys": ["shopId"],
+                "type": "OneToMany"
+            },{
+                "name": "productLook",
+                "entity": "ProductLook",
+                "parentKeys": ["remoteShopId"],
+                "childKeys": ["shopId"],
+                "type": "OneToMany"
             }
         ]
     }

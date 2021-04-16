@@ -56,6 +56,14 @@
                     "id"
                 ],
                 "type": "ManyToOne"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["remoteShopId"],
+                "childKeys": ["shopId"],
+                "type": "ManyToOne",
+                "lang": true
             }
 
         ]

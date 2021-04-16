@@ -11,6 +11,14 @@
                 "childKeys": ["productLookId"],
                 "type": "OneToMany",
                 "lang": true
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["remoteShopId"],
+                "childKeys": ["shopId"],
+                "type": "ManyToOne",
+                "lang": true
             }
         ]
     }
