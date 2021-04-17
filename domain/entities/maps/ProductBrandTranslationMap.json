@@ -1,0 +1,33 @@
+{
+    "entity": {
+        "name": "ProductBrandTranslation",
+        "keys": [
+            "id"
+        ],
+        "cacheable": "false",
+        "children": [
+            {
+                "name": "productBrand",
+                "entity": "ProductBrand",
+                "parentKeys": ["productBrandId"],
+                "childKeys": ["id"],
+                "type": "ManyToOne"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["remoteShopId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "lang",
+                "entity": "Lang",
+                "parentKeys": ["langId"],
+                "childKeys": ["id"],
+                "type": "ManyToOne"
+            }
+
+        ]
+    }
+}

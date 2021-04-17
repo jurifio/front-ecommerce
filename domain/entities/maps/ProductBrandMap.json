@@ -12,7 +12,15 @@
                 "parentKeys": ["id"],
                 "childKeys": ["productBrandId"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "productBrandTranslation",
+                "entity": "ProductBrandTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["productBrandId"],
+                "type": "OneToOne"
             }
+
         ]
     }
 }

@@ -88,6 +88,13 @@
                 "parentKeys": ["remoteShopId"],
                 "childKeys": ["shopId"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "productBrandTranslation",
+                "entity": "ProductBrandTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["remoteShopId"],
+                "type": "OneToMany"
             }
         ]
     }

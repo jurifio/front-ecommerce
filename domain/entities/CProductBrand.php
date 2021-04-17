@@ -11,6 +11,7 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  *
  *
  * @property CProductBrandHasPrestashopManufacturer $productBrandHasPrestashopManufacturer
+ * @property CProductBrandTranslation $productBrandTranslation
  *
  */
 class CProductBrand extends AEntity
