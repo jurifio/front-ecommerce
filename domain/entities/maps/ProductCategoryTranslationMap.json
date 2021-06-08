@@ -1,13 +1,27 @@
 {
     "entity": {
         "name": "ProductCategoryTranslation",
-        "keys": ["productCategoryId","langId"],
+        "keys": ["productCategoryId","langId","shopId"],
         "cacheable" : "true",
         "children": [
             {
                 "name": "productCategory",
                 "entity": "ProductCategory",
                 "parentKeys": ["productCategoryId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "lang",
+                "entity": "Lang",
+                "parentKeys": ["langId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shop",
+                "entity": "Shop",
+                "parentKeys": ["shopId"],
                 "childKeys": ["id"],
                 "type": "OneToOne"
             }

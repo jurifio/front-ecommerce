@@ -21,5 +21,5 @@ use bamboo\core\db\pandaorm\entities\AEntity;
 class CProductCategoryTranslation extends AEntity
 {
     protected $entityTable = 'ProductCategoryTranslation';
-    protected $primaryKeys = ['productCategoryId','langId'];
+    protected $primaryKeys = ['productCategoryId','langId','shopId'];
 }
