@@ -890,11 +890,11 @@ class COrderRepo extends ARepo
             foreach ($prestashopHasProductHasMarketplaceHasShopRepo as $collections) {
                 $prestashopShopIds[] = $collections->marketplaceHasShopId;
             }
-
+            /*
             if ($prestashopShopIds != null) {
                 $prestashopProduct = new CPrestashopProduct();
                 $prestashopProduct->updateProductQuantity($php->prestaId,$productSizeId,$newQty,$differential,$prestashopShopIds);
-            }
+            }*/
 
 
         }
