@@ -38,7 +38,7 @@ class CBuildSearchIndex extends ACronJob {
                            FROM ProductCategory node
                               JOIN ProductCategory parent ON parent.id != 1 AND
                                                              node.lft BETWEEN parent.lft AND parent.rght
-                              JOIN ProductCategoryTranslation pct ON parent.id = pct.productCategoryId
+                              JOIN ProductCategoryTranslation pct ON parent.id = pct.productCategoryId and pct.shopId=44
                             GROUP BY node.id, langId
                           ) pct on phpc.productCategoryId = pct.id AND pct.langId = l.id
                         LEFT JOIN ProductNameTranslation pn ON p.id = pn.productId AND

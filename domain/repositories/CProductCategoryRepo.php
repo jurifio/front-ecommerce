@@ -485,7 +485,7 @@ class CProductCategoryRepo extends ARepo
                         UPDATE ProductCategory pc
                           LEFT JOIN DictionaryCategory dc ON pc.id = dc.productCategoryId
                             LEFT JOIN ProductCategoryHasMarketplaceAccountCategory pcm ON pc.id = pcm.productCategoryId
-                            LEFT JOIN ProductCategoryTranslation pct ON pc.id = pct.productCategoryId
+                            LEFT JOIN ProductCategoryTranslation pct ON pc.id = pct.productCategoryId and pct.shopId=44
                             LEFT JOIN ProductHasProductCategory ppc ON pc.id = ppc.productCategoryId
                             LEFT JOIN ProductSheetModelPrototypeHasProductCategory psmp ON pc.id = psmp.productCategoryId
                           SET
@@ -550,7 +550,8 @@ class CProductCategoryRepo extends ARepo
             ],
             'ProductCategoryTranslation' => [
                 'productCategoryId',
-                'langId'
+                'langId',
+                'shopId'
             ],
             'ProductHasProductCategory' => [
                 'productId',

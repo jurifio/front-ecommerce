@@ -74,6 +74,58 @@ class CShipmentRepo extends ARepo
     /**
      * Crea una nuova spedizione di un ordine per un cliente
      * @param $carrierId
+     * @param $trackingNumber
+     * @param $time
+     * @param $orderLineId
+     * @param COrder $order
+     * @return CShipment
+     * @throws BambooException
+     */
+    public function newOrderShipmentToClientSingleLine($carrierId, $trackingNumber, $time, COrder $order, $orderLineId )
+    {
+        /** @var CShipment $shipment */
+        $shipment = \Monkey::app()->repoFactory->create('Shipment')->getEmptyEntity();
+        $shipment->carrierId = $carrierId;
+        $shipment->scope = $shipment::SCOPE_US_TO_USER;
+        $shipment->predictedShipmentDate = $time;
+        $shipment->predictedDeliveryDate = SDateToolbox::GetNextWorkingDay(\DateTime::createFromFormat(DATE_MYSQL_FORMAT, $time));
+        $shipment->declaredValue = $order->grossTotal;
+
+        /** @var CAddressBookRepo $addressBookRepo */
+        $addressBookRepo = \Monkey::app()->repoFactory->create('AddressBook');
+
+        $shipment->fromAddressBookId = $addressBookRepo->getMainHubAddressBook()->id;
+
+        $addressBookTo = $addressBookRepo->findOrInsertUserAddress(CUserAddress::defrost($order->frozenShippingAddress));
+        $shipment->toAddressBookId = $addressBookTo->id;
+        $shipment->note = $order->shipmentNote;
+        $shipment->smartInsert();
+
+        foreach ($order->orderLine as $orderLine) {
+            if($orderLine->id==$orderlineId) {
+                $olhs = \Monkey::app()->repoFactory->create('OrderLineHasShipment')->getEmptyEntity();
+                $olhs->orderId = $orderLine->orderId;
+                $olhs->orderLineId = $orderLine->id;
+                $olhs->shipmentId = $shipment->id;
+                $olhs->insert();
+            }else{
+                continue;
+            }
+        }
+
+        if ($shipment->carrier->implementation != null) {
+            $shipment->sendToCarrier();
+        } else {
+            if (!$trackingNumber) throw new BambooException('Per una spedizione Manuale è necessario fornire il Tracking Number');
+            $shipment->trackingNumber = trim($trackingNumber);
+        }
+
+
+        return $shipment;
+    }
+    /**
+     * Crea una nuova spedizione di un ordine per un cliente
+     * @param $carrierId
      * @param $bookingNumber
      * @param $time
      * @param COrder $order
@@ -136,6 +188,77 @@ class CShipmentRepo extends ARepo
             $olhs->insert();
             $shipment->declaredValue += $orderLine->friendRevenue;
         }
+        $shipment->update();
+        if ($shipment->carrier->implementation != null) {
+            $shipment->sendToCarrier($orderLine->orderId);
+        }
+        return $shipment;
+    }
+    /**
+     * Crea una nuova spedizione di un ordine per un cliente
+     * @param $carrierId
+     * @param $bookingNumber
+     * @param $time
+     * @param COrder $order
+     * @param $orderLineId
+     * @param $orderId
+     * @throws BambooException
+
+     */
+    public function newOrderShipmentFromSupplierToClientSingleLine($carrierId, $fromId, $bookingNumber, $time, $orderLineId, $orderId)
+    {
+
+        $orderRepo=\Monkey::app()->repoFactory->create('Order')->findOneBy(['id'=>$orderId]);
+        if($orderRepo!=null){
+            $shipmentAddress=$orderRepo->frozenShippingAddress;
+        }
+        /** @var CShipment $shipment */
+        /** @var CAddressBookRepo $addressBookRepo */
+        $addressBookRepo = \Monkey::app()->repoFactory->create('AddressBook');
+        $toAddressBook = $addressBookRepo->findOrInsertUserAddress(CUserAddress::defrost($shipmentAddress));
+
+        $shipment = \Monkey::app()->repoFactory->create('Shipment')->findBySql("SELECT id,date(predictedShipmentDate)
+                                                                            FROM Shipment
+                                                                            WHERE date(predictedShipmentDate) = DATE(?) AND
+                                                                                  shipmentDate is null AND 
+                                                                                  cancellationDate is null AND
+                                                                                  carrierId = ? AND
+                                                                                  fromAddressBookId = ? AND
+                                                                                  toAddressBookId = ?", [$time,
+            $carrierId,
+            $fromId,
+            $toAddressBook->id]);
+
+        if ($shipment->isEmpty()) {
+            $shipment = \Monkey::app()->repoFactory->create('Shipment')->getEmptyEntity();
+            $shipment->carrierId = $carrierId;
+            $shipment->scope = $shipment::SCOPE_SUPPLIER_TO_USER;
+            if($bookingNumber!='') {
+                $shipment->bookingNumber = trim($bookingNumber);
+            }
+            $shipment->predictedShipmentDate = $time;
+            $shipment->predictedDeliveryDate = STimeToolbox::DbFormattedDate(SDateToolbox::GetNextWorkingDay(STimeToolbox::GetDateTime($time)));
+            $shipment->declaredValue = 0;
+            $shipment->fromAddressBookId = $fromId;
+            $shipment->toAddressBookId = $toAddressBook->id;
+            $shipment->id = $shipment->insert();
+            sleep(2);
+            $shipment = $this->findOne(['id' => $shipment->id]);
+            sleep(2);
+            $this->addPickUp($shipment,$orderId);
+
+        } else {
+            $shipment = $shipment->getFirst();
+        }
+
+        $orderLine=\Monkey::app()->repoFactory->create('OrderLine')->findOneBy(['id'=>$orderLineId,'orderId'=>$orderId]);
+            $olhs = \Monkey::app()->repoFactory->create('OrderLineHasShipment')->getEmptyEntity();
+            $olhs->orderId = $orderId;
+            $olhs->orderLineId = $orderLineId;
+            $olhs->shipmentId = $shipment->id;
+            $olhs->insert();
+            $shipment->declaredValue += $orderLine->friendRevenue;
+
         $shipment->update();
         if ($shipment->carrier->implementation != null) {
             $shipment->sendToCarrier($orderLine->orderId);

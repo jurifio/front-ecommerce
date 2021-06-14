@@ -39,7 +39,7 @@ class CDrezzyFeedBluilder extends ACronJob
 		
 	    $cm = $this->app->categoryManager;
 	    $helper = new CWidgetHelper($this->app);
-	    $categoriesName = $this->app->dbAdapter->query("SELECT productCategoryId, name FROM ProductCategoryTranslation where langId = ?",[$id])->fetchAll();
+        $categoriesName = $this->app->dbAdapter->query("SELECT productCategoryId, name FROM ProductCategoryTranslation where langId = ? and shopId=?" ,[$id,44])->fetchAll();
 	    $categories=[];
 	    foreach($categoriesName as $alls){
 		    $categories[$alls['productCategoryId']] = $alls['name'];

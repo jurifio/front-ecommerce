@@ -25,7 +25,7 @@ class CCatalogtitleController extends ANodeController
 
         $this->view->pass('app', $this->helper);
         $this->view->pass('data', $this->dataBag);
-        $this->view->pass('cat', $cat->productCategoryTranslation->findOneByKeys(["langId"=>$this->app->getLang()->getId()]));
+        $this->view->pass('cat', $cat->productCategoryTranslation->findOneBy(["langId"=>$this->app->getLang()->getId(),"productCategoryId"=>$catId,"shopId"=>44]));
 
         return $this->show();
     }
