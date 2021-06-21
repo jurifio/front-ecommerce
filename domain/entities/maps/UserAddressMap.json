@@ -1,7 +1,7 @@
 {
     "entity": {
         "name": "UserAddress",
-        "keys": ["id", "productVariantId"],
+        "keys": ["id", "userId"],
         "cacheable" : "true",
         "children": [
             {
