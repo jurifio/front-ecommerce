@@ -355,7 +355,7 @@ class COrderLineRepo extends ARepo
                     $findIfExistOrder->execute();
                     while($rowFindIfExistOrder = $findIfExistOrder->fetch(PDO::FETCH_ASSOC)){
                         $countOrder=$rowFindIfExistOrder['countOrder'];
-                        $orderId=$rowFindIfExistOrder['countOrder'];
+                        $orderId=$rowFindIfExistOrder['remoteOrderId'];
                     }
 
                     if ($countOrder == 0 ) {
@@ -622,15 +622,12 @@ class COrderLineRepo extends ARepo
                   null,
                  null,1,null)",$userRemoteId,$cartId,$orderForRemote->status,addslashes($billingAddress),addslashes($orderForRemote->frozenShippingAddress),$billingAddressId,$shipmentAddressId,$revenueTotal,$revenueTotal,$vat,$orderForRemote->orderDate,$orderForRemote->note,$orderForRemote->shipmentNote,$orderForRemote->transactionNumber,$orderForRemote->transactionMac,$revenueTotal,date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),date('Y-m-d H:i:s'),$orderLine->orderId,$orderForRemote->remoteShopSellerId,$isOrderMarketplace,$orderLine->orderId,$isShippingto));*/
                             $insertRemoteOrder->execute();
-
+                            $orderId=$db_con->lastInsertId();
 
                         } catch (\Throwable $e) {
                             \Monkey::app()->applicationLog('COrderLineRepo','Error','Insert remote Order to Shop ',$e->getMessage(),$e->getLine());
                         }
-                        $findLastRemoteOrder = $db_con->prepare("select MAX(id) as orderId from `Order` ");
-                        $findLastRemoteOrder->execute();
-                        $rowFindLastRemoteOrder = $findLastRemoteOrder->fetch(PDO::FETCH_ASSOC);
-                        $orderId = $rowFindLastRemoteOrder['orderId'];
+
                         try {
                             if ($findShopId->id != '1') {
                                 $insertRemoteOrderLine = $db_con->prepare(sprintf("INSERT INTO OrderLine (
