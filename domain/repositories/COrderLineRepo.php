@@ -304,7 +304,7 @@ class COrderLineRepo extends ARepo
         try {
             $orderLine->status = $newStatus->code;
             if ($orderLine->shopId != $orderLine->remoteShopSellerId) {
-
+                $isOrderMarketplace='0';
                 $findShopId = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->shopId]);
                 if ($findShopId->hasEcommerce == '1' && $findShopId->id != '44') {
                     /* find  orderId*/
@@ -440,9 +440,9 @@ class COrderLineRepo extends ARepo
                         $friendRevenue = $orderLine->friendRevenue;
                         $vat = ($friendRevenue / 100) * 22;
                         $revenueTotal = number_format($friendRevenue + $vat,2);
-                        $isOrdermarketplace='0';
+                        $isOrderMarketplace='0';
                         if ($orderForRemote->remoteShopSellerId == '44') {
-                            $isOrdermarketplace = '1';
+                            $isOrderMarketplace = '1';
                         } else {
                             $isOrderMarketplace = '0';
                         }
