@@ -95,7 +95,7 @@ class CMpkImporter extends ABluesealProductImporter
                         $dirtyProductExtend['cat2'] = $rawSku['second_category'];
                         $dirtyProductExtend['generalColor'] = $rawSku['color'];
                         $dirtyProductExtend['sizeGroup'] = 'IT';
-                        $dirtyProductExtend['name'] = $rawSku['productName'];
+                        $dirtyProductExtend['name'] = $rawSku['item_name'];
                         $dirtyProductExtend['description'] = $rawSku['item_description'];
                         $dirtyProductExtend['season'] = $rawSku['season_reference'].$rawSku['season_year'];
                         $collectDetails = explode(',', $rawSku['item_description']);
