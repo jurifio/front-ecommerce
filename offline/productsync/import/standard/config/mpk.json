@@ -2,7 +2,7 @@
   "filesConfig": {
     "location": "url",
     "istructions": {
-      "url": "http://testing.efashion.cloud/api/v3.0/products/condensed?storeCode=N1R3X",
+      "url": "https://testing.efashion.cloud/api/v3.0/products/condensed?storeCode=ASAHP",
       "root": "__default__",
       "folder": "import",
       "glob": "*.json"

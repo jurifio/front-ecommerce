@@ -4,6 +4,7 @@ namespace bamboo\offline\productsync\import\mpk;
 
 use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooLogicException;
+use bamboo\domain\entities\CDirtySkuHasStoreHouse;
 use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
@@ -82,9 +83,11 @@ class CMpkImporter extends ABluesealProductImporter
                         $this->debug('Cycle', 'product checksum don\'t exists', $dirtyProduct);
                         //populate dirties
                         $dirtyProduct['extId'] = $rawSku['product_id'];
-                        $dirtyProduct['brand'] = $rawSku['brandName'];
+                        $dirtyProduct['brand'] = $rawSku['brand'];
                         $dirtyProduct['itemno'] = $rawSku['product_reference'];
                         $dirtyProduct['var'] = $rawSku['color_reference'];
+                        $dirtyProduct['price']=$rawSku['retail_price'];
+                        $dirtyProduct['value']=$rawSku['price'];
                         $dirtyProduct['keysChecksum'] = md5(implode('::', $this->mapKeys($dirtyProduct, $productKeys)));
 
                         $dirtyProductExtend['audience'] = $rawSku['gender'];
@@ -94,8 +97,8 @@ class CMpkImporter extends ABluesealProductImporter
                         $dirtyProductExtend['sizeGroup'] = 'IT';
                         $dirtyProductExtend['name'] = $rawSku['productName'];
                         $dirtyProductExtend['description'] = $rawSku['item_description'];
-                        $dirtyProductExtend['season'] = $rawSku['season_year'];
-                        $collectDetails = explode('-', $rawSku['item_description']);
+                        $dirtyProductExtend['season'] = $rawSku['season_reference'].$rawSku['season_year'];
+                        $collectDetails = explode(',', $rawSku['item_description']);
                         //Filling Details
                         array_count_values($collectDetails);
 
@@ -166,8 +169,8 @@ class CMpkImporter extends ABluesealProductImporter
                         $this->debug('Cycle', 'product checking item_imgs', $rawSku['images']);
                         $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $dirtyProduct["id"]])->fetchAll();
                         $position = 0;
-                        $this->report('processImage', 'array image: ' . $rawSku['images']);
-                        $imgs = explode('||', $rawSku['images']);
+                        $this->report('processImage', 'array image: ' . $rawSku['item_images']);
+                        $imgs =  $rawSku['images'];
 
                         foreach ($imgs as $img) {
                             if (empty(trim($img))) {
@@ -198,42 +201,74 @@ class CMpkImporter extends ABluesealProductImporter
                 try {
 
                     $this->debug('processFile', 'Going with Sku');
-                    $dirtySku = [];
-                    $dirtySku['dirtyProductId'] = $dirtyProduct['id'];
-                    $dirtySku['shopId'] = $this->getShop()->id;
-                    $dirtySku['size'] = $rawSku['size'];
-                    $dirtySku['extSkuId'] = $rawSku['skuID'];
-                    $dirtySku['size'] = $rawSku['size'];
-                    $dirtySku['qty'] = $rawSku['quantity'];
-                    $dirtySku['price'] = $rawSku['marketPrice'];
+                    foreach($rawSku['variants'] as $rawDirtySku) {
+                        $dirtySku = [];
+                        $dirtySku['dirtyProductId'] = $dirtyProduct['id'];
+                        $dirtySku['shopId'] = $this->getShop()->id;
+                        $dirtySku['size'] = $rawDirtySku['size'];
+                        $dirtySku['extSkuId'] = $rawSku['product_reference'].'_'.$rawDirtySku['size'];
+                        $dirtySku['qty'] = $rawDirtySku['quantity'];
+                        $dirtySku['price'] = $rawSku['retail_price'];
+                        $dirtySku['value'] = $rawSku['price'];
+                        $dirtySku['barcode']=$rawDirtySku['barcode'][0];
+                        $dirtySku['storeHouseId']=1;
 
-                    $dirtySku['checksum'] = md5(json_encode($dirtySku));
-                    if (isset($skusChecksums[$dirtySku['checksum']])) {
-                        $dirtySku['id'] = $skusChecksums[$dirtySku['checksum']];
-                        $this->debug('processFile', 'Sku checksum Exist, save it', $dirtySku);
-                    } else {
-                        $dirtySku['changed'] = 1;
 
-                        $existingSku = \Monkey::app()->dbAdapter->select('DirtySku', [
-                            'shopId' => $this->getShop()->id,
-                            'dirtyProductId' => $dirtyProduct['id'],
-                            'extSkuId' => $dirtySku['extSkuId']
-                        ])->fetchAll();
+                        $dirtySku['checksum'] = md5(json_encode($dirtySku));
+                        if (isset($skusChecksums[$dirtySku['checksum']])) {
+                            $dirtySku['id'] = $skusChecksums[$dirtySku['checksum']];
+                            $this->debug('processFile','Sku checksum Exist, save it',$dirtySku);
+                        } else {
+                            $dirtySku['changed'] = 1;
 
-                        if (count($existingSku) == 0) {
-                            $dirtySku['id'] = \Monkey::app()->dbAdapter->insert('DirtySku', $dirtySku);
-                            $this->debug('processFile', 'Sku don\'t Exist, insert', $dirtySku);
+                            $existingSku = \Monkey::app()->dbAdapter->select('DirtySku',[
+                                'shopId' => $this->getShop()->id,
+                                'dirtyProductId' => $dirtyProduct['id'],
+                                'extSkuId' => $dirtySku['extSkuId']
+                            ])->fetchAll();
 
-                        } elseif (count($existingSku) == 1) {
-                            \Monkey::app()->dbAdapter->update('DirtySku', $dirtySku, ['id' => $existingSku[0]['id']]);
-                            $dirtySku['id'] = $existingSku[0]['id'];
-                            $this->debug('processFile', 'Sku Exist, update', $dirtySku);
+                            if (count($existingSku) == 0) {
+                                $dirtySku['id'] = \Monkey::app()->dbAdapter->insert('DirtySku',$dirtySku);
+                                $this->debug('processFile','Sku don\'t Exist, insert',$dirtySku);
 
-                        } else throw new BambooException('More than 1 sku found to update');
+                            } elseif (count($existingSku) == 1) {
+                                \Monkey::app()->dbAdapter->update('DirtySku',$dirtySku,['id' => $existingSku[0]['id']]);
+                                $dirtySku['id'] = $existingSku[0]['id'];
+                                /* @var CDirtySkuHasStoreHouse $FindDirtyHasStoreHouse  **/
+                                $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
+                                    'shopId'=> $this->getShop()->id,
+                                    'size'=>$dirtySku['size'],
+                                    'dirtySkuId'=>$id,
+                                    'dirtyProductId' =>$dirtyProduct['id'],
+                                    'storeHouseId'=> 1
+                                ]);
+                                if(!$findDirtyHasStoreHouse){
+                                    /* @var CDirtySkuHasStoreHouse $insertDirtySkuHasStoreHouse  **/
+                                    $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
+                                    $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
+                                    $insertDirtySkuHasStoreHouse->dirtySkuId= $dirtySku['id'];
+                                    $insertDirtySkuHasStoreHouse->storeHouseId= 1;
+                                    $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
+                                    $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                                    $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                                    $insertDirtySkuHasStoreHouse->qty=$dirtySku['qty'];
+                                    $insertDirtySkuHasStoreHouse->productSizeId= $existingSku[0]['productSizeId'];
+                                    $insertDirtySkuHasStoreHouse->insert();
+                                }else{
+                                    $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
+                                    $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
+                                    $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
+                                    $findDirtyHasStoreHouse->productSizeId=$existingSku[0]['productSizeId'];
+                                    $findDirtyHasStoreHouse->qty=$sku['qty'];
+                                    $findDirtyHasStoreHouse->update();
+                                }
+                                $this->debug('processFile','Sku Exist, update',$dirtySku);
+
+                            } else throw new BambooException('More than 1 sku found to update');
+                        }
+
+                        $seenSkus[] = $dirtySku['id'];
                     }
-
-                    $seenSkus[] = $dirtySku['id'];
-
                 } catch (\Throwable $e) {
                     $this->error('processFile', 'Error reading Sku: ' . json_encode($rawSku), $e);
                 }
