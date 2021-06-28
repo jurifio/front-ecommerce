@@ -65,7 +65,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
             return true;
         } catch (\Throwable $e) {
-            iwesMail('it@iwes.it',
+            iwesMail('juri@iwes.it',
                 'Importer Error for ' . $this->getShop()->name,
                 "Unknown GENERAL error!\n\n\n" . $e->getMessage() . "\n" . $e->getTraceAsString());
             throw $e;
