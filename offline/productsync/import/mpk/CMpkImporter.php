@@ -166,7 +166,7 @@ class CMpkImporter extends ABluesealProductImporter
                             $countInsertDet = $countInsertDet + 1;
                         }
 
-                        $this->debug('Cycle', 'product checking item_imgs', $rawSku['images']);
+                        $this->debug('Cycle', 'product checking item_imgs', $rawSku['item_images']);
                         $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $dirtyProduct["id"]])->fetchAll();
                         $position = 0;
                         $this->report('processImage', 'array image: ' . $rawSku['item_images']);
