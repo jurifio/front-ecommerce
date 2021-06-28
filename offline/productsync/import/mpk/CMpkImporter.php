@@ -210,7 +210,7 @@ class CMpkImporter extends ABluesealProductImporter
                         $dirtySku['qty'] = $rawDirtySku['quantity'];
                         $dirtySku['price'] = $rawSku['retail_price'];
                         $dirtySku['value'] = $rawSku['price'];
-                        $dirtySku['barcode']=$rawDirtySku['barcode'][0];
+                        $dirtySku['barcode']=$rawDirtySku['barcodes'][0];
                         $dirtySku['storeHouseId']=1;
 
 
