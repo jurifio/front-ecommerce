@@ -169,7 +169,7 @@ class CMpkImporter extends ABluesealProductImporter
                         $this->debug('Cycle', 'product checking item_imgs', $rawSku['item_images']);
                         $dirtyPhotos = \Monkey::app()->dbAdapter->select('DirtyPhoto', ['dirtyProductId' => $dirtyProduct["id"]])->fetchAll();
                         $position = 0;
-                        $this->report('processImage', 'array image: ' . $rawSku['item_images']);
+                        $this->report('processImage', 'array image: ' );
                         $imgs =  $rawSku['item_images']['full'];
 
                         foreach ($imgs as $img) {
