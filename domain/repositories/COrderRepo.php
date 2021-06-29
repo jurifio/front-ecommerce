@@ -20,7 +20,7 @@ use bamboo\domain\entities\CPrestashopHasProduct;
 use bamboo\domain\entities\CPrestashopHasProductHasMarketplaceHasShop;
 use bamboo\domain\entities\CProductPublicSku;
 use bamboo\domain\entities\CProductSku;
-use bamboo\offline\productsync\import\alducadaosta\CAlducadaostaOrderAPI;
+use bamboo\offline\productsync\import\mpk\CMpkOrderApi;
 use bamboo\utils\price\SPriceToolbox;
 use bamboo\utils\time\STimeToolbox;
 
@@ -283,13 +283,13 @@ class COrderRepo extends ARepo
                 $haveAlduca = false;
 
                 foreach ($orderLines as $ordLineV) {
-                    if ($ordLineV->shopId == 46) {
+                    if ($ordLineV->shopId == 61) {
                         $haveAlduca = true;
                     }
                 }
 
                 if ($haveAlduca) {
-                    $alducaApi = new CAlducadaostaOrderAPI($order->id);
+                    $alducaApi = new CMpkOrderApi($order->id);
                     $alducaApi->deleteOrder();
                 }
 
