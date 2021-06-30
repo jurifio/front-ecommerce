@@ -24,8 +24,8 @@ use PDOException;
 class CMpkOrderApi
 {
     protected $addHoldOrderUrl="https://www.luxury888.it/holdorder/";
-    protected $addOrderUrl = "https://testing.efashion.cloud/api/v3.0/place/order?storeCode=ASAHP";
-    protected $deleteOrderUrl = "https://testing.efashion.cloud/api/v3.0/cancel/order?storeCode=ASAHP";
+    protected $addOrderUrl = "https://testing.efashion.cloud/api/v3.0/place/order.json?storeCode=ASAHP";
+    protected $deleteOrderUrl = "https://testing.efashion.cloud/api/v3.0/cancel/order.json?storeCode=ASAHP";
 
     protected $orderId;
     protected $rows;
@@ -117,8 +117,8 @@ class CMpkOrderApi
         }';
 
 
-        $curl = curl_init($this->addOrderUrl);
-        curl_setopt($curl, CURLOPT_URL, $this->addOrderUrl);
+        $curl = curl_init($this->deleteOrderUrl);
+        curl_setopt($curl, CURLOPT_URL, $this->deleteOrderUrl);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
