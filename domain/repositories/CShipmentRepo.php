@@ -277,28 +277,31 @@ class CShipmentRepo extends ARepo
         /** @var CAddressBookRepo $addressBookRepo */
         $addressBookRepo = \Monkey::app()->repoFactory->create('AddressBook');
         $toAddressBook = $addressBookRepo->getMainHubAddressBook();
+        if($carrierId!=5) {
+            /** @var CCarrier $carrier */
+            $carrier = \Monkey::app()->repoFactory->create('Carrier')->findOneByStringId($carrierId);
 
-        /** @var CCarrier $carrier */
-        $carrier = \Monkey::app()->repoFactory->create('Carrier')->findOneByStringId($carrierId);
-
-        $isTodayExisting = $this->app->dbAdapter->query(
-            "SELECT TRUE
+            $isTodayExisting = $this->app->dbAdapter->query(
+                "SELECT TRUE
                     FROM Shipment
                     WHERE date(predictedShipmentDate) = DATE(CURRENT_TIMESTAMP) AND
                           shipmentDate is null AND
                           carrierId = ? AND
                           fromAddressBookId = ? AND
                           toAddressBookId = ?",
-            [$carrierId, $fromAddressBookId, $toAddressBook->id])->fetchAll();
+                [$carrierId,$fromAddressBookId,$toAddressBook->id])->fetchAll();
 
-        if (count($isTodayExisting) > 0) {
-            $firstPossibleDate = new \DateTime();
-        } elseif ($carrier->getHandler() && $carrier->getHandler() instanceof IImplementedPickUpHandler) {
-            $fromAddressBook = $addressBookRepo->findOneByStringId($fromAddressBookId);
-            $firstPossibleDate = $carrier->getHandler()->getFirstPickUpDate($fromAddressBook,$toAddressBook);
-        } elseif ($carrier->prenotationTimeLimit > (new \DateTime())->format('H:i:s'))  {
-            $firstPossibleDate = new \DateTime();
-        } else {
+            if (count($isTodayExisting) > 0) {
+                $firstPossibleDate = new \DateTime();
+            } elseif ($carrier->getHandler() && $carrier->getHandler() instanceof IImplementedPickUpHandler) {
+                $fromAddressBook = $addressBookRepo->findOneByStringId($fromAddressBookId);
+                $firstPossibleDate = $carrier->getHandler()->getFirstPickUpDate($fromAddressBook,$toAddressBook);
+            } elseif ($carrier->prenotationTimeLimit > (new \DateTime())->format('H:i:s')) {
+                $firstPossibleDate = new \DateTime();
+            } else {
+                $firstPossibleDate = SDateToolbox::GetNextWorkingDay(new \DateTime());
+            }
+        }else{
             $firstPossibleDate = SDateToolbox::GetNextWorkingDay(new \DateTime());
         }
 
