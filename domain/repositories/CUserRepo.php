@@ -545,7 +545,7 @@ class CUserRepo extends ARepo implements IUserRepo
 
             /** @var CEmailRepo $emailRepo */
             $emailRepo = \Monkey::app()->repoFactory->create('Email');
-            $emailRepo->newPackagedTemplateMail('recoverpassword', 'no-reply@pickyshop.com', $to, [], [], ['name' => $user->userDetails->name, 'token' => urlencode($user->getRegistrationToken())],'MailGun',null);
+            $emailRepo->newPackagedEmail('recoverpassword', 'no-reply@pickyshop.com', $to, [], [], ['name' => $user->userDetails->name, 'token' => urlencode($user->getRegistrationToken())],'MailGun',null);
         }
 
         return $form;

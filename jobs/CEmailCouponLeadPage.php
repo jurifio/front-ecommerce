@@ -99,7 +99,7 @@ class CEmailCouponLeadPage extends ACronJob
 
                             switch ($today) {
                                 case SDateToolbox::removeOrAddDaysFromDate($subscriptionDate, 3, '+'):
-                                    $emailRepo->newPackagedTemplateMail(
+                                    $emailRepo->newPackagedEmail(
                                         'reminederleadcoupon',
                                         'no-reply@pickyshop.com',
                                         [$newsletterUser->email],
@@ -113,7 +113,7 @@ class CEmailCouponLeadPage extends ACronJob
                                     );
                                     break;
                                 case SDateToolbox::removeOrAddDaysFromDate($subscriptionDate, 5, '+'):
-                                    $emailRepo->newPackagedTemplateMail(
+                                    $emailRepo->newPackagedEmail(
                                         'reminederleadcoupon',
                                         'no-reply@pickyshop.com',
                                         [$newsletterUser->email],
@@ -127,7 +127,7 @@ class CEmailCouponLeadPage extends ACronJob
                                     );
                                     break;
                                 case SDateToolbox::removeOrAddDaysFromDate($subscriptionDate, 7, '+'):
-                                    $emailRepo->newPackagedTemplateMail(
+                                    $emailRepo->newPackagedEmail(
                                         'reminederleadcoupon',
                                         'no-reply@pickyshop.com',
                                         [$newsletterUser->email],
