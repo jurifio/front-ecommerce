@@ -52,7 +52,7 @@ class CEdsTemaOrderApi
         $variante=trim($dirtyProduct->var);
         $lenVariante=strlen(trim($variante));
         $defVariante=$variante.str_repeat(' ',9-$lenVariante);
-        $defASC=str_repeat(' ',10);
+        $defASC=str_repeat(' ',12);
         $taglia=trim($dirtySku->size);
         $lenTaglia=strlen($taglia);
         $defTaglia=$tagliastr_repeat(' ',4-$lenTaglia);
@@ -65,7 +65,7 @@ class CEdsTemaOrderApi
         $lenRealizzo=strlen($realizzo);
         $defRealizzo=$realizzo.str_repeat(' ',9-$lenRealizzo);
         $defCommesso=str_repeat(' ',6);
-        $defPrefisso='CLI';
+        $defPrefisso='CLI      ';
         $listino=$this->rows->fullPrice*1000;
         $lenListino=strlen($listino);
         $defListino=$listino.str_repeat(' ',9-$lenListino);
