@@ -58,7 +58,8 @@ class CEdsTemaOrderApi
         $defTaglia=str_repeat(' ',4-$lenTaglia).$taglia;
         $defBarcode='000000000000';
         $defCausale='VE';
-        $defData=(new DateTime())->format('ymd_his');
+        $defData=(new DateTime())->format('ymd');
+        $defDataNew=(new DateTime())->format('ymd_his');
         $defBolla=str_repeat(' ',14);
         $realizzo=$this->rows->activePrice*1000;
         $lenRealizzo=strlen($realizzo);
@@ -81,7 +82,7 @@ class CEdsTemaOrderApi
         }else{
             $directory='/media/sf_sites/iwespro/client/public/media/productync/'.$name.'/export/';
         }
-        $fp = fopen($directory.$this->rows->orderId.'-'.$defData.'.csv','w');
+        $fp = fopen($directory.$this->rows->orderId.'-'.$defDataNew.'.csv','w');
         fwrite($fp, $orderLineString);
         fclose($fp);
 
