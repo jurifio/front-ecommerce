@@ -52,7 +52,7 @@ class CEdsTemaOrderApi
         $variante=trim($dirtyProduct->var);
         $lenVariante=strlen(trim($variante));
         $defVariante=str_repeat(' ',9-$lenVariante).$variante;
-        $defASC=str_repeat(' ',12);
+        $defASC=str_repeat(' ',10);
         $taglia=trim($dirtySku->size);
         $lenTaglia=strlen($taglia);
         $defTaglia=str_repeat(' ',4-$lenTaglia).$taglia;
