@@ -68,9 +68,9 @@ class CMailOrderClient extends AEventListener
 
             /** @var CEmailRepo $emailRepo */
             $emailRepo = \Monkey::app()->repoFactory->create('Email');
-            $emailRepo->newPackagedEmail('neworderclient','no-reply@pickyshop.com', $to,[],[],['order'=>$order,'orderId'=>$order->id],'MailGun',null);
-            $emailRepo->newPackagedEmail('neworderclient','no-reply@pickyshop.com', $toIwes,[],[],['order'=>$order,'orderId'=>$order->id],'MailGun',null);
-            $emailRepo->newPackagedEmail('neworderclient','no-reply@pickyshop.com', $toIt,[],[],['order'=>$order,'orderId'=>$order->id],'MailGun',null);
+            $emailRepo->newPackagedMail('neworderclient','no-reply@pickyshop.com', $to,[],[],['order'=>$order,'orderId'=>$order->id],'MailGun',null);
+            $emailRepo->newPackagedMail('neworderclient','no-reply@pickyshop.com', $toIwes,[],[],['order'=>$order,'orderId'=>$order->id],'MailGun',null);
+            $emailRepo->newPackagedMail('neworderclient','no-reply@pickyshop.com', $toIt,[],[],['order'=>$order,'orderId'=>$order->id],'MailGun',null);
 
 
         } catch (\Throwable $e) {
