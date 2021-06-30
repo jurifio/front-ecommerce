@@ -58,7 +58,7 @@ class CEdsTemaOrderApi
         $defTaglia=str_repeat(' ',4-$lenTaglia).$taglia;
         $defBarcode='000000000000';
         $defCausale='VE';
-        $defData=(new DateTime())->format('ymd');
+        $defData=(new DateTime())->format('ymd_his');
         $defBolla=str_repeat(' ',14);
         $realizzo=$this->rows->activePrice*1000;
         $lenRealizzo=strlen($realizzo);
