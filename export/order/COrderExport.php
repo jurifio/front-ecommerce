@@ -144,6 +144,24 @@ class COrderExport
         $emailRepo = \Monkey::app()->repoFactory->create('Email');
         $emailRepo->newPackagedMail('friendconfirmationmail', 'no-reply@iwes.pro', $to, [], [], ['lines' => $lines],'MailGun',null);
 	}
+    /**
+     * @param CShop $shop
+     * @param $orderLines
+     */
+    public function sendMailPendingOrder(CShop $shop, $orderLines)
+    {
+        $lines = $this->buildDatas($shop, $orderLines);
+        $userAdmin='gianluca@iwes.it;jurif@iwes.it';
+        $to = explode(';', $userAdmin);
+
+        /*
+        $this->app->mailer->prepare('friendconfirmationmail', 'no-reply', $to, [], [], ['lines' => $lines]);
+        $res = $this->app->mailer->send();*/
+
+        /** @var CEmailRepo $emailRepo */
+        $emailRepo = \Monkey::app()->repoFactory->create('Email');
+        $emailRepo->newPackagedMail('pendingmailorder', 'no-reply@iwes.pro', $to, [], [], ['lines' => $lines],'MailGun',null);
+    }
 
 	/**
 	 * @param CShop $shop
