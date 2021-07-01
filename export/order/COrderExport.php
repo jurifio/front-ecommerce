@@ -151,8 +151,8 @@ class COrderExport
     public function sendMailPendingOrder(CShop $shop, $orderLines)
     {
         $lines = $this->buildDatas($shop, $orderLines);
-        $userAdmin='gianluca@iwes.it;jurif@iwes.it';
-        $to = explode(';', $userAdmin);
+        //$userAdmin='gianluca@iwes.it;jurif@iwes.it';
+        $to = ['gianluca@iwes.it'];
 
         /*
         $this->app->mailer->prepare('friendconfirmationmail', 'no-reply', $to, [], [], ['lines' => $lines]);
