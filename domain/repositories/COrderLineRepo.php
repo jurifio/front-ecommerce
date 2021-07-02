@@ -74,9 +74,9 @@ class COrderLineRepo extends ARepo
         $lR = \Monkey::app()->repoFactory->create('Log');
         /** @var COrderLineRepo $olR */
         $olR = \Monkey::app()->repoFactory->create('OrderLine');
-        if ('ok' === $verdict || 1 === $verdict) $verdict = 'ORD_FRND_OK';
+        if ('ok' === $verdict || 1 === $verdict) $verdict = 'ORD_MAIL_PREP_C';
         if ('ko' === $verdict || 0 === $verdict) $verdict = 'ORD_FRND_CANC';
-        if ('ORD_FRND_OK' !== $verdict && 'ORD_FRND_CANC' !== $verdict) throw new BambooException('Status non accettato per questa operazione');
+        if ('ORD_MAIL_PREP_C' !== $verdict && 'ORD_FRND_CANC' !== $verdict) throw new BambooException('Status non accettato per questa operazione');
         $stringId = $orderLine->printId();
         $statusId = $orderLine->orderLineStatus->id;
         if (4 > $statusId || 8 < $statusId) {
@@ -88,7 +88,7 @@ class COrderLineRepo extends ARepo
                 $last = $lR->getLastEntry(
                     [
                         'stringId' => $stringId,
-                        'eventValue' => 'ORD_FRND_OK'
+                        'eventValue' => 'ORD_MAIL_PREP_C'
                     ]
                 );
                 if ($last) {
@@ -107,7 +107,7 @@ class COrderLineRepo extends ARepo
             );
         }
 
-        $accepted = ('ORD_FRND_OK' === $verdict) ? true : false;
+        $accepted = ('ORD_MAIL_PREP_C' === $verdict) ? true : false;
         $psk = \Monkey::app()->repoFactory->create('ProductSku')->findOne(
             [
                 $orderLine->productId,
@@ -212,7 +212,7 @@ class COrderLineRepo extends ARepo
             case 'ORD_CANCEL':
                 $orderLine = $this->updateToCancel($orderLine,$newStatusE,$oldStatus);
                 break;
-            case 'ORD_FRND_OK':
+            case 'ORD_MAIL_PREP_C':
                 $orderLine = $this->updateToFriendOk($orderLine,$newStatusE,$oldStatus);
                 break;
             case 'ORD_FRND_ORDSNT':
