@@ -52,7 +52,7 @@ class CEdsTemaOrderApi
         $variante=$dirtyProduct->var;
         $lenVariante=strlen($variante);
         $defVariante=$variante.str_repeat(' ',9-$lenVariante);
-        $defAnno=str_repeat(' ',2);
+        $defAnno='';
         $defStagione=str_repeat(' ',1);
         $defCosto=str_repeat(' ',9);
         $taglia=$dirtySku->size;
@@ -63,22 +63,22 @@ class CEdsTemaOrderApi
         $defData=(new DateTime())->format('ymd');
         $defDataNew=(new DateTime())->format('ymd_his');
         $defBolla=str_repeat(' ',12);
-        $defneg=str_repeat(' ',2);
+        $defneg='';
         $realizzo=$this->rows->activePrice*1000;
         $lenRealizzo=strlen($realizzo);
-        $defRealizzo=str_repeat(' ',9 - $lenRealizzo).$realizzo;
-        $defCommesso=str_repeat(' ',6);
+        $defRealizzo=str_repeat(' ',8 - $lenRealizzo).$realizzo;
+        $defCommesso=str_repeat(' ',9);
         $defPrefisso='CLI';
         $defCliente='888888';
         $listino=$this->rows->fullPrice * 1000;
         $lenListino=strlen($listino);
-        $defListino=str_repeat(' ',9-$lenListino).$listino;
+        $defListino=$listino.str_repeat(' ',9-$lenListino);
         $defIva='22';
         $defSegno='+';
         $defQuantita='0001';
         $defFiller=str_repeat(' ',25);
         $flag='0';
-        $orderLineString=$defCodiceNegozio.$defCodiceArticolo.$defVariante.$defAnno.$defStagione.$defCosto.$defTaglia.$defBarcode.$defCausale.$defData.$defBolla.$defRealizzo.$defneg.$defCommesso.$defPrefisso.$defCliente.$defListino.$defIva.$defSegno.$defQuantita.$defFiller.$flag;
+        $orderLineString=$defCodiceNegozio.$defCodiceArticolo.$defVariante.$defAnno.$defStagione.$defCosto.$defTaglia.$defBarcode.$defCausale.$defData.$defBolla.$defneg.$defRealizzo.$defCommesso.$defPrefisso.$defCliente.$defListino.$defIva.$defSegno.$defQuantita.$defFiller.$flag;
         $name=$shop->name;
         if(ENV=='prod') {
             $directory='/home/iwespro/public_html/client/public/media/productsync/'.$name.'/export/';
