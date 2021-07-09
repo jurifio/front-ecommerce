@@ -31,6 +31,18 @@
                 "parentKeys": ["productId","productVariantId"],
                 "childKeys": ["productId","productVariantId"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "marketplaceAccount",
+                "entity": "MarketplaceAccount",
+                "parentKeys": ["marketplaceHasShopId"],
+                "childKeys": ["marketplaceId"],
+                "join On": {
+                    "table": "MarketplaceHasShop",
+                    "childKeys": ["marketplaceId"],
+                    "parentKeys" : ["id"]
+                },
+                "type": "OneToMany"
             }
         ]
     }
