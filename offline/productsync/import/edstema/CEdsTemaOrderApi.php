@@ -54,7 +54,7 @@ class CEdsTemaOrderApi
         $defVariante=$variante.str_repeat(' ',9-$lenVariante);
         $defAnno='';
         $defStagione=str_repeat(' ',1);
-        $defCosto=str_repeat(' ',9);
+        $defCosto=str_repeat(' ',7);
         $taglia=$dirtySku->size;
         $lenTaglia=strlen($taglia);
         $defTaglia=$taglia.str_repeat(' ',4-$lenTaglia);
