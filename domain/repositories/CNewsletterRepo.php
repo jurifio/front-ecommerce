@@ -140,8 +140,8 @@ class CNewsletterRepo extends ARepo
       //  $emailRepo = \Monkey::app()->repoFactory->create('Email');
         $verificafineciclo = 0;
 
-       // $allEmailAddress = array_chunk($indirizzi, 900);
-        $i=0;
+        $allEmailAddress = array_chunk($indirizzi, 900);
+
         foreach ($indirizzi as $subTo) {
             try {
                 \Monkey::app()->applicationLog('NewsletterRepo','log','send Newsletter n.'.$newsletterId,$sutoto,'' );
@@ -152,10 +152,7 @@ class CNewsletterRepo extends ARepo
                 $emailRepo = \Monkey::app()->repoFactory->create('Email');
                 $emailRepo->newMail($from, [$subTo], [], [], $subject, $preCompiledTemplate, null, $newsletterId, $newsletterCloneId, 'mailGun', false,null);
                 $res=true;
-                $i++;
-                if($i==1){
-                    break;
-                }
+
 
             } catch (\Throwable $e) {
                 $res = false;
