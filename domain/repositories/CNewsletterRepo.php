@@ -145,20 +145,17 @@ class CNewsletterRepo extends ARepo
         foreach ($indirizzi as $subTo) {
             try {
                 \Monkey::app()->applicationLog('NewsletterRepo','log','send Newsletter n.'.$newsletterId,$sutoto,'' );
-                $this->sendBatchFromNewsletter($from, $subTo, $subject, $preCompiledTemplate, $newsletterId, $newsletterCloneId);
+               // $this->sendBatchFromNewsletter($from, $subTo, $subject, $preCompiledTemplate, $newsletterId, $newsletterCloneId);
                 $res = true;
+
+                /** @var CEmailRepo $emailRepo */
+                $emailRepo = \Monkey::app()->repoFactory->create('Email');
+                $emailRepo->newMail($from, [$subTo], [], [], $subject, $preCompiledTemplate, null, $newsletterId, $newsletterCloneId, 'mailGun', false,null);
+                $res=true;
                 $i++;
                 if($i==1){
                     break;
                 }
-                //$message = str_replace('emailunsuscriber', $val["email"], $preCompiledTemplate);
-                //if ($withEvents) {
-                //$args = [$from, [$val["email"]], [], [], $subject, $message, null,$newsletterId, $newsletterCloneId, 'mailGun', false];
-                //\Monkey::app()->eventManager->triggerEvent('newEmail',$args);
-                // $res = true;
-                // } else {
-                //   $res = $emailRepo->newMail($from, [$val["email"]], [], [], $subject, $message, null, $newsletterId, $newsletterCloneId, 'mailGun', false);
-                // }
 
             } catch (\Throwable $e) {
                 $res = false;
