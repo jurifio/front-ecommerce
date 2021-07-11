@@ -13,6 +13,8 @@ use bamboo\domain\entities\CExternalEmail;
 use bamboo\domain\entities\CNewsletter;
 use bamboo\domain\entities\CNewsletterGroup;
 use bamboo\core\db\pandaorm\repositories\ARepo;
+use bamboo\domain\repositories\CEmailRepo;
+
 
 /**
  * Class CNewsletterRepo
@@ -139,11 +141,16 @@ class CNewsletterRepo extends ARepo
         $verificafineciclo = 0;
 
        // $allEmailAddress = array_chunk($indirizzi, 900);
+        $i=0;
         foreach ($indirizzi as $subTo) {
             try {
-
+                \Monkey::app()->applicationLog('NewsletterRepo','log','send Newsletter n.'.$newsletterId,$sutoto,'' );
                 $this->sendBatchFromNewsletter($from, $subTo, $subject, $preCompiledTemplate, $newsletterId, $newsletterCloneId);
                 $res = true;
+                $i++;
+                if($i==1){
+                    break;
+                }
                 //$message = str_replace('emailunsuscriber', $val["email"], $preCompiledTemplate);
                 //if ($withEvents) {
                 //$args = [$from, [$val["email"]], [], [], $subject, $message, null,$newsletterId, $newsletterCloneId, 'mailGun', false];
@@ -161,7 +168,7 @@ class CNewsletterRepo extends ARepo
         }
 
         if (count($indirizzi) === $verificafineciclo) {
-            $res = "Email Generate $verificafineciclo";
+            $res = "Email Generate ".$i;
             return $res;
         } else return 'errore, numero email sbagliato';
 
