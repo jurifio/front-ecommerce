@@ -306,9 +306,10 @@ class CNewsletterRepo extends ARepo
                 $externalEmailRepo = \Monkey::app()->repoFactory->create('ExternalEmail');
                 $externalEmailRepo->newExternalMail($from, $to, $subject, $body, $newsletterId, $newsletterCloneId,'MailGun',false,null);
             }*/
+            $tos=[$to];
             /** @var CEmailRepo $emailRepo */
             $emailRepo = \Monkey::app()->repoFactory->create('Email');
-            $emailRepo->newBatchMail($from, $to, $subject, $body, $newsletterId, $newsletterCloneId,'MailGun',false,null);
+            $emailRepo->newBatchMail($from, $tos, $subject, $body, $newsletterId, $newsletterCloneId,'MailGun',false,null);
 
         } catch (\Throwable $e) {
             $this->report('Error while sending', $e->getMessage(), $e);
