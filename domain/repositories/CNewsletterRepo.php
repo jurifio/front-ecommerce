@@ -83,7 +83,7 @@ class CNewsletterRepo extends ARepo
      * @param bool $isTest
      * @return bool|string
      */
-    public function sendNewsletterEmails(CNewsletter $newsletter, $isTest = true)
+    public function sendNewsletterEmails(CNewsletter $newsletter,$isTest = true)
     {
         $newsletterUser = $newsletter;
 
@@ -107,7 +107,7 @@ class CNewsletterRepo extends ARepo
         /** @var CEmailAddress $emailAddress */
 
         $emailAddress = \Monkey::app()->repoFactory->create('EmailAddress')->findOneBy(['id' => $fromEmailAddressId]);
-        \Monkey::app()->applicationReport('NewsletterRepo', 'Newsletter Send', 'Sending Newsletter - from, isTest  = ' . $test, $emailAddress);
+        \Monkey::app()->applicationReport('NewsletterRepo','Newsletter Send','Sending Newsletter - from, isTest  = ' . $test,$emailAddress);
         $fromEmailAddress = $emailAddress->id;
         $checkEmailAddress = $emailAddress;
 
@@ -119,56 +119,67 @@ class CNewsletterRepo extends ARepo
 
 
         //Se è una newsletter madre
-       /* if (!$newsletter->isChild()) {
-            //se mamma allora piglio gli indirizzi come ho sempre fatto
-            $indirizzi = $this->getAddressFromSql($isTest, $newsletterEmailListId);
-        } else {
-            if (!$newsletter->haveResend()) {
-                //FIGLIO --> SE è SELEZIONATA UNA LISTA E NON UNA SUB-QUERY
-                $indirizzi = $this->getAddressFromSql($isTest, $newsletterEmailListId);
-            } else {
-                //FIGLIO --> SE è SUB-QUERY
-                $indirizzi = $this->getAddressFromCriterion($newsletter);
-            }
-        }*/
-        $indirizzi = $this->getAddressFromSql($isTest, $newsletterEmailListId);
+        /* if (!$newsletter->isChild()) {
+             //se mamma allora piglio gli indirizzi come ho sempre fatto
+             $indirizzi = $this->getAddressFromSql($isTest, $newsletterEmailListId);
+         } else {
+             if (!$newsletter->haveResend()) {
+                 //FIGLIO --> SE è SELEZIONATA UNA LISTA E NON UNA SUB-QUERY
+                 $indirizzi = $this->getAddressFromSql($isTest, $newsletterEmailListId);
+             } else {
+                 //FIGLIO --> SE è SUB-QUERY
+                 $indirizzi = $this->getAddressFromCriterion($newsletter);
+             }
+         }*/
+        $indirizzi = $this->getAddressFromSql($isTest,$newsletterEmailListId);
 
         //\Monkey::app()->applicationReport('NewsletterRepo', 'Newsletter Send', 'Sending Newsletter - sql, isTest  = '.$test,$sql);
 
         //\Monkey::app()->applicationReport('NewsletterRepo', 'Newsletter Send', 'Sending Newsletter - result, isTest  = '.$test,$indirizzi);
         /** @var CEmailRepo $emailRepo */
-      //  $emailRepo = \Monkey::app()->repoFactory->create('Email');
+        //  $emailRepo = \Monkey::app()->repoFactory->create('Email');
         $verificafineciclo = 0;
+        $i=0;
+        $allEmailAddress = array_chunk($indirizzi,900);
+        foreach ($allEmailAddress as $EmailAddress) {
+            foreach ($EmailAddress as $subTo) {
+                try {
 
-        $allEmailAddress = array_chunk($indirizzi, 900);
+                    \Monkey::app()->applicationLog('NewsletterRepo','log','send Newsletter n.' . $newsletterId,$subTo,'');
+                    // $this->sendBatchFromNewsletter($from, $subTo, $subject, $preCompiledTemplate, $newsletterId, $newsletterCloneId);
+                    $res = true;
+                    //$message = str_replace('emailunsuscriber', $val["email"], $preCompiledTemplate);
+                    //if ($withEvents) {
+                    //$args = [$from, [$val["email"]], [], [], $subject, $message, null,$newsletterId, $newsletterCloneId, 'mailGun', false];
+                    //\Monkey::app()->eventManager->triggerEvent('newEmail',$args);
+                    // $res = true;
+                    // } else {
+                    //   $res = $emailRepo->newMail($from, [$val["email"]], [], [], $subject, $message, null, $newsletterId, $newsletterCloneId, 'mailGun', false);
+                    // }
+                    $cliente = $subTo['email'];
+                    $message = str_replace('{{emailunsuscriber}}',$subTo['email'],$preCompiledTemplate);
+                        /** @var CEmailRepo $emailRepo */
+                        $emailRepo = \Monkey::app()->repoFactory->create('Email');
+                        $emailRepo->newMail($from,[$subTo['email']],[],[],$subject,$message,null,$newsletterId,$newsletterCloneId,'mailGun',false,null);
+                    $res = true;
+                    $i++;
 
-        foreach ($indirizzi as $subTo) {
-            try {
-                \Monkey::app()->applicationLog('NewsletterRepo','log','send Newsletter n.'.$newsletterId,$sutoto,'' );
-               // $this->sendBatchFromNewsletter($from, $subTo, $subject, $preCompiledTemplate, $newsletterId, $newsletterCloneId);
-                $res = true;
 
-                /** @var CEmailRepo $emailRepo */
-                $emailRepo = \Monkey::app()->repoFactory->create('Email');
-                $emailRepo->newMail($from, [$subTo], [], [], $subject, $preCompiledTemplate, null, $newsletterId, $newsletterCloneId, 'mailGun', false,null);
-                $res=true;
+                } catch (\Throwable $e) {
+                    $res = false;
+                }
 
-
-            } catch (\Throwable $e) {
-                $res = false;
             }
-
-            if ($res) $verificafineciclo = $verificafineciclo + count($subTo);
         }
 
-        if (count($indirizzi) === $verificafineciclo) {
-            $res = "Email Generate ".$i;
+
+            $res = "Email Generate " . $i;
             return $res;
-        } else return 'errore, numero email sbagliato';
+
 
     }
 
-    public function getAddressFromSql($isTest, $newsletterEmailListId)
+    public function getAddressFromSql($isTest,$newsletterEmailListId)
     {
 
         /** @var  $CNewsletterEmailList $newsletterEmailList */
@@ -192,13 +203,13 @@ class CNewsletterRepo extends ARepo
         $sqlDefault = $newsletterGroup->sql;
         $sql = $sqlDefault . " " . $filterSql;
 
-      /*  if ($isTest) {
-            $indirizzi = [];
-            $indirizzi[] = ['email' => \Monkey::app()->getUser()->getEmail()];
-        } else {
-            $indirizzi = \Monkey::app()->dbAdapter->query($sql, [])->fetchAll();
-        }*/
-        $indirizzi = \Monkey::app()->dbAdapter->query($sql, [])->fetchAll();
+        /*  if ($isTest) {
+              $indirizzi = [];
+              $indirizzi[] = ['email' => \Monkey::app()->getUser()->getEmail()];
+          } else {
+              $indirizzi = \Monkey::app()->dbAdapter->query($sql, [])->fetchAll();
+          }*/
+        $indirizzi = \Monkey::app()->dbAdapter->query($sql,[])->fetchAll();
         return $indirizzi;
     }
 
@@ -223,9 +234,9 @@ class CNewsletterRepo extends ARepo
                     /** @var CEmail $email */
                     foreach ($emails as $email) {
                         /** @var CEmailRecipient $dest */
-                        $dests = $email->emailRecipient->findByKey('typeTo', 'TO');
+                        $dests = $email->emailRecipient->findByKey('typeTo','TO');
 
-                        foreach ($dests as $dest){
+                        foreach ($dests as $dest) {
                             if (is_null($dest->firstOpenTime)) {
                                 $indirizzi[]['email'] = $dest->emailAddress->address;
                             }
@@ -237,9 +248,9 @@ class CNewsletterRepo extends ARepo
                     /** @var CExternalEmail $externalEmail */
                     foreach ($externalEmails as $externalEmail) {
                         /** @var CEmailExternalRecipient $dest */
-                        $dests = $externalEmail->emailExternalRecipient->findByKey('typeTo', 'TO');
+                        $dests = $externalEmail->emailExternalRecipient->findByKey('typeTo','TO');
 
-                        foreach ($dests as $dest){
+                        foreach ($dests as $dest) {
                             if (is_null($dest->firstOpenTime)) {
                                 $indirizzi[]['email'] = $dest->newsletterExternalUser->email;
                             }
@@ -255,9 +266,9 @@ class CNewsletterRepo extends ARepo
                     /** @var CEmail $email */
                     foreach ($emails as $email) {
                         /** @var CEmailRecipient $dest */
-                        $dests = $email->emailRecipient->findByKey('typeTo', 'TO');
+                        $dests = $email->emailRecipient->findByKey('typeTo','TO');
 
-                        foreach ($dests as $dest){
+                        foreach ($dests as $dest) {
                             if (!is_null($dest->firstOpenTime) && is_null($dest->firstClickTime)) {
                                 $indirizzi[]['email'] = $dest->emailAddress->address;
                             }
@@ -269,9 +280,9 @@ class CNewsletterRepo extends ARepo
                     /** @var CExternalEmail $externalEmail */
                     foreach ($externalEmails as $externalEmail) {
                         /** @var CEmailExternalRecipient $dest */
-                        $dests = $externalEmail->emailExternalRecipient->findByKey('typeTo', 'TO');
+                        $dests = $externalEmail->emailExternalRecipient->findByKey('typeTo','TO');
 
-                        foreach ($dests as $dest){
+                        foreach ($dests as $dest) {
                             if (!is_null($dest->firstOpenTime) && is_null($dest->firstClickTime)) {
                                 $indirizzi[]['email'] = $dest->newsletterExternalUser->email;
                             }
@@ -285,7 +296,7 @@ class CNewsletterRepo extends ARepo
 
     }
 
-    public function sendBatchFromNewsletter($from, $to, $subject, $body, $newsletterId, $newsletterCloneId)
+    public function sendBatchFromNewsletter($from,$to,$subject,$body,$newsletterId,$newsletterCloneId)
     {
 
         try {
@@ -296,8 +307,8 @@ class CNewsletterRepo extends ARepo
 
             $isExternal = $newsletter->isExternal();
 
-         /*   if (!$isExternal) {
-                /** @var CEmailRepo $emailRepo */
+            /*   if (!$isExternal) {
+                   /** @var CEmailRepo $emailRepo */
             /*
                 $emailRepo = \Monkey::app()->repoFactory->create('Email');
                 $emailRepo->newBatchMail($from, $to, $subject, $body, $newsletterId, $newsletterCloneId,'MailGun',false,null);
@@ -307,13 +318,13 @@ class CNewsletterRepo extends ARepo
                 $externalEmailRepo = \Monkey::app()->repoFactory->create('ExternalEmail');
                 $externalEmailRepo->newExternalMail($from, $to, $subject, $body, $newsletterId, $newsletterCloneId,'MailGun',false,null);
             }*/
-            $tos=[$to];
+            $tos = [$to];
             /** @var CEmailRepo $emailRepo */
             $emailRepo = \Monkey::app()->repoFactory->create('Email');
-            $emailRepo->newBatchMail($from, $tos, $subject, $body, $newsletterId, $newsletterCloneId,'MailGun',false,null);
+            $emailRepo->newBatchMail($from,$tos,$subject,$body,$newsletterId,$newsletterCloneId,'MailGun',false,null);
 
         } catch (\Throwable $e) {
-            $this->report('Error while sending', $e->getMessage(), $e);
+            $this->report('Error while sending',$e->getMessage(),$e);
         }
 
         return true;
