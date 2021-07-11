@@ -117,7 +117,7 @@ class CNewsletterRepo extends ARepo
 
 
         //Se è una newsletter madre
-        if (!$newsletter->isChild()) {
+       /* if (!$newsletter->isChild()) {
             //se mamma allora piglio gli indirizzi come ho sempre fatto
             $indirizzi = $this->getAddressFromSql($isTest, $newsletterEmailListId);
         } else {
@@ -128,7 +128,8 @@ class CNewsletterRepo extends ARepo
                 //FIGLIO --> SE è SUB-QUERY
                 $indirizzi = $this->getAddressFromCriterion($newsletter);
             }
-        }
+        }*/
+        $indirizzi = $this->getAddressFromSql($isTest, $newsletterEmailListId);
 
         //\Monkey::app()->applicationReport('NewsletterRepo', 'Newsletter Send', 'Sending Newsletter - sql, isTest  = '.$test,$sql);
 
@@ -190,13 +191,13 @@ class CNewsletterRepo extends ARepo
         $sqlDefault = $newsletterGroup->sql;
         $sql = $sqlDefault . " " . $filterSql;
 
-        if ($isTest) {
+      /*  if ($isTest) {
             $indirizzi = [];
             $indirizzi[] = ['email' => \Monkey::app()->getUser()->getEmail()];
         } else {
             $indirizzi = \Monkey::app()->dbAdapter->query($sql, [])->fetchAll();
-        }
-
+        }*/
+        $indirizzi = \Monkey::app()->dbAdapter->query($sql, [])->fetchAll();
         return $indirizzi;
     }
 
