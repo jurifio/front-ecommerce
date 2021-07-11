@@ -139,7 +139,7 @@ class CNewsletterRepo extends ARepo
         $verificafineciclo = 0;
 
        // $allEmailAddress = array_chunk($indirizzi, 900);
-        foreach ($allEmailAddress as $subTo) {
+        foreach ($indirizzi as $subTo) {
             try {
 
                 $this->sendBatchFromNewsletter($from, $subTo, $subject, $preCompiledTemplate, $newsletterId, $newsletterCloneId);
