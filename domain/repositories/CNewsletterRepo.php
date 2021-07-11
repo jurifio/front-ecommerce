@@ -137,7 +137,7 @@ class CNewsletterRepo extends ARepo
 
         //\Monkey::app()->applicationReport('NewsletterRepo', 'Newsletter Send', 'Sending Newsletter - result, isTest  = '.$test,$indirizzi);
         /** @var CEmailRepo $emailRepo */
-        $emailRepo = \Monkey::app()->repoFactory->create('Email');
+      //  $emailRepo = \Monkey::app()->repoFactory->create('Email');
         $verificafineciclo = 0;
 
        // $allEmailAddress = array_chunk($indirizzi, 900);
