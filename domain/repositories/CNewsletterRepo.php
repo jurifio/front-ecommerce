@@ -295,15 +295,20 @@ class CNewsletterRepo extends ARepo
 
             $isExternal = $newsletter->isExternal();
 
-            if (!$isExternal) {
+         /*   if (!$isExternal) {
                 /** @var CEmailRepo $emailRepo */
+            /*
                 $emailRepo = \Monkey::app()->repoFactory->create('Email');
                 $emailRepo->newBatchMail($from, $to, $subject, $body, $newsletterId, $newsletterCloneId,'MailGun',false,null);
             } else {
                 /** @var CExternalEmailRepo $externalEmailRepo */
+            /*
                 $externalEmailRepo = \Monkey::app()->repoFactory->create('ExternalEmail');
                 $externalEmailRepo->newExternalMail($from, $to, $subject, $body, $newsletterId, $newsletterCloneId,'MailGun',false,null);
-            }
+            }*/
+            /** @var CEmailRepo $emailRepo */
+            $emailRepo = \Monkey::app()->repoFactory->create('Email');
+            $emailRepo->newBatchMail($from, $to, $subject, $body, $newsletterId, $newsletterCloneId,'MailGun',false,null);
 
         } catch (\Throwable $e) {
             $this->report('Error while sending', $e->getMessage(), $e);
