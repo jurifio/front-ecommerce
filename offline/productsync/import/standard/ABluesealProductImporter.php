@@ -344,6 +344,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             if ($i % 500) {
             $limitEnd=$limitEnd+500;
             $urlDef=$url.'&offset='.$limitStart.'&limit=500';
+                $this->report("fetchWebMultiplesFiles","url: " . $urlDef,null);
                 $ch = curl_init();
                 //$urlget = sprintf("%s:%s", $urlDef, http_build_query(false));
                 curl_setopt($ch,CURLOPT_URL,$urlDef);
@@ -359,6 +360,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
 
                 $filename = $localDir . '/import/' . time() . ($this->config->fetch('filesConfig','extension') ?? '.xml');
+                $this->report("fetchWebMultiplesFiles","filename: " . $filename,null);
                 if (empty($retValue)) {
                     $this->warning('fetchWebMultiplesFiles','Got Empty File!');
                 } else {
