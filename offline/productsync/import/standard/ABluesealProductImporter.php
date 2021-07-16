@@ -1172,7 +1172,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
         } else $this->debug('Download Immagine', 'Wont Save DummyPictures');
     }
-    function callAPI($method, $url, $data){
+    public function callAPI($method, $url, $data){
         $curl = curl_init();
 
         switch ($method){
