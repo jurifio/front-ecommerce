@@ -347,26 +347,18 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             $limitEnd=$limitEnd+500;
             $urlDef=$url.'&offset='.$limitStart.'&limit=500';
                 $this->report("fetchWebMultiplesFiles","url: " . $urlDef,null);
-                $ch = curl_init();
-                //$urlget = sprintf("%s:%s", $urlDef, http_build_query(false));
-                curl_setopt($ch,CURLOPT_URL,$urlDef);
-                curl_setopt($ch,CURLOPT_FAILONERROR,1);
-                curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-                curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-                curl_setopt($ch,CURLOPT_TIMEOUT,0);
-                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,0);
-                $retValue = curl_exec($ch);
+                $get_data = callAPI('GET',$urlDef,false);
+                $response = json_decode($get_data);
 
-                curl_close($ch);
 
 
                 $filename = $localDir . '/import/' . time() . ($this->config->fetch('filesConfig','extension') ?? '.xml');
                 $this->report("fetchWebMultiplesFiles","filename: " . $filename,null);
-                if (empty($retValue)) {
+                if (empty($response)) {
                     $this->warning('fetchWebMultiplesFiles','Got Empty File!');
                 } else {
-                    file_put_contents($filename,trim($retValue));
+
+                    file_put_contents($filename,trim(json_encode($response->results->items)));
                     $this->report("fetchWebMultiplesFiles","filename: " . $filename,null);
                 }
 
@@ -1179,5 +1171,36 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             }
 
         } else $this->debug('Download Immagine', 'Wont Save DummyPictures');
+    }
+    function callAPI($method, $url, $data){
+        $curl = curl_init();
+
+        switch ($method){
+            case "POST":
+                curl_setopt($curl, CURLOPT_POST, 1);
+                if ($data)
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                break;
+            case "PUT":
+                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+                if ($data)
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                break;
+            default:
+                if ($data)
+                    $url = sprintf("%s:%s", $url, http_build_query($data));
+        }
+
+        // OPTIONS:
+        curl_setopt($curl, CURLOPT_URL, $url);
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+
+        // EXECUTE:
+        $result = curl_exec($curl);
+        if(!$result){die("Connection Failure");}
+        curl_close($curl);
+        return $result;
     }
 }
