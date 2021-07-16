@@ -21,6 +21,7 @@ use bamboo\domain\entities\CPrestashopHasProductHasMarketplaceHasShop;
 use bamboo\domain\entities\CProductPublicSku;
 use bamboo\domain\entities\CProductSku;
 use bamboo\offline\productsync\import\mpk\CMpkOrderApi;
+use bamboo\offline\productsync\import\stylecommerce\CStylecommerceOrderApi;
 use bamboo\utils\price\SPriceToolbox;
 use bamboo\utils\time\STimeToolbox;
 
@@ -289,7 +290,7 @@ class COrderRepo extends ARepo
                 }
 
                 if ($haveAlduca) {
-                    $alducaApi = new CMpkOrderApi($order->id);
+                    $alducaApi = new CStylecommerceOrderApi($order->id);
                     $alducaApi->deleteOrder();
                 }
 
