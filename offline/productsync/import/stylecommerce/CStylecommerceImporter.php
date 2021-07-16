@@ -9,7 +9,7 @@ use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
  * Class CStylecommerceImporter
- * @package bamboo\offline\productsync\import\mpk
+ * @package bamboo\offline\productsync\import\stylecommerce
  *
  * @author Iwes Team <it@iwes.it>
  *
