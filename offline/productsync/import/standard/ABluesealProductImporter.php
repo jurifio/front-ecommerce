@@ -230,6 +230,9 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             case "url":
                 $this->fetchWebFiles();
                 break;
+            case "urls":
+                $this->fetchWebMultiplesFiles();
+                break;
             default:
                 throw new BambooConfigException('Wrong configuration for fetching files');
         }
@@ -326,6 +329,47 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         }
 
         $this->fetchLocalFiles();
+    }
+    protected function fetchWebMultiplesFiles()
+    {
+        $localDir = $this->app->rootPath() . $this->app->cfg()->fetch('paths', 'productSync') . '/' . $this->getShop()->name;
+
+        $url = $this->config->fetch('filesConfig', 'istructions')['url'];
+        $maxProducts=$this->config->fetch('filesConfig', 'istructions')['maxProducts'];
+        $offSet=1;
+        $limitStart=1;
+        $limitEnd=0;
+
+        for($i=1;$i<=$maxProducts;$i++) {
+
+            if ($i % 500) {
+            $limitEnd=$limitEnd+500;
+            $urlDef=$url.'&offset='.$offSet.'&limit='.$limitStart.','.$limitEnd;
+                $ch = curl_init();
+                curl_setopt($ch,CURLOPT_URL,$urlDef);
+                curl_setopt($ch,CURLOPT_FAILONERROR,1);
+                curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+                curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+                curl_setopt($ch,CURLOPT_TIMEOUT,0);
+                curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,0);
+                $retValue = curl_exec($ch);
+                curl_close($ch);
+
+                $filename = $localDir . '/import/' . time() . ($this->config->fetch('filesConfig','extension') ?? '.xml');
+                if (empty($retValue)) {
+                    $this->warning('fetchWebFiles','Got Empty File!');
+                } else {
+                    file_put_contents($filename,trim($retValue));
+                    $this->report("fetchWebFiles","filename: " . $filename,null);
+                }
+
+                $this->fetchLocalFiles();
+                $offSet++;
+                $limitStart=$limitStart+500;
+            }else{
+                continue;
+            }
+        }
     }
 
     /**
