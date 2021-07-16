@@ -353,13 +353,9 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 curl_setopt($ch,CURLOPT_TIMEOUT,0);
                 curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,0);
                 $retValue = curl_exec($ch);
-                $response=json_decode($retValue,true);
+
                 curl_close($ch);
-                foreach ($response as $rawSkus) {
-                    foreach ($rawSkus['items'] as $rawSku) {
-                        $k++;
-                    }
-                }
+
 
                 $filename = $localDir . '/import/' . time() . ($this->config->fetch('filesConfig','extension') ?? '.xml');
                 if (empty($retValue)) {
