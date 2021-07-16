@@ -341,7 +341,9 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         $limitEnd=0;
 
         for($i=1;$i<=$maxProducts;$i++) {
-            if ($i % 500) {
+            if ($i%500) {
+                continue;
+            }else{
             $limitEnd=$limitEnd+500;
             $urlDef=$url.'&offset='.$limitStart.'&limit=500';
                 $this->report("fetchWebMultiplesFiles","url: " . $urlDef,null);
@@ -371,8 +373,6 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 $this->fetchLocalFiles();
                 $offSet++;
                 $limitStart=$limitStart+500;
-            }else{
-                continue;
             }
 
         }
