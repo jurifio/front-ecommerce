@@ -344,21 +344,31 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             if ($i%500) {
                 continue;
             }else{
-            $limitEnd=$limitEnd+500;
-            $urlDef=$url.'&offset='.$limitStart.'&limit=500';
+                $limitEnd=$limitEnd+500;
+                $urlDef=$url.'&offset='.$limitStart.'&limit=500';
                 $this->report("fetchWebMultiplesFiles","url: " . $urlDef,null);
-                $get_data = $this->callAPI('GET',$urlDef,false);
-                $response = json_decode($get_data);
+                $ch = curl_init();
+                //$urlget = sprintf("%s:%s", $urlDef, http_build_query(false));
+                curl_setopt($ch,CURLOPT_URL,$urlDef);
+                curl_setopt($ch,CURLOPT_FAILONERROR,1);
+                curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+                curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+                curl_setopt($ch,CURLOPT_TIMEOUT,0);
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,0);
+                $retValue = curl_exec($ch);
+
+                curl_close($ch);
 
 
 
                 $filename = $localDir . '/import/' . time() . ($this->config->fetch('filesConfig','extension') ?? '.xml');
                 $this->report("fetchWebMultiplesFiles","filename: " . $filename,null);
-                if (empty($response)) {
+                if (empty($retValue)) {
                     $this->warning('fetchWebMultiplesFiles','Got Empty File!');
                 } else {
 
-                    file_put_contents($filename,trim(json_encode($response->results->items)));
+                    file_put_contents($filename,trim($retValue));
                     $this->report("fetchWebMultiplesFiles","filename: " . $filename,null);
                 }
 
