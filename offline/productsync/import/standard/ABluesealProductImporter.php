@@ -359,10 +359,10 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
                 $filename = $localDir . '/import/' . time() . ($this->config->fetch('filesConfig','extension') ?? '.xml');
                 if (empty($retValue)) {
-                    $this->warning('fetchWebFiles','Got Empty File!');
+                    $this->warning('fetchWebMultiplesFiles','Got Empty File!');
                 } else {
                     file_put_contents($filename,trim($retValue));
-                    $this->report("fetchWebFiles","filename: " . $filename,null);
+                    $this->report("fetchWebMultiplesFiles","filename: " . $filename,null);
                 }
 
                 $this->fetchLocalFiles();
