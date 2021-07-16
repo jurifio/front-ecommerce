@@ -347,7 +347,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             $limitEnd=$limitEnd+500;
             $urlDef=$url.'&offset='.$limitStart.'&limit=500';
                 $this->report("fetchWebMultiplesFiles","url: " . $urlDef,null);
-                $get_data = callAPI('GET',$urlDef,false);
+                $get_data = $this->callAPI('GET',$urlDef,false);
                 $response = json_decode($get_data);
 
 
