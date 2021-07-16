@@ -339,18 +339,19 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         $offSet=1;
         $limitStart=1;
         $limitEnd=0;
-        $k=0;
 
         for($i=1;$i<=$maxProducts;$i++) {
             if ($i % 500) {
             $limitEnd=$limitEnd+500;
             $urlDef=$url.'&offset='.$limitStart.'&limit=500';
                 $ch = curl_init();
-                curl_setopt($ch,CURLOPT_URL,$urlDef);
+                $urlget = sprintf("%s:%s", $url, http_build_query());
+                curl_setopt($ch,CURLOPT_URL,$urlget);
                 curl_setopt($ch,CURLOPT_FAILONERROR,1);
                 curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
                 curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
                 curl_setopt($ch,CURLOPT_TIMEOUT,0);
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
                 curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,0);
                 $retValue = curl_exec($ch);
 
