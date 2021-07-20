@@ -258,8 +258,8 @@ class CStylecommerceImporter extends ABluesealProductImporter
                                     $dp=\Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['id'=>$dirtyProduct['id']]);
                                     if($dp->productId!=null) {
                                         $findDirtyHasStoreHouse->dirtyProductId = $dirtyProduct['id'];
-                                        $findDirtyHasStoreHouse->productId = $dirtyProduct['productId'];
-                                        $findDirtyHasStoreHouse->productVariantId = $dirtyProduct['productVariantId'];
+                                        $findDirtyHasStoreHouse->productId = $dp->productId;
+                                        $findDirtyHasStoreHouse->productVariantId = $dp->productVariantId;
                                         $findDirtyHasStoreHouse->productSizeId = $existingSku[0]['productSizeId'];
                                         $findDirtyHasStoreHouse->qty = $sku['qty'];
                                         $findDirtyHasStoreHouse->update();
