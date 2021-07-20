@@ -1091,7 +1091,8 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 }
 
                 $imgN = str_pad($v['position'], 3, "0", STR_PAD_LEFT);
-                $destFileName = trim($p->getAztecCode() . " - " . $imgN . "." . $path['extension']);
+                $destTempFileName = $p->getAztecCode() . " - " . $imgN . "." . $path['extension'];
+                $destFileName=str_replace(' ','',$destTempFileName);
                 if ($p->productPhoto->count()) $existing = true;
                 else $existing = false;
 
