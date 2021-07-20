@@ -1121,7 +1121,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                         unlink($destDir . $destFileName);
                     }
                 } catch (\Throwable $e) {
-                    $this->error("download immagini", $destFileName . "non salvato. File scaricato, ma impossibile salvarlo su disco. Url corrispondente: " . $v['url'], $e);
+                    $this->error("download immagini", $destFileName . "non salvato. File scaricato, ma impossibile salvarlo su disco. Url corrispondente: " . $v['url'], $e-getLIne().'-'.$e->getMessage());
                     if (!is_dir(rtrim($destDir, "/"))) {
                         if (!mkdir($destDir, 0777, true) && !is_dir($destDir)) {
                             throw new \RuntimeException(sprintf('Directory "%s" was not created', $destDir));
