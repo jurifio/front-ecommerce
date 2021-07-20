@@ -243,6 +243,7 @@ class CStylecommerceImporter extends ABluesealProductImporter
                                     'storeHouseId'=> 1
                                 ]);
                                 if(!$findDirtyHasStoreHouse){
+
                                     /* @var CDirtySkuHasStoreHouse $insertDirtySkuHasStoreHouse  **/
                                     $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
                                     $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
@@ -250,7 +251,6 @@ class CStylecommerceImporter extends ABluesealProductImporter
                                     $insertDirtySkuHasStoreHouse->storeHouseId= 1;
                                     $insertDirtySkuHasStoreHouse->size=$dirtySku['size'];
                                     $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
-                                    $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
                                     $insertDirtySkuHasStoreHouse->qty=$dirtySku['qty'];
                                     $insertDirtySkuHasStoreHouse->productSizeId= $existingSku[0]['productSizeId'];
                                     $insertDirtySkuHasStoreHouse->insert();
