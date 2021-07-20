@@ -1065,7 +1065,11 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                       //  $imgBody = file_get_contents($v['url']);
                         $imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
                     }catch(\Throwable $e) {
-                        $imgBody = file_get_contents($v['url']);
+                        if (strpos($v['url'], ' ') !== false) {
+                            $imgBody = file_get_contents(str_replace(' ','%20',$v['url']));
+                        }else{
+                            $imgBody = file_get_contents($v['url']);
+                        }
                         //$imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
                         //$imgBody = file_get_contents($v['url']);
                     }
