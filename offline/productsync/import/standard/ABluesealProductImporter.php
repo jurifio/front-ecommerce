@@ -1041,10 +1041,12 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
         //creo la cartella
         $destDir = $this->app->rootPath() . "/temp/tempImgs/";
-        if (!is_dir(rtrim($destDir, "/"))) if (!mkdir($destDir, 0777, true) && !is_dir($destDir)) {
+       /* if (!is_dir(rtrim($destDir, "/"))) if (!mkdir($destDir, 0777, true) && !is_dir($destDir)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $destDir));
         }
-        $newMethod = false;
+        $newMethod = false;*/
+        if (!is_dir(rtrim($destDir, "/"))) mkdir($destDir, 0777, true);
+        $newMethod = true;
         $i = 0;
         foreach ($res as $k => $v) {
             try {
