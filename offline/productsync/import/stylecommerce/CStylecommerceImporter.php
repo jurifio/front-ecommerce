@@ -238,7 +238,7 @@ class CStylecommerceImporter extends ABluesealProductImporter
                                 $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
                                     'shopId'=> $this->getShop()->id,
                                     'size'=>$dirtySku['size'],
-                                    'dirtySkuId'=>$id,
+                                    'dirtySkuId'=>$existingSku[0]['id'],
                                     'dirtyProductId' =>$dirtyProduct['id'],
                                     'storeHouseId'=> 1
                                 ]);
