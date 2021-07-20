@@ -255,12 +255,14 @@ class CStylecommerceImporter extends ABluesealProductImporter
                                     $insertDirtySkuHasStoreHouse->productSizeId= $existingSku[0]['productSizeId'];
                                     $insertDirtySkuHasStoreHouse->insert();
                                 }else{
-                                    $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
-                                    $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
-                                    $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
-                                    $findDirtyHasStoreHouse->productSizeId=$existingSku[0]['productSizeId'];
-                                    $findDirtyHasStoreHouse->qty=$sku['qty'];
-                                    $findDirtyHasStoreHouse->update();
+                                    if($dirtyProduct['productId']!=null) {
+                                        $findDirtyHasStoreHouse->dirtyProductId = $dirtyProduct['id'];
+                                        $findDirtyHasStoreHouse->productId = $dirtyProduct['productId'];
+                                        $findDirtyHasStoreHouse->productVariantId = $dirtyProduct['productVariantId'];
+                                        $findDirtyHasStoreHouse->productSizeId = $existingSku[0]['productSizeId'];
+                                        $findDirtyHasStoreHouse->qty = $sku['qty'];
+                                        $findDirtyHasStoreHouse->update();
+                                    }
                                 }
                                 $this->debug('processFile','Sku Exist, update',$dirtySku);
 
