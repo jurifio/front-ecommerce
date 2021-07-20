@@ -261,7 +261,7 @@ class CStylecommerceImporter extends ABluesealProductImporter
                                         $findDirtyHasStoreHouse->productId = $dp->productId;
                                         $findDirtyHasStoreHouse->productVariantId = $dp->productVariantId;
                                         $findDirtyHasStoreHouse->productSizeId = $existingSku[0]['productSizeId'];
-                                        $findDirtyHasStoreHouse->qty = $sku['qty'];
+                                        $findDirtyHasStoreHouse->qty = $dirtySku['qty'];
                                         $findDirtyHasStoreHouse->update();
                                     }
                                 }
