@@ -1067,8 +1067,10 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                     }catch(\Throwable $e) {
                         if (strpos($v['url'], ' ') !== false) {
                             $imgBody = file_get_contents(str_replace(' ','%20',$v['url']));
+                            $fileUrl=str_replace(' ','%20',$v['url']);
                         }else{
                             $imgBody = file_get_contents($v['url']);
+                            $fileUrl=$v['url'];
                         }
                         //$imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
                         //$imgBody = file_get_contents($v['url']);
@@ -1077,7 +1079,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 } else {
                     $this->debug('Download Immagine', 'going to curl');
                     $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $v['url']);
+                    curl_setopt($ch, CURLOPT_URL, $fileUrl);
                     curl_setopt($ch, CURLOPT_HEADER, FALSE);
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
