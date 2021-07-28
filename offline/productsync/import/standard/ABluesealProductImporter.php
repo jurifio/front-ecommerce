@@ -19,6 +19,7 @@ use bamboo\core\utils\slugify\CSlugify;
 use bamboo\domain\repositories\CProductNameTranslationRepo;
 use bamboo\ecommerce\offline\productsync\import\IBluesealProductImporter;
 use bamboo\core\base\CFTPClient;
+use \Throwable;
 
 /**
  * Class ABluesealProductImporter
@@ -1051,7 +1052,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         foreach ($res as $k => $v) {
             try {
                 if ($i % 50 == 0) $this->report('download immagini', 'tentate ' . $k . ' immagini');
-                if (2000 < $i) break;
+                if (4500 < $i) break;
                 $this->debug('Download Immagine', $v['url']);
                 /** @var CProduct $p */
                 $p = \Monkey::app()->repoFactory->create("Product")->findOneBy(['id' => $v['productId'], 'productVariantId' => $v['productVariantId']]);
