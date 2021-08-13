@@ -4,6 +4,20 @@
         "keys": ["id"],
         "cacheable" : "true",
         "children": [
+            {
+                "name": "currencyTranslation",
+                "entity": "CurrencyTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["langId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "locale",
+                "entity": "Locale",
+                "parentKeys": ["id"],
+                "childKeys": ["langId"],
+                "type": "OneToOne"
+            }
         ]
     }
 }

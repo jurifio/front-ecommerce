@@ -10,6 +10,20 @@
                 "parentKeys": ["id"],
                 "childKeys": ["currencyId"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "currencyTranslation",
+                "entity": "CurrencyTranslation",
+                "parentKeys": ["id"],
+                "childKeys": ["currencyId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "country",
+                "entity": "Country",
+                "parentKeys": ["code"],
+                "childKeys": ["currencyCode"],
+                "type": "OneToMany"
             }
         ]
     }

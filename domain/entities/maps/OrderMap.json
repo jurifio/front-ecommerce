@@ -95,6 +95,12 @@
                 "childKeys" : ["id"],
                 "type" : "OneToOne"
             },{
+                "name" : "currency",
+                "entity" : "Currency",
+                "parentKeys": ["currencyId"],
+                "childKeys" : ["id"],
+                "type" : "OneToOne"
+            },{
                 "name": "shipment",
                 "entity": "Shipment",
                 "parentKeys": ["id"],

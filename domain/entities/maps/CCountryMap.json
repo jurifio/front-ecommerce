@@ -1,0 +1,30 @@
+{
+    "entity": {
+        "name": "Country",
+        "keys": ["id"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "countryIp",
+                "entity": "CountryIp",
+                "parentKeys": ["geonameId"],
+                "childKeys": ["geonameId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "carrierHasCountry",
+                "entity": "CarrierHasCountry",
+                "parentKeys": ["id"],
+                "childKeys": ["countryId"],
+                "type": "OneToMany"
+            },
+            {
+                "name": "locale",
+                "entity": "Locale",
+                "parentKeys": ["id"],
+                "childKeys": ["countryId"],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

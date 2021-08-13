@@ -1,0 +1,30 @@
+{
+    "entity": {
+        "name": "Locale",
+        "keys": ["langId,currencyId,countryId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "lang",
+                "entity": "Lang",
+                "parentKeys": ["langId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "currency",
+                "entity": "Currency",
+                "parentKeys": ["currencyId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "country",
+                "entity": "Country",
+                "parentKeys": ["countryId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+        ]
+    }
+}

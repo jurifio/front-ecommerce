@@ -1,0 +1,24 @@
+{
+    "entity": {
+        "name": "CurrencyTransalation",
+        "keys": ["id,langId"],
+        "cacheable" : "true",
+        "children": [
+            {
+                "name": "currency",
+                "entity": "Currency",
+                "parentKeys": ["currencyId"],
+                "childKeys": ["id"],
+                "type": "ManyToOne"
+            },
+            {
+                "name": "lang",
+                "entity": "Lang",
+                "parentKeys": ["langId"],
+                "childKeys": ["id"],
+                "type": "ManyToOne"
+            }
+
+        ]
+    }
+}
