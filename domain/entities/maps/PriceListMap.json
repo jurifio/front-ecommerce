@@ -1,0 +1,23 @@
+{
+    "entity": {
+        "name": "PriceList",
+        "keys": ["id","shopId"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "user",
+                "entity": "User",
+                "parentKeys": ["id","shopId"],
+                "childKeys": ["priceListId","remoteShopId"],
+                "type": "OneToOne"
+            },{
+              "name": "shop",
+              "entity": "Shop",
+              "parentKeys": ["shopId"],
+              "childKeys": ["id"],
+              "type": "OneToOne"
+            }
+        ]
+    }
+}

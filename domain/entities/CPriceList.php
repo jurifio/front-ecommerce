@@ -6,7 +6,7 @@ use bamboo\core\db\pandaorm\entities\AEntity;
 
 
 /**
- * Class CProductHistoryPrice
+ * Class CPriceList
  * @package bamboo\domain\entities
  *
  * @author Iwes Team <it@iwes.it>
@@ -18,8 +18,8 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  * @date 08/09/2021
  * @since 1.0
  */
-class CProductHistoryPrice extends AEntity
+class CPriceList extends AEntity
 {
-    protected $entityTable = 'ProductHistoryPrice';
-	protected $primaryKeys = ['id','productId','productVariantId','productSizeId','shopId'];
+    protected $entityTable = 'PriceList';
+	protected $primaryKeys = ['id','shopId'];
 } 
