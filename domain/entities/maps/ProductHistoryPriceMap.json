@@ -1,0 +1,83 @@
+{
+    "entity": {
+        "name": "ProductHistoryPrice",
+        "keys": ["id","productId", "productVariantId","productSizeId","shopId"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+                "name": "product",
+                "entity": "Product",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },{
+              "name": "shopHasProduct",
+              "entity": "ShopHasProduct",
+              "parentKeys": ["productId,productVariantId","shopId"],
+              "childKeys": ["productId,productVariantId","shopId"],
+              "type": "OneToOne"
+            },{
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": ["productId,productVariantId","productSizeId","shopId"],
+                "childKeys": ["productId,productVariantId","productSizeId","shopId"],
+                "type": "OneToOne"
+            },{
+                "name": "productSheetActual",
+                "entity": "ProductSheetActual",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name": "productHasShopDestination",
+                "entity": "ProductHasShopDestination",
+                "parentKeys": ["id","productVariantId","shopIdOrigin"],
+                "childKeys": ["productId","productVariantId","shopId"],
+                "type": "OneToOne"
+            } ,{
+                "name": "productEan",
+                "entity": "ProductEan",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name": "productHasProductCategory",
+                "entity": "ProductHasProductCategory",
+                "parentKeys": ["productId","productVariantId"],
+                "childKeys": ["productId","productVariantId"],
+                "type": "OneToMany"
+            },{
+                "name": "productSku",
+                "entity": "ProductSku",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId",
+                    "productSizeId",
+                    "shopId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId",
+                    "productSizeId",
+                    "shopId"
+                ],
+                "type": "OneToMany"
+            },{
+                "name": "dirtyProduct",
+                "entity": "DirtyProduct",
+                "parentKeys": [
+                    "productId",
+                    "productVariantId",
+                    "shopId"
+                ],
+                "childKeys": [
+                    "productId",
+                    "productVariantId",
+                    "shopId"
+                ],
+                "type": "OneToMany"
+            }
+        ]
+    }
+}

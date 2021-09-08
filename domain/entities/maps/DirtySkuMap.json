@@ -31,6 +31,13 @@
                 "parentKeys": ["dirtyProductId","shopId","productSizeId"],
                 "type": "OneToOneCustom",
                 "query": "SELECT dp.productId, dp.productVariantId, ds.productSizeId, ds.shopId FROM DirtyProduct dp, DirtySku ds WHERE dp.id = ds.dirtyProductId AND dp.id = ? and dp.shopId and ds.productSizeId = ? LIMIT 1"
+            },
+            {
+                "name": "productHistoryPrice",
+                "entity": "ProductHistoryPrice",
+                "parentKeys": ["dirtyProductId","shopId","productSizeId"],
+                "type": "OneToOneCustom",
+                "query": "SELECT dp.productId, dp.productVariantId, ds.productSizeId, ds.shopId FROM DirtyProduct dp, DirtySku ds WHERE dp.id = ds.dirtyProductId AND dp.id = ? and dp.shopId and ds.productSizeId = ? LIMIT 1"
             }
         ]
     }
