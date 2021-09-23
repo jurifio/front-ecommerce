@@ -1,0 +1,17 @@
+{
+    "entity": {
+        "name": "PriceRuleList",
+        "keys": ["id","shopId"],
+        "cacheable" : "true",
+        "cacheExpiration": 86400,
+        "children": [
+            {
+              "name": "shop",
+              "entity": "Shop",
+              "parentKeys": ["shopId"],
+              "childKeys": ["id"],
+              "type": "OneToOne"
+            }
+        ]
+    }
+}

@@ -31,7 +31,7 @@ class CEdsTemaOrderApi
     protected $orderId;
     protected $rows;
 
-    public function __construct($orderId,array $rows = null)
+    public function __construct($orderId,array $rows)
     {
         $this->orderId = $orderId;
         $this->rows = $rows;
