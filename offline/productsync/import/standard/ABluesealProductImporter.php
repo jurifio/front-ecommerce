@@ -933,7 +933,6 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             $dirtyProduct->update();
 
             $this->warning('fuseProduct', 'Fusing DirtyProduct: ' . $dirtyProduct->id . ' with Product: ' . $existing->printId());
-
             $product = \Monkey::app()->repoFactory->create('Product')->findOneBy([
                 'id'=> $dirtyProduct->productId,
                 'productVariantId' =>$dirtyProduct->productVariantId
