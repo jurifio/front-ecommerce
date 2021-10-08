@@ -119,7 +119,10 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
                 $type = [];
                 foreach ($cats as $cat) {
                     if ($cat['id'] == 1) continue;
-                    $type[] = \Monkey::app()->repoFactory->create('ProductCategory',$this->lang)->findOne([$cat['id']])->getLocalizedName();
+
+
+                    $type[] = \Monkey::app()->repoFactory->create('ProductCategoryTranslation')->findOneBy(['langId' => 1,'productCategoryId'=>$cat['id'],'shopId'=>44])->name;
+                    //$type[] = \Monkey::app()->repoFactory->create('ProductCategory',$this->lang)->findOne([$cat['id']])->getLocalizedName();
                 }
                 $product_type[] = implode(', ',$type);
             }
