@@ -3,7 +3,6 @@
         "name": "BillRegistryInvoice",
         "keys": ["id"],
         "cacheable" : "false",
-        "cacheExpiration": 86400,
         "children": [
             {
                 "name": "billRegistryClient",
