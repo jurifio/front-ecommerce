@@ -2,7 +2,7 @@
   "filesConfig": {
     "location": "urls",
     "istructions": {
-      "url": "https://di.efashion.cloud/api/v3.0/products/condensed?storeCode=YHPE6",
+      "url": "https://luxlet.efashion.cloud/api/v3.0/products/condensed?storeCode=YHPE6",
       "root": "__default__",
       "maxProducts": "4000",
       "folder": "import",
