@@ -43,7 +43,7 @@ class CStylecommerceImporter extends ABluesealProductImporter
             $checksums[$one['checksum']] = $one['id'];
         }
 
-        $rows = \Monkey::app()->dbAdapter->query('SELECT checksum, id FROM DirtySku WHERE shopId = ? and qty > 0', [$this->getShop()->id])->fetchAll();
+        $rows = \Monkey::app()->dbAdapter->query('SELECT checksum, id FROM DirtySku WHERE shopId = ?', [$this->getShop()->id])->fetchAll();
         $skusChecksums = [];
         foreach ($rows as $row) {
             $skusChecksums[$row['checksum']] = $row['id'];
