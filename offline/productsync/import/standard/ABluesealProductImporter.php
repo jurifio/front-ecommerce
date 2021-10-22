@@ -19,7 +19,6 @@ use bamboo\core\utils\slugify\CSlugify;
 use bamboo\domain\repositories\CProductNameTranslationRepo;
 use bamboo\ecommerce\offline\productsync\import\IBluesealProductImporter;
 use bamboo\core\base\CFTPClient;
-use \Throwable;
 
 /**
  * Class ABluesealProductImporter
@@ -66,7 +65,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
             return true;
         } catch (\Throwable $e) {
-            iwesMail('juri@iwes.it',
+            iwesMail('it@iwes.it',
                 'Importer Error for ' . $this->getShop()->name,
                 "Unknown GENERAL error!\n\n\n" . $e->getMessage() . "\n" . $e->getTraceAsString());
             throw $e;
@@ -231,9 +230,6 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             case "url":
                 $this->fetchWebFiles();
                 break;
-            case "urls":
-                $this->fetchWebMultiplesFiles();
-                break;
             default:
                 throw new BambooConfigException('Wrong configuration for fetching files');
         }
@@ -331,56 +327,6 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
         $this->fetchLocalFiles();
     }
-    protected function fetchWebMultiplesFiles()
-    {
-        $localDir = $this->app->rootPath() . $this->app->cfg()->fetch('paths', 'productSync') . '/' . $this->getShop()->name;
-
-        $url = $this->config->fetch('filesConfig', 'istructions')['url'];
-        $maxProducts=$this->config->fetch('filesConfig', 'istructions')['maxProducts'];
-        $offSet=1;
-        $limitStart=1;
-        $limitEnd=0;
-
-        for($i=1;$i<=$maxProducts;$i++) {
-            if ($i%500) {
-                continue;
-            }else{
-                $limitEnd=$limitEnd+500;
-                $urlDef=$url.'&offset='.$limitStart.'&limit=500';
-                $this->report("fetchWebMultiplesFiles","url: " . $urlDef,null);
-                $ch = curl_init();
-                //$urlget = sprintf("%s:%s", $urlDef, http_build_query(false));
-                curl_setopt($ch,CURLOPT_URL,$urlDef);
-                curl_setopt($ch,CURLOPT_FAILONERROR,1);
-                curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-                curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-                curl_setopt($ch,CURLOPT_TIMEOUT,0);
-                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,0);
-                $retValue = curl_exec($ch);
-
-                curl_close($ch);
-
-
-
-                $filename = $localDir . '/import/' . time() . ($this->config->fetch('filesConfig','extension') ?? '.xml');
-                $this->report("fetchWebMultiplesFiles","filename: " . $filename,null);
-                if (empty($retValue)) {
-                    $this->warning('fetchWebMultiplesFiles','Got Empty File!');
-                } else {
-
-                    file_put_contents($filename,trim($retValue));
-                    $this->report("fetchWebMultiplesFiles","filename: " . $filename,null);
-                }
-
-                $this->fetchLocalFiles();
-                $offSet++;
-                $limitStart=$limitStart+500;
-            }
-
-        }
-
-    }
 
     /**
      *  read files and validate them
@@ -446,7 +392,6 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         if (count($seenSkus) == 0) {
             throw new BambooLogicException('seenSkus contains 0 elements');
         }
-
         $res = $this->app->dbAdapter->query("SELECT ds.id
                                                       FROM DirtySku ds 
                                                         JOIN DirtyProduct dp on ds.dirtyProductId = dp.id
@@ -671,7 +616,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         foreach ($dps as $dpId) {
             $this->report('createProducts', 'working for ' . $dpId['id']);
             try {
-                $dirtyProduct = $dpEm->findOneBy(['id'=>$dpId]);
+                $dirtyProduct = $dpEm->findOne($dpId);
                 $sheetPrototype->productDetailLabel->rewind();
 
                 \Monkey::app()->repoFactory->beginTransaction();
@@ -899,20 +844,16 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 														  Product.itemno LIKE ? AND
 														  Product.productBrandId = ? AND
 														  ProductVariant.name LIKE ? AND
-													      Product.productSeasonId LIKE ? AND 
-														  Product.productStatusId NOT IN (8,13)", [$dirtyProduct->itemno, $product->productBrandId, $newSeasonId, $variant->name]);
-//trovo il prodotto
+														  Product.productStatusId NOT IN (8,13)", [$dirtyProduct->itemno, $product->productBrandId, $variant->name]);
+
         if ($existing) {
-            // se esiste il prodotto creato in product creo una nuova riga e inserisco il prodotto da product con lo shop di appartenenza del prodotto
             $shp = \Monkey::app()->repoFactory->create('ShopHasProduct')->getEmptyEntity();
             $shp->shopId = $this->getShop()->id;
             $shp->productId = $existing->id;
             $shp->productVariantId = $existing->productVariantId;
-            $shp->productSeasonId=$newSeasonId;
-// riverifico se esiste un prodotto con lo stesso id
+
             $shp2 = \Monkey::app()->repoFactory->create('ShopHasProduct')->findOne($shp->getIds());
             if (is_null($shp2)) {
-                //se non esiste prendo i prezzi di dirtyProduct e li inserisco i nella riga creata
                 $shp->price = $dirtyProduct->getDirtyPrice();
                 $shp->salePrice = $dirtyProduct->getDirtySalePrice();
                 $shp->value = $dirtyProduct->getDirtyValue();
@@ -920,29 +861,28 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 if(!is_numeric($shp->productSizeGroupId)) $shp->productSizeGroupId = $product->productSizeGroupId;
                 $shp->insert();
             } else {
-                //altrimenti se esiste li aggiorno se esiste il prodotto
                 $shp2->price = $dirtyProduct->getDirtyPrice();
                 $shp2->salePrice = $dirtyProduct->getDirtySalePrice();
                 $shp2->value = $dirtyProduct->getDirtyValue();
                 $shp2->update();
             }
-// aggiorno dirtyProduct on gli id e productVariantId assegnati fondendo il prodotto
+
             $dirtyProduct->productId = $existing->id;
             $dirtyProduct->productVariantId = $existing->productVariantId;
             $dirtyProduct->dirtyStatus = 'K';
             $dirtyProduct->update();
 
             $this->warning('fuseProduct', 'Fusing DirtyProduct: ' . $dirtyProduct->id . ' with Product: ' . $existing->printId());
+
             $product = \Monkey::app()->repoFactory->create('Product')->findOneBy([
                 'id'=> $dirtyProduct->productId,
                 'productVariantId' =>$dirtyProduct->productVariantId
             ]);
-// controllo se il prodotto e differente dalla stagione corrente
+
             if($product->productSeasonId != $newSeasonId) {
                 $this->warning('fuseProduct', 'Season Change for product:'.$product->printId().' from '.$product->productSeasonId.' to '.$newSeasonId);
 
                 $productSeason = \Monkey::app()->repoFactory->create('ProductSeason')->findOneBy(['id'=>$newSeasonId]);
-                //se l'ordine della  nuova stagione e maggiore della stagione del prodotto fuso assegno al prodotto fuso la nuova stagione e metto a false il saldo
                 if($productSeason->order > $product->productSeason->order) {
                     $this->warning('fuseProduct', 'Season Change, the new season is newer, CHANGE!');
                     $product->productSeasonId = $newSeasonId;
@@ -954,7 +894,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             }
         } else {
             $this->error('fuseProduct', 'Error Fusing DirtyProduct: ' . $dirtyProduct->id . ' existing in context...', $existing);
-            throw new BambooLogicException("Product already existing");
+            throw new BambooLogicException("Product already extisting");
         }
 
     }
@@ -1047,17 +987,13 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
         //creo la cartella
         $destDir = $this->app->rootPath() . "/temp/tempImgs/";
-       /* if (!is_dir(rtrim($destDir, "/"))) if (!mkdir($destDir, 0777, true) && !is_dir($destDir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $destDir));
-        }
-        $newMethod = false;*/
         if (!is_dir(rtrim($destDir, "/"))) mkdir($destDir, 0777, true);
         $newMethod = true;
         $i = 0;
         foreach ($res as $k => $v) {
             try {
                 if ($i % 50 == 0) $this->report('download immagini', 'tentate ' . $k . ' immagini');
-                if (4500 < $i) break;
+                if (2000 < $i) break;
                 $this->debug('Download Immagine', $v['url']);
                 /** @var CProduct $p */
                 $p = \Monkey::app()->repoFactory->create("Product")->findOneBy(['id' => $v['productId'], 'productVariantId' => $v['productVariantId']]);
@@ -1067,27 +1003,14 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
                 if ($newMethod) {
                     $this->debug('Download Immagine', 'going to file_get_contents');
-                    try {
-                      //  $imgBody = file_get_contents($v['url']);
-                        $imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
-                    }catch(\Throwable $e) {
-                        if (strpos($v['url'], ' ') !== false) {
-                            $imgBody = file_get_contents(str_replace(' ','%20',$v['url']));
-                            $fileUrl=str_replace(' ','%20',$v['url']);
-                        }else{
-                            $imgBody = file_get_contents($v['url']);
-                            $fileUrl=$v['url'];
-                        }
-                        //$imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
-                        //$imgBody = file_get_contents($v['url']);
-                    }
+                    $imgBody = file_get_contents(htmlspecialchars_decode($v['url']));
                     $this->debug('Download Immagine', 'got content');
                 } else {
                     $this->debug('Download Immagine', 'going to curl');
                     $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $fileUrl);
+                    curl_setopt($ch, CURLOPT_URL, $v['url']);
                     curl_setopt($ch, CURLOPT_HEADER, FALSE);
-                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
                     $imgBody = curl_exec($ch);
@@ -1107,8 +1030,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 }
 
                 $imgN = str_pad($v['position'], 3, "0", STR_PAD_LEFT);
-                $destTempFileName = $p->getAztecCode() . " - " . $imgN . "." . $path['extension'];
-                $destFileName=str_replace(' ','',$destTempFileName);
+                $destFileName = $p->getAztecCode() . " - " . $imgN . "." . $path['extension'];
                 if ($p->productPhoto->count()) $existing = true;
                 else $existing = false;
 
@@ -1138,16 +1060,12 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                         unlink($destDir . $destFileName);
                     }
                 } catch (\Throwable $e) {
-                    $this->error("download immagini", $destFileName . "non salvato. File scaricato, ma impossibile salvarlo su disco. Url corrispondente: " . $v['url'], $e->getLine().'-'.$e->getMessage());
-                    if (!is_dir(rtrim($destDir, "/"))) {
-                        if (!mkdir($destDir, 0777, true) && !is_dir($destDir)) {
-                            throw new \RuntimeException(sprintf('Directory "%s" was not created', $destDir));
-                        }
-                    }
+                    $this->error("download immagini", $destFileName . "non salvato. File scaricato, ma impossibile salvarlo su disco. Url corrispondente: " . $v['url'], $e);
+                    if (!is_dir(rtrim($destDir, "/"))) mkdir($destDir, 0777, true);
                 }
 
             } catch (\Throwable $e) {
-                $this->error('Downloading Photo',  $e->getLine().'-generic error: ' . $e->getMessage());
+                $this->error('Downloading Photo', 'generic error: ' . $e->getMessage(), $e);
             }
             $i++;
         }
@@ -1187,7 +1105,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 $this->debug('Download Immagine', 'going to resize: ' . $width);
                 $this->debug('Download Immagine', 'going to resize: ' . $imager->getWidth());
                 $imager->resizeToWidth($width);
-                $this->debug('Download Immagine', 'going to save: ' . $dummyFolder . '/' . $dummyName);
+                $this->debug('Download Immagine', 'goijng to save: ' . $dummyFolder . '/' . $dummyName);
                 $imager->save($dummyFolder . '/' . $dummyName);
                 $this->debug('Download Immagine', 'Saved Dummy');
                 $p->dummyPicture = $dummyName;
@@ -1199,36 +1117,5 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             }
 
         } else $this->debug('Download Immagine', 'Wont Save DummyPictures');
-    }
-    public function callAPI($method, $url, $data){
-        $curl = curl_init();
-
-        switch ($method){
-            case "POST":
-                curl_setopt($curl, CURLOPT_POST, 1);
-                if ($data)
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                break;
-            case "PUT":
-                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
-                if ($data)
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                break;
-            default:
-                if ($data)
-                    $url = sprintf("%s:%s", $url, http_build_query($data));
-        }
-
-        // OPTIONS:
-        curl_setopt($curl, CURLOPT_URL, $url);
-
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-
-        // EXECUTE:
-        $result = curl_exec($curl);
-        if(!$result){die("Connection Failure");}
-        curl_close($curl);
-        return $result;
     }
 }

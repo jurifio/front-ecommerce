@@ -4,7 +4,7 @@
     "istructions": {
       "url": "https://luxlet.efashion.cloud/api/v3.0/products/condensed?storeCode=YHPE6",
       "root": "__default__",
-      "maxProducts": "4000",
+      "maxProducts": "8000",
       "folder": "import",
       "glob": "*.json"
     },
