@@ -257,6 +257,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             usort($files, function ($a, $b) {
                 return filemtime($a) > filemtime($b);
             });
+
             if (isset($istructions['lastOnly']) && $istructions['lastOnly'] == true) {
                 $this->report('fetchFiles', "Uso solo l'ultimo di " . count($files) . " files: " . implode(', ', $files));
                 $lastFile = $files[count($files) - 1];
