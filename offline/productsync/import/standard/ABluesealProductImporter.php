@@ -249,7 +249,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         $folder = $istructions['folder'];
         $glob = $istructions['glob'];
 
-        $files = glob($root . '/' . $folder . '/' . $glob);
+        $files = glob($root . '/' . $folder  . $glob);
         if (empty($files)) {
             $this->mainFilenames = [];
             $this->report("fetchFiles", "Nessun file trovato", null);
