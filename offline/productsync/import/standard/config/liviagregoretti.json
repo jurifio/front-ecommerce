@@ -1,0 +1,171 @@
+{
+    "filesConfig": {
+        "type": "CSV",
+        "columns": 51,
+        "separator": ";",
+        "delimiter": "\"",
+        "location": "local",
+        "istructions": {
+            "root": "__default__",
+            "folder": "",
+            "glob": "*.csv"
+        },
+        "mapping": {
+            "extSkuId": 0,
+            "itemno": 1,
+            "brand": 2,
+            "extId": 3,
+            "barcode": 4,
+            "name": 5,
+            "season": 6,
+            "var": 7,
+            "colorDescription": 8,
+            "generalColor": 9,
+            "sizeGroup": 10,
+            "size": 11,
+            "value": 12,
+            "price": 13,
+            "salePrice": 14,
+            "qty": 15,
+            "audience": 16,
+            "cat1": 17,
+            "cat2": 18,
+            "cat3": 19,
+            "cat4": 20,
+            "cat5": 21,
+            "tag1": 22,
+            "tag2": 23,
+            "tag3": 24,
+            "description": 25,
+            "det1": 26,
+            "det2": 27,
+            "det3": 28,
+            "det4": 29,
+            "det5": 30,
+            "det6": 31,
+            "det7": 32,
+            "det8": 33,
+            "det9": 34,
+            "det10": 35,
+            "det11": 36,
+            "det12": 37,
+            "det13": 38,
+            "det14": 39,
+            "det15": 40,
+            "photo1": 41,
+            "photo2": 42,
+            "photo3": 43,
+            "photo4": 44,
+            "photo5": 45,
+            "photo6": 46,
+            "photo7": 47,
+            "photo8": 48,
+            "relationship": 49,
+            "parent": 50
+        },
+        "control": {
+            "numeric": [
+                "value",
+                "price",
+                "salePrice",
+                "qty"
+            ],
+            "productNotEmpty": [
+                "extSkuId",
+                "itemno",
+                "brand",
+                "var"
+            ],
+            "emptyToFullProduct": [],
+            "skuNotEmpty": [
+                "extSkuId",
+                "size",
+                "qty",
+                "value",
+                "price"
+            ]
+        },
+        "relationship": [
+            "extSkuId",
+            "relationship",
+            "parent"
+        ],
+        "product": [
+            "itemno",
+            "brand",
+            "extId",
+            "var"
+        ],
+        "productExtend": [
+            "name",
+            "description",
+            "season",
+            "audience",
+            "cat1",
+            "cat2",
+            "cat3",
+            "cat4",
+            "cat5",
+            "tag1",
+            "tag2",
+            "tag3",
+            "generalColor",
+            "colorDescription",
+            "sizeGroup"
+        ],
+        "details": [
+            "det1",
+            "det2",
+            "det3",
+            "det4",
+            "det5",
+            "det6",
+            "det7",
+            "det8",
+            "det9",
+            "det10",
+            "det11",
+            "det12",
+            "det13",
+            "det14",
+            "det15"
+        ],
+        "photos": [
+            "photo1",
+            "photo2",
+            "photo3",
+            "photo4",
+            "photo5",
+            "photo6",
+            "photo7",
+            "photo8"
+        ],
+        "sku": [
+            "extSkuId",
+            "barcode",
+            "size",
+            "value",
+            "price",
+            "salePrice",
+            "qty"
+        ]
+    },
+    "keys": {
+        "product": [
+            "brand",
+            "itemno",
+            "var"
+        ],
+        "sku": [
+            "extSkuId"
+        ]
+    },
+    "destFTPClient": {
+        "host": "fiber.office.iwes.it",
+        "user": "shooting",
+        "pass": "PBYI34nbf",
+        "port": "21",
+        "timeout": "10",
+        "mode": "2"
+    }
+}
