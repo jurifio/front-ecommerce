@@ -248,8 +248,8 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         $root = $istructions['root'] == '__default__' ? $this->app->rootPath() . $this->app->cfg()->fetch('paths', 'productSync') . '/' . $this->getShop()->name : $istructions['root'];
         $folder = $istructions['folder'];
         $glob = $istructions['glob'];
-
-        $files = glob($root . '/' . $folder  . $glob);
+        $this->report("glob", $root . '/' . $folder  .'/'. $glob, null);
+        $files = glob($root . '/' . $folder  .'/'. $glob);
         if (empty($files)) {
             $this->mainFilenames = [];
             $this->report("fetchFiles", "Nessun file trovato", null);
