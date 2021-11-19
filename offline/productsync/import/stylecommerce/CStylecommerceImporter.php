@@ -206,7 +206,7 @@ class CStylecommerceImporter extends ABluesealProductImporter
                         $dirtySku['dirtyProductId'] = $dirtyProduct['id'];
                         $dirtySku['shopId'] = $this->getShop()->id;
                         $dirtySku['size'] = $rawDirtySku['size'];
-                        $dirtySku['extSkuId'] = $rawSku['product_reference'].'_'.$rawDirtySku['size'];
+                        $dirtySku['extSkuId'] = $rawSku['product_reference'];
                         $dirtySku['qty'] = $rawDirtySku['quantity'];
                         $dirtySku['price'] = $rawSku['retail_price'];
                         $dirtySku['value'] = $rawSku['price'];
