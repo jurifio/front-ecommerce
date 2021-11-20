@@ -654,7 +654,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 												WHERE dp.shopId = ? AND
 													  productId IS NULL AND
 													  productVariantId IS NULL AND
-													  dirtyStatus = 'F' GROUP BY dp.id HAVING sum(ds.qty) > 0", [$this->getShop()->id])->fetchAll();
+													  dirtyStatus = 'F' GROUP BY dp.id HAVING sum(ds.qty) > 0 ", [$this->getShop()->id])->fetchAll();
 
         $dpEm = \Monkey::app()->repoFactory->create('DirtyProduct');
         $productFactory = \Monkey::app()->repoFactory->create('Product');
@@ -900,8 +900,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 														  Product.itemno LIKE ? AND
 														  Product.productBrandId = ? AND
 														  ProductVariant.name LIKE ? AND
-													      Product.productSeasonId LIKE ? AND 
-														  Product.productStatusId NOT IN (8,13)", [$dirtyProduct->itemno, $product->productBrandId, $newSeasonId, $variant->name]);
+														  Product.productStatusId NOT IN (8,13)", [$dirtyProduct->itemno, $product->productBrandId, $variant->name]);
 //trovo il prodotto
         if ($existing) {
             // se esiste il prodotto creato in product creo una nuova riga e inserisco il prodotto da product con lo shop di appartenenza del prodotto
@@ -909,7 +908,6 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             $shp->shopId = $this->getShop()->id;
             $shp->productId = $existing->id;
             $shp->productVariantId = $existing->productVariantId;
-            $shp->productSeasonId=$newSeasonId;
 // riverifico se esiste un prodotto con lo stesso id
             $shp2 = \Monkey::app()->repoFactory->create('ShopHasProduct')->findOne($shp->getIds());
             if (is_null($shp2)) {
