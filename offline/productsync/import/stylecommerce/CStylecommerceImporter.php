@@ -43,7 +43,7 @@ class CStylecommerceImporter extends ABluesealProductImporter
             $checksums[$one['checksum']] = $one['id'];
         }
 
-        $rows = \Monkey::app()->dbAdapter->query('SELECT checksum, id FROM DirtySku WHERE shopId = ?', [$this->getShop()->id])->fetchAll();
+        $rows = \Monkey::app()->dbAdapter->query('SELECT `checksum`, id FROM DirtySku WHERE shopId = ?', [$this->getShop()->id])->fetchAll();
         $skusChecksums = [];
         foreach ($rows as $row) {
             $skusChecksums[$row['checksum']] = $row['id'];
@@ -224,7 +224,7 @@ class CStylecommerceImporter extends ABluesealProductImporter
                             $existingSku = \Monkey::app()->dbAdapter->select('DirtySku',[
                                 'shopId' => $this->getShop()->id,
                                 'dirtyProductId' => $dirtyProduct['id'],
-                                'extSkuId' => $dirtySku['extSkuId'].'_'.$rawDirtySku['size']
+                                'extSkuId' => $dirtySku['extSkuId']
                             ])->fetchAll();
 
                             if (count($existingSku) == 0) {
