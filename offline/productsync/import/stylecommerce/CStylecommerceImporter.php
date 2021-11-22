@@ -232,6 +232,20 @@ class CStylecommerceImporter extends ABluesealProductImporter
                                 $this->debug('processFile','Sku don\'t Exist, insert',$dirtySku);
 
                             } elseif (count($existingSku) == 1) {
+                                $updateDirtySku=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$existingSku[0]['id']]);
+                                if($updateDirtySku){
+                                    $updateDirtySku->size=$dirtySku['size'];
+                                    $updateDirtySku->extSkuId=$dirtySku['extSkuId'];
+                                    $updateDirtySku->shopId=$dirtySku['shopId'];
+                                    $updateDirtySku->qty=$dirtySku['qty'];
+                                    $updateDirtySku->price=$dirtySku['price'];
+                                    $updateDirtySku->value=$dirtySku['value'];
+                                    $updateDirtySku->barcode=$dirtySku['barcode'];
+                                    $updateDirtySku->checksum=$dirtySku['checksum'];
+                                    $updateDirtySku->update();
+
+
+                                }
                                 \Monkey::app()->dbAdapter->update('DirtySku',$dirtySku,['id' => $existingSku[0]['id']]);
                                 $dirtySku['id'] = $existingSku[0]['id'];
                                 /* @var CDirtySkuHasStoreHouse $FindDirtyHasStoreHouse  **/
