@@ -224,7 +224,7 @@ class CStylecommerceImporter extends ABluesealProductImporter
                             $existingSku = \Monkey::app()->dbAdapter->select('DirtySku',[
                                 'shopId' => $this->getShop()->id,
                                 'dirtyProductId' => $dirtyProduct['id'],
-                                'extSkuId' => $dirtySku['extSkuId']
+                                'extSkuId' => $dirtySku['extSkuId'].'_'.$rawDirtySku['size']
                             ])->fetchAll();
 
                             if (count($existingSku) == 0) {
