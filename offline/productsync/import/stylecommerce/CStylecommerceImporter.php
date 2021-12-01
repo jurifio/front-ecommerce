@@ -32,7 +32,7 @@ class CStylecommerceImporter extends ABluesealProductImporter
     {
         $productKeys = $this->config->fetch('keys', 'product');
 
-        $rows = \Monkey::app()->dbAdapter->query('SELECT keysChecksum, id, checksum FROM DirtyProduct WHERE shopId = ? AND keysChecksum IS NOT NULL', [$this->getShop()->id])->fetchAll();
+        $rows = \Monkey::app()->dbAdapter->query('SELECT keysChecksum, id, `checksum` FROM DirtyProduct WHERE shopId = ? AND keysChecksum IS NOT NULL', [$this->getShop()->id])->fetchAll();
         $keysChecksums = [];
         $checksums = [];
 
@@ -43,7 +43,7 @@ class CStylecommerceImporter extends ABluesealProductImporter
             $checksums[$one['checksum']] = $one['id'];
         }
 
-        $rows = \Monkey::app()->dbAdapter->query('SELECT `checksum`, id FROM DirtySku WHERE shopId = ?', [$this->getShop()->id])->fetchAll();
+        $rows = \Monkey::app()->dbAdapter->query('SELECT `checksum`, id FROM DirtySku WHERE shopId = ? and qty > 0', [$this->getShop()->id])->fetchAll();
         $skusChecksums = [];
         foreach ($rows as $row) {
             $skusChecksums[$row['checksum']] = $row['id'];
@@ -233,11 +233,11 @@ class CStylecommerceImporter extends ABluesealProductImporter
 
                             } elseif (count($existingSku) == 1) {
                                 $updateDirtySku=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$existingSku[0]['id']]);
-                                if($updateDirtySku){
+                               // if($updateDirtySku){
                                     $updateDirtySku->size=$dirtySku['size'];
                                     $updateDirtySku->extSkuId=$dirtySku['extSkuId'];
                                     $updateDirtySku->shopId=$dirtySku['shopId'];
-                                    $updateDirtySku->qty=$dirtySku['qty'];
+                                    $updateDirtySku->qty=$rawDirtySku['quantity'];
                                     $updateDirtySku->price=$dirtySku['price'];
                                     $updateDirtySku->value=$dirtySku['value'];
                                     $updateDirtySku->barcode=$dirtySku['barcode'];
@@ -245,8 +245,8 @@ class CStylecommerceImporter extends ABluesealProductImporter
                                     $updateDirtySku->update();
 
 
-                                }
-                                \Monkey::app()->dbAdapter->update('DirtySku',$dirtySku,['id' => $existingSku[0]['id']]);
+                              //  }
+                             //   \Monkey::app()->dbAdapter->update('DirtySku',$dirtySku,['id' => $existingSku[0]['id']]);
                                 $dirtySku['id'] = $existingSku[0]['id'];
                                 /* @var CDirtySkuHasStoreHouse $FindDirtyHasStoreHouse  **/
                                 $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
