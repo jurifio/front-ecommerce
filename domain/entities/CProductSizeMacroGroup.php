@@ -19,6 +19,7 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  * @since 1.0
  *
  * @property CObjectCollection $productSizeGroup
+ * @property CObjectCollection $productSizeMacroGroupHasProductCategory
  */
 class CProductSizeMacroGroup extends AEntity
 {
