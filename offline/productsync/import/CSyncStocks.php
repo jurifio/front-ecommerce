@@ -118,7 +118,7 @@ class CSyncStocks extends ACronJob
                                                                 shp.productVariantId = ? AND
                                                                 shp.shopId = ?",
                                       [$dirtyProduct['productId'], $dirtyProduct['productVariantId'], $dirtyProduct['shopId']])->fetchAll();*/
-            $goodSizes = $this->app->dbAdapter->query("SELECT ps.*
+            $goodSizes = $this->app->dbAdapter->query("SELECT ps.* from 
                                                          ProductSize ps ",[])->fetchAll();
 
             $skus = $this->app->dbAdapter->query("SELECT * FROM DirtySku WHERE dirtyProductId = ?", [$dirtyProduct['id']])->fetchAll();
