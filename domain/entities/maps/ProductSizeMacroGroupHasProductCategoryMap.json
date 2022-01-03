@@ -1,0 +1,24 @@
+{
+    "entity": {
+        "name": "ProductSizeMacroGroupHasProductCategory",
+        "keys": ["productSizeMacroGroupId","productCategoryId"],
+        "cacheable": "true",
+        "children": [
+            {
+                "name": "productSizeMacroGroup",
+                "entity": "ProductSizeMacroGroup",
+                "parentKeys": ["productSizeMacroGroupId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "productCategory",
+                "entity": "ProductCategory",
+                "parentKeys": ["productCategoryId"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            }
+
+        ]
+    }
+}

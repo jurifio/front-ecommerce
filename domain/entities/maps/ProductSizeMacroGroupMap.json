@@ -10,7 +10,15 @@
                 "parentKeys": ["id"],
                 "childKeys": ["productSizeMacroGroupId"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "productSizeGroupMacroGroupHasProductCategory",
+                "entity": "ProductSizeGroupMacroGroupHasProductCategory",
+                "parentKeys": ["id"],
+                "childKeys": ["productSizeMacroGroupId"],
+                "type": "OneToMany"
             }
+
         ]
     }
 }

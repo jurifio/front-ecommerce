@@ -99,6 +99,13 @@
                 "parentKeys": ["id"],
                 "childKeys": ["productCategoryId"],
                 "type": "OneToOne"
+            },
+            {
+                "name": "productSizeMacroGroupHasProductCategory",
+                "entity": "ProductSizeMacroGroupHasProductCategory",
+                "parentKeys": ["id"],
+                "childKeys": ["productCategoryId"],
+                "type": "OneToOne"
             }
         ]
     }
