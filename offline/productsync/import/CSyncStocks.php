@@ -110,14 +110,16 @@ class CSyncStocks extends ACronJob
                 $this->report("Linking Skus", "Product done: " . $z ,'');
             }
             //per ogni prodotto trovo il gruppo fuck taglie e le relative taglie
-            $goodSizes = $this->app->dbAdapter->query("SELECT shp.productSizeGroupId,ps.*
+           /* $goodSizes = $this->app->dbAdapter->query("SELECT shp.productSizeGroupId,ps.*
                                                           FROM ProductSizeGroupHasProductSize psg 
                                                             JOIN ShopHasProduct shp ON psg.productSizeGroupId = shp.productSizeGroupId
                                                             JOIN ProductSize ps ON psg.productSizeId = ps.id 
                                                           WHERE shp.productId = ? AND
                                                                 shp.productVariantId = ? AND
                                                                 shp.shopId = ?",
-                                      [$dirtyProduct['productId'], $dirtyProduct['productVariantId'], $dirtyProduct['shopId']])->fetchAll();
+                                      [$dirtyProduct['productId'], $dirtyProduct['productVariantId'], $dirtyProduct['shopId']])->fetchAll();*/
+            $goodSizes = $this->app->dbAdapter->query("SELECT ps.*
+                                                         ProductSize ps ",[])->fetchAll();
 
             $skus = $this->app->dbAdapter->query("SELECT * FROM DirtySku WHERE dirtyProductId = ?", [$dirtyProduct['id']])->fetchAll();
 
@@ -146,7 +148,8 @@ class CSyncStocks extends ACronJob
                             $error = $sku;
                             throw new BambooOutOfBoundException('Size not found in Dictionary Tables: ' . $sku['size']);
                        } elseif (!array_key_exists($res, $ids_names)) {
-                            throw new BambooOutOfBoundException('Size out of Size Group: size:' . $sku['size'] . ', id:' . $res . ' Group ' . $groupSize . ':' . implode(',', $ids_names));
+                            //throw new BambooOutOfBoundException('Size out of Size Group: size:' . $sku['size'] . ', id:' . $res . ' Group ' . $groupSize . ':' . implode(',', $ids_names));
+                            throw new BambooOutOfBoundException('Size out of Size Group: size:' . $sku['size'] . ', id:' . $res . ' Group :' . implode(',', $ids_names));
                         } else {
                             $up = $this->app->dbAdapter->update("DirtySku", ["productSizeId" => $res, "status" => 'ok'], ["id" => $sku['id']]);
                         }
