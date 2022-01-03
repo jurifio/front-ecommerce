@@ -125,7 +125,7 @@ class CSyncStocks extends ACronJob
 
             $ids_slugs = [];
             $ids_names = [];
-            $groupSize = $goodSizes[0]['productSizeGroupId'];
+            //$groupSize = $goodSizes[0]['productSizeGroupId'];
             // inserisco in due array le i rispettivi nomi taglia e slug
             foreach ($goodSizes as $size) {
                 $ids_names[$size['id']] = $size['name'];
