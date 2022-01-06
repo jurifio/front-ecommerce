@@ -24,6 +24,27 @@
                 "parentKeys": ["id"],
                 "childKeys": ["countryId"],
                 "type": "OneToMany"
+            },
+            {
+                "name": "currencyDisplay",
+                "entity": "Currency",
+                "parentKeys": ["currenceDisplay"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "currencyPayment",
+                "entity": "Currency",
+                "parentKeys": ["currencyPayment"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "lang",
+                "entity": "Lang",
+                "parentKeys": ["currentLang"],
+                "childKeys": ["id"],
+                "type": "OneToOne"
             }
         ]
     }
