@@ -196,15 +196,18 @@ class CStorehouseOperationRepo extends ARepo
 
             /** @var CStorehouseOperationLine $sol */
             foreach ($solE as $sol) {
-                $skuToUpdate = $sol->productSku;
-                $shpEm = $skuToUpdate->shopHasProduct;
 
-                $value = $shpEm->value;
-                $price = $shpEm->price;
+                $skuToUpdate = \Monkey::app()->repoFactory->create('ProductSku')->findOneBy(['productId'=>$sol->productId,'productVariantId'=>$sol->productVariantId,'productSizeId'=>$sol->productSizeId]);
 
-                $qtyToMove = $sol->qty;
+
+
 
                 if ($skuToUpdate) {
+                    $shpEm = $skuToUpdate->shopHasProduct;
+                    $value = $shpEm->value;
+                    $price = $shpEm->price;
+
+                    $qtyToMove = $sol->qty;
                     //TODO: gestione padding da aggiornare quando si implementeranno i resi
 
                     //prepare i releaseDate o gli esaurito
