@@ -184,6 +184,28 @@ class COrderLineRepo extends ARepo
         $oldStatus = $orderLine->orderLineStatus;
         $shopRepo = \Monkey::app()->repoFactory->create('Shop')->findOneBy(['id' => $orderLine->remoteShopSellerId]);
         $orderRepo = \Monkey::app()->repoFactory->create('Order')->findOneBy(['id' => $orderLine->orderId,'remoteShopSellerId' => $orderLine->remoteShopSellerId]);
+
+
+
+        switch ($code) {
+            case 'ORD_CANCEL':
+                $orderLine = $this->updateToCancel($orderLine,$newStatusE,$oldStatus);
+                break;
+            case 'ORD_MAIL_PREP_C':
+                $orderLine = $this->updateToFriendOk($orderLine,$newStatusE,$oldStatus);
+                break;
+            case 'ORD_FRND_ORDSNT':
+                $orderLine = $this->updateFriendOrderSent($orderLine,$newStatusE,$time);
+                break;
+            case 'ORD_FRND_SNDING':
+                $orderLine = $this->updateFriendOrderSending($orderLine,$newStatusE,$time);
+                break;
+            default:
+                $orderLine->status = $newStatusE->code;
+                $orderLine->update();
+        }
+
+
         if (ENV == "prod") {
             if ($orderLine->remoteOrderSellerId != null) {
                 $db_host = $shopRepo->dbHost;
@@ -206,34 +228,13 @@ class COrderLineRepo extends ARepo
                 $stmtOrderLine->execute();
             }
         }
-
-
-        switch ($code) {
-            case 'ORD_CANCEL':
-                $orderLine = $this->updateToCancel($orderLine,$newStatusE,$oldStatus);
-                break;
-            case 'ORD_MAIL_PREP_C':
-                $orderLine = $this->updateToFriendOk($orderLine,$newStatusE,$oldStatus);
-                break;
-            case 'ORD_FRND_ORDSNT':
-                $orderLine = $this->updateFriendOrderSent($orderLine,$newStatusE,$time);
-                break;
-            case 'ORD_FRND_SNDING':
-                $orderLine = $this->updateFriendOrderSending($orderLine,$newStatusE,$time);
-                break;
-            default:
-                $orderLine->status = $newStatusE->code;
-                $orderLine->update();
-        }
-
-        //Se cambia il flag isActive, si ricalcolano i totali del carrello.
+//Se cambia il flag isActive, si ricalcolano i totali del carrello.
         //if ($oldStatus->isActive != $newStatusE->isActive) {
         //    /** @var COrderRepo $oR */
         //    $oR = \Monkey::app()->repoFactory->create('Order');
         //    $oR->fillOrderValues($orderLine->order);
         //    $oR->fillRowsValues($orderLine->order);
         //}
-
         \Monkey::app()->eventManager->triggerEvent('changeOrderLineStatus',
             [
                 'order' => $orderLine,
