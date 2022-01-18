@@ -279,7 +279,12 @@ class COrderRepo extends ARepo
                 /** @var COrderLine $orderLine */
                 foreach ($orderLines as $orderLine) {
                     $this->updatePrestashopQty($orderLine->productId,$orderLine->productVariantId,$orderLine->productSizeId,null,1);
+                    $orderLine->status='ORD_CANCEL';
+                    $orderLine->update();
+
                 }
+
+
 
                 $haveAlduca = false;
 
