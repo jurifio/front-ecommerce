@@ -183,7 +183,7 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $writer->writeElement('g:brand',$product->productBrand->name);
             $creationDate= (new \DateTime($product->creationDate))->format('Y-m-d H:i:s');
 
-            if($creationDate>'2021-08-01 00:00:00'){
+            if($creationDate>'2022-02-01 00:00:00'){
                 $writer->writeElement('custom_label_0','Nuovi Arrivi');
             }else{
                 $writer->writeElement('custom_label_0','Prodotti in magazzino');
