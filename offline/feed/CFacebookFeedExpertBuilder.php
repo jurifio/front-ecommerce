@@ -90,7 +90,12 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $writer->startElement('title');
             $variant = ($product->productVariant) ? $product->productVariant->name : '';
             $prodName = $product->getName();
-            $name = mb_strtoupper($product->productBrand->name) . ' ' . $variant . ' ' . $prodName.' '.$product->productSeason->name;
+            $productSeason=\Monkey::app()->repoFactory->create('ProductSeason')->findOneBy(['id'=>$product->productSeasonId]);
+            if($productSeason) {
+                $name = mb_strtoupper($product->productBrand->name) . ' ' . $variant . ' ' . $prodName . ' ' . $product->productSeason->name;
+            }else{
+                $name = mb_strtoupper($product->productBrand->name) . ' ' . $variant . ' ' . $prodName;
+            }
 
             if (count($sizes) < 3) $name .= " (" . implode('-',$sizes) . ")";
             $writer->writeCdata($name);
