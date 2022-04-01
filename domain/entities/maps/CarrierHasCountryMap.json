@@ -1,7 +1,7 @@
 {
     "entity": {
         "name": "CarrierHasCountry",
-        "keys": ["carrierId","countryId"],
+        "keys": ["id","carrierId","countryId"],
         "cacheable" : "true",
         "children": [
             {

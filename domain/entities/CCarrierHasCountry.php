@@ -20,5 +20,5 @@ use bamboo\core\db\pandaorm\entities\AEntity;
 class CCarrierHasCountry extends AEntity
 {
     protected $entityTable = 'CarrierHasCountry';
-    protected $primaryKeys = ['carrierId','countryId'];
+    protected $primaryKeys = ['id','carrierId','countryId'];
 }
