@@ -54,7 +54,7 @@ trait TCatalogRepoFunctions
          ProductPublicSku.productSizeId = ifnull(:size, ProductPublicSku.productSizeId) AND
          Product.productColorGroupId = ifnull(:color, Product.productColorGroupId) AND
          Product.productBrandId = ifnull(:brand, Product.productBrandId)
-        ORDER BY tt.sortingPriorityId";
+        ORDER BY tt.sortingPriorityId asc";
 
 
     /**
