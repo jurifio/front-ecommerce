@@ -1364,7 +1364,7 @@ class COrderLineRepo extends ARepo
 <script  type="application/javascript" src="https://www.iwes.pro/assets/js/monkeyUtil.js"></script>
 <script defer type="application/javascript" src="https://www.iwes.pro/assets/js/invoice_print.js"></script>
 <script defer async type="application/javascript" src="https://www.iwes.pro/assets/js/blueseal.common.js"></script>
-    <title>BlueSeal - Stampa fattura</title>
+    <title>99Monkeys - Stampa fattura</title>
     <style type="text/css">';
 
 
