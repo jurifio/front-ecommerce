@@ -582,7 +582,7 @@ class CProduct extends AEntity
         $object['head'][1] = 'Store';
         $object['head'][2] = 'Gr.Tag';
 
-        $i=3;
+        $i = 3;
         /*   $psp = \Monkey::app()->repoFactory->create('ProductSizeGroupHasProductSize')->findBy(['productSizeGroupId' => $this->productSizeGroupId]);
            foreach ($psp as $productSizeGroup) {
                $productSize = \Monkey::app()->repoFactory->create('ProductSize')->findOneBy(['id' => $productSizeGroup->productSizeId]);
@@ -593,44 +593,48 @@ class CProduct extends AEntity
 
 
         foreach ($shopIds as $shopId) {
+            $i = 3;
             $object['head'][0] = 'Shop';
             $object['head'][1] = 'Store';
             $object['head'][2] = 'Gr.Tag';
-            $i = 3;
+
 
             /** @var CShopHasProduct $shopHasProduct */
             $shopHasProduct = $this->shopHasProduct->findOneByKey('shopId',$shopId);
             if ($shopHasProduct) {
-                $storehouses = \Monkey::app()->repoFactory->create('Storehouse')->findBy(['shopId' => $shopId]);
-                /** @var CStorehouse $storehouse */
-                foreach ($storehouses as $storehouse) {
-                    $k=3;
-                    \Monkey::dump($shopHasProduct);
-                    \Monkey::dump($shopHasProduct->productSizeGroup);
-                    \Monkey::dump($shopHasProduct->productSizeGroup->productSizeMacroGroup);
-                    /** @var CDirtyProduct $dirtyProduct */
-                    $dirtyProduct = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['productId' => $shopHasProduct->productId,'productVariantId' => $shopHasProduct->productVariantId,'shopId' => $shopId]);
+                foreach($this->productPublicSku as $productPublicSku ) {
+                    /** @var CProductPublicSku $productPublicSku */
+                    /** @var CProductSku $productSku */
+                    if ($productPublicSku->stockQty > 0) {
+                        $object['head'][$productPublicSku->productSizeId] = $productPublicSku->productSize->name;
+                    }
+                }
+            }
+            $storehouses = \Monkey::app()->repoFactory->create('Storehouse')->findBy(['shopId' => $shopId]);
+
+            /** @var CStorehouse $storehouse */
+            foreach ($storehouses as $storehouse) {
+
+                $object['rows'][$storehouse->id][0] = $storehouse->shop->name;
+                $object['rows'][$storehouse->id][1] = $storehouse->sigla;
+                $object['rows'][$storehouse->id][2] = $shopHasProduct->productSizeGroup->locale . ' ' . $shopHasProduct->productSizeGroup->productSizeMacroGroup->name;
+
+                \Monkey::dump($shopHasProduct);
+                \Monkey::dump($shopHasProduct->productSizeGroup);
+                \Monkey::dump($shopHasProduct->productSizeGroup->productSizeMacroGroup);
+                /** @var CDirtyProduct $dirtyProduct */
+                $dirtyProduct = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['productId' => $shopHasProduct->productId,'productVariantId' => $shopHasProduct->productVariantId,'shopId' => $shopId]);
 
 
-
-                    $object['rows'][$storehouse->id][0] = $storehouse->shop->name;
-                    $object['rows'][$storehouse->id][1] = $storehouse->sigla;
-                    $object['rows'][$storehouse->id][2] = $shopHasProduct->productSizeGroup->locale . ' ' . $shopHasProduct->productSizeGroup->productSizeMacroGroup->name;
-
-
-                    /** @var CDirtySku $dirtySku */
-                    $dirtySku = \Monkey::app()->repoFactory->create('DirtySku')->findBy(['dirtyProductId' => $dirtyProduct->id,'shopId' => $dirtyProduct->shopId,'storeHouseId' => $storehouse->id,'status'=>'ok']);
-                    foreach($dirtySku as $dirtySkus) {
-                        if ($dirtySkus) {
-                            if ($dirtySkus->qty >= 1) {
-                                $object['head'][$i] = $dirtySkus->size;
-                                $object['rows'][$storehouse->id][$dirtySkus->productSizeId]['qty'] = $dirtySkus->qty;
-                                $i++;
-                            }
+                /** @var CDirtySku $dirtySku */
+                $dirtySku = \Monkey::app()->repoFactory->create('DirtySku')->findBy(['dirtyProductId' => $dirtyProduct->id,'shopId' => $storehouse->shopId,'storeHouseId' => $storehouse->id,'status' => 'ok']);
+                foreach ($dirtySku as $dirtySkus) {
+                    if ($dirtySkus) {
+                        if($dirtySkus->qty>0){
+                            $object['rows'][$storehouse->id][$dirtySkus->productSizeId]['qty'] = $dirtySkus->qty;
+                            $i++;
                         }
                     }
-
-                    $k++;
 
 
                 }
