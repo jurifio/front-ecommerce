@@ -38,6 +38,20 @@
                 "parentKeys": ["dirtyProductId","shopId","productSizeId"],
                 "type": "OneToOneCustom",
                 "query": "SELECT dp.productId, dp.productVariantId, ds.productSizeId, ds.shopId FROM DirtyProduct dp, DirtySku ds WHERE dp.id = ds.dirtyProductId AND dp.id = ? and dp.shopId and ds.productSizeId = ? LIMIT 1"
+            },
+            {
+                "name": "storehouse",
+                "entity": "Storehouse",
+                "parentKeys": ["storeHouseId,shopId"],
+                "childKeys": ["id,shopId"],
+                "type": "OneToOne"
+            },
+            {
+                "name": "shopHasProduct",
+                "entity": "ShopHasProduct",
+                "parentKeys": ["shopId"],
+                "childKeys": ["shopId"],
+                "type": "OneToOne"
             }
         ]
     }

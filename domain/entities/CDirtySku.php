@@ -15,6 +15,8 @@ use bamboo\core\db\pandaorm\entities\AEntity;
  * @since ${VERSION}
  *
  * @property CDirtyProduct $dirtyProduct
+ * @property CStorehouse $storehouse
+ * @property CProductSize $productSize
  *
  */
 class CDirtySku extends AEntity
