@@ -613,11 +613,7 @@ class CProduct extends AEntity
 
             /** @var CStorehouse $storehouse */
             foreach ($storehouses as $storehouse) {
-
-                $object['rows'][$storehouse->id][0] = $storehouse->shop->name;
-                $object['rows'][$storehouse->id][1] = $storehouse->sigla;
-                $object['rows'][$storehouse->id][2] = $shopHasProduct->productSizeGroup->locale . ' ' . $shopHasProduct->productSizeGroup->productSizeMacroGroup->name;
-
+                $okView=0;
                 \Monkey::dump($shopHasProduct);
                 \Monkey::dump($shopHasProduct->productSizeGroup);
                 \Monkey::dump($shopHasProduct->productSizeGroup->productSizeMacroGroup);
@@ -630,6 +626,7 @@ class CProduct extends AEntity
                 foreach ($dirtySku as $dirtySkus) {
                     if ($dirtySkus) {
                         if($dirtySkus->qty>0){
+                            $okView=1;
                             $object['rows'][$storehouse->id][$dirtySkus->productSizeId]['qty'] = $dirtySkus->qty;
                             $i++;
                         }
@@ -637,6 +634,12 @@ class CProduct extends AEntity
 
 
                 }
+                if($okView==1) {
+                    $object['rows'][$storehouse->id][0] = $storehouse->shop->name;
+                    $object['rows'][$storehouse->id][1] = $storehouse->sigla;
+                    $object['rows'][$storehouse->id][2] = $shopHasProduct->productSizeGroup->locale . ' ' . $shopHasProduct->productSizeGroup->productSizeMacroGroup->name;
+                }
+
             }
 
             return $object;
