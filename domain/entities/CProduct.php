@@ -602,7 +602,7 @@ class CProduct extends AEntity
             /** @var CShopHasProduct $shopHasProduct */
             $shopHasProduct = $this->shopHasProduct->findOneByKey('shopId',$shopId);
             if ($shopHasProduct) {
-                foreach($this->product as $productSku ) {
+                foreach($this->productSku as $productSku ) {
                     /** @var CProductSku $productSku */
                     if ($productSku->stockQty > 0) {
                         $object['head'][$productSku->productSizeId] = $productSku->productSize->name;
