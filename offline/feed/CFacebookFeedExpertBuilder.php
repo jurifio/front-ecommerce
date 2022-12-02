@@ -175,15 +175,15 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $price = number_format($priceActive->price,2,'.','');
 
             $writer->writeElement('g:price',$price . ' EUR');
-            if ($product->isOnSale == 1) {
+            /*if ($product->isOnSale == 1) {
                 $salePrice = number_format($priceActive->salePrice,2,'.','');
                 $writer->writeElement('g:sale_price',$salePrice . ' EUR');
-            }
+            }*/
             $writer->writeElement('g:mpn',$product->itemno . ' ' . $product->productVariant->name);
             $writer->writeElement('g:brand',$product->productBrand->name);
             $creationDate= (new \DateTime($product->creationDate))->format('Y-m-d H:i:s');
 
-            if($creationDate>'2022-02-01 00:00:00'){
+            if($creationDate >'2022-10-01 00:00:00'){
                 $writer->writeElement('custom_label_0','Nuovi Arrivi');
             }else{
                 $writer->writeElement('custom_label_0','Prodotti in magazzino');
