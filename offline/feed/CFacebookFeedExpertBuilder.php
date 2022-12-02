@@ -92,7 +92,7 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             $prodName = $product->getName();
             $productSeason=\Monkey::app()->repoFactory->create('ProductSeason')->findOneBy(['id'=>$product->productSeasonId]);
             if($productSeason) {
-                $name = mb_strtoupper($product->productBrand->name) . ' ' . $variant . ' ' . $prodName . ' ' . $product->productSeason->name;
+                $name = mb_strtoupper($product->productBrand->name) . ' ' . $variant . ' ' . $prodName;
             }else{
                 $name = mb_strtoupper($product->productBrand->name) . ' ' . $variant . ' ' . $prodName;
             }
@@ -136,7 +136,7 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
 
             $categories = $product->getMarketplaceAccountCategoryIdsFacebook($this->marketplaceAccount);
 
-                $writer->writeElement('g:google_product_category',$categories[0]);
+                $writer->writeElement('g:google_product_category',167);
 
             $writer->writeElement('g:age_group','all ages');
 
@@ -188,6 +188,7 @@ class CFacebookFeedExpertBuilder extends AExpertFeedBuilder
             }else{
                 $writer->writeElement('custom_label_0','Prodotti in magazzino');
             }
+            $writer->writeElement('custom_label_1',$product->productSeason->name);
             if (!is_null($product->productColorGroup)) {
                 $writer->writeElement('g:color',$product->productColorGroup->productColorGroupTranslation->getFirst()->name);
             }
