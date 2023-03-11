@@ -63,7 +63,7 @@ class CBarbagalloImporter extends ABluesealProductImporter
                 $newDirtyProduct["itemno"] = $one["articolo"];
                 $newDirtyProduct["value"] = floatval(str_replace(',','.',$one["PrAcquisto"]));
                 $newDirtyProduct["price"] = floatval(str_replace(',','.',$one["PrListino"]));
-                $newDirtyProduct["var"] = $one["productColor"];
+                $newDirtyProduct["var"] = $one["supplier_color"];
                 $newDirtyProduct["text"] = implode(',', $newDirtyProduct);
 
                 $newDirtyProduct["checksum"] = md5(implode(',', $newDirtyProduct));
@@ -74,7 +74,7 @@ class CBarbagalloImporter extends ABluesealProductImporter
                 $newDirtyProductExtend["audience"] = $one["reparto"];
                 $newDirtyProductExtend["cat1"] = $one["categoria"];
                 $newDirtyProductExtend["generalColor"] = $one["supplier_color"];
-                $newDirtyProductExtend["colorDescription"] = $one["productColor"];
+                $newDirtyProductExtend["colorDescription"] = $one["supplier_color"];
                 $newDirtyProductExtend["description"] = $one["descrizioneEstesa"];
                 $newDirtyProductExtend["name"] = $one["ZEPPA"];
 
