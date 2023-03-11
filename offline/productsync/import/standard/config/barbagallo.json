@@ -2,7 +2,7 @@
     "filesConfig": {
         "location": "url",
         "istructions": {
-            "url": "http://2.226.177.164:88/barbagallo/articoli.php?p=095",
+            "url": "https://api.retaildreamslab.net/sync/sciuti/barbagallo",
             "root": "__default__",
             "folder": "import",
             "glob": "*.json"

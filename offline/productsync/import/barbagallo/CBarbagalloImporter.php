@@ -59,10 +59,11 @@ class CBarbagalloImporter extends ABluesealProductImporter
 
                 $newDirtyProduct["shopId"] = $this->getShop()->id;
                 $newDirtyProduct["brand"] = $one["marchio"];
+                $newDirtyProduct["extId"] = $one["product_id"];
                 $newDirtyProduct["itemno"] = $one["articolo"];
                 $newDirtyProduct["value"] = floatval(str_replace(',','.',$one["PrAcquisto"]));
                 $newDirtyProduct["price"] = floatval(str_replace(',','.',$one["PrListino"]));
-                $newDirtyProduct["var"] = $one["colore"];
+                $newDirtyProduct["var"] = $one["productColor"];
                 $newDirtyProduct["text"] = implode(',', $newDirtyProduct);
 
                 $newDirtyProduct["checksum"] = md5(implode(',', $newDirtyProduct));
@@ -72,8 +73,10 @@ class CBarbagalloImporter extends ABluesealProductImporter
                 $newDirtyProductExtend["season"] = $one["stagione"].' '.$one['anno'];
                 $newDirtyProductExtend["audience"] = $one["reparto"];
                 $newDirtyProductExtend["cat1"] = $one["categoria"];
-                $newDirtyProductExtend["generalColor"] = $one["colore"];
-                $newDirtyProductExtend["colorDescription"] = $one["colore"];
+                $newDirtyProductExtend["generalColor"] = $one["supplier_color"];
+                $newDirtyProductExtend["colorDescription"] = $one["productColor"];
+                $newDirtyProductExtend["description"] = $one["descrizioneEstesa"];
+                $newDirtyProductExtend["name"] = $one["ZEPPA"];
 
 
                 $existingDirtyProduct = \Monkey::app()->dbAdapter->selectCount("DirtyProduct", ['checksum' => $newDirtyProduct['checksum']]);
