@@ -61,8 +61,8 @@ class CBarbagalloImporter extends ABluesealProductImporter
                 $newDirtyProduct["brand"] = $one["marchio"];
                 $newDirtyProduct["extId"] = $one["prodotto_id"];
                 $newDirtyProduct["itemno"] = $one["articolo"];
-                $newDirtyProduct["value"] = floatval(str_replace(',','.',$one["PrIniziale"]));
-                $newDirtyProduct["price"] = floatval(str_replace(',','.',$one["PrListino"]));
+                $newDirtyProduct["value"] = (float)str_replace(',','.',$one["PrIniziale"]);
+                $newDirtyProduct["price"] = (float)str_replace(',','.',$one["PrListino"]);
                 $newDirtyProduct["var"] = $one["colore"];
                 $newDirtyProduct["text"] = implode(',', $newDirtyProduct);
 
@@ -154,8 +154,8 @@ class CBarbagalloImporter extends ABluesealProductImporter
                 $newDirtySku["size"] = $one["taglia"];
                 $newDirtySku["shopId"] = $this->getShop()->id;
                 $newDirtySku["dirtyProductId"] = $dirtyProduct["id"];
-                $newDirtySku["value"] = floatval(str_replace(',','.',$one["PrAcquisto"]));
-                $newDirtySku["price"] = floatval(str_replace(',','.',$one["PrListino"]));
+                $newDirtySku["value"] = (float)str_replace(',','.',$one["PrIniziale"]);
+                $newDirtySku["price"] = (float)str_replace(',','.',$one["PrListino"]);
                 $newDirtySku["qty"] = $one["esistenza"];
                 $newDirtySku["barcode"] = $one["barcode"];
                 $newDirtySku["text"] = implode(',', $newDirtySku);
