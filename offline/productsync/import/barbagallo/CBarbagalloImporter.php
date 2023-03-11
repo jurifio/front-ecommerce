@@ -59,7 +59,7 @@ class CBarbagalloImporter extends ABluesealProductImporter
 
                 $newDirtyProduct["shopId"] = $this->getShop()->id;
                 $newDirtyProduct["brand"] = $one["marchio"];
-                $newDirtyProduct["extId"] = $one["product_id"];
+                $newDirtyProduct["extId"] = $one["prodotto_id"];
                 $newDirtyProduct["itemno"] = $one["articolo"];
                 $newDirtyProduct["value"] = floatval(str_replace(',','.',$one["PrAcquisto"]));
                 $newDirtyProduct["price"] = floatval(str_replace(',','.',$one["PrListino"]));
