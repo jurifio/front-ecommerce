@@ -19,7 +19,7 @@ use bamboo\domain\entities\CProduct;
  * @since 1.0
  * @property CProduct $product
  * @property CObjectCollection $dirtySku
- *
+ * @proprety CDirtyProductExtend $extend
  *
  */
 class CDirtyProduct extends AEntity

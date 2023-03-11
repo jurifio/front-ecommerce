@@ -672,6 +672,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         foreach ($dps as $dpId) {
             $this->report('createProducts', 'working for ' . $dpId['id']);
             try {
+                /** @var CDirtyProduct $dirtyProduct */
                 $dirtyProduct = $dpEm->findOneBy(['id'=>$dpId]);
                 $sheetPrototype->productDetailLabel->rewind();
 
