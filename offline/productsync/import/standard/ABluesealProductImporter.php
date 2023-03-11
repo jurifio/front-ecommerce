@@ -4,6 +4,7 @@ namespace bamboo\offline\productsync\import\standard;
 
 use bamboo\core\utils\amazonPhotoManager\ImageEditor;
 use bamboo\domain\entities\CDirtyProduct;
+use bamboo\domain\entities\CDirtyProductExtend;
 use bamboo\domain\entities\CImporterConnector;
 use bamboo\domain\entities\CProduct;
 use bamboo\domain\entities\CShop;
@@ -680,7 +681,8 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 /** Inserisco la variante*/
                 $variant = $variantFactory->getEmptyEntity();
                 $variant->name = $dirtyProduct->var;
-                $variant->description = $dirtyProduct->extend->colorDescription;
+                $dirtyProductExtend=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dpId]);
+                $variant->description = $dirtyProductExtend->colorDescription;
 
 
                 /** Inserisco il prodotto */
@@ -717,8 +719,8 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 														  Product.productStatusId NOT IN (8,13)", [$dirtyProduct->itemno, $product->productBrandId, $variant->name])->fetch()['conto'];
                 if ($conto > 0) {
                     /** CHANGE EXECUTION; FUSE AND CONTINUE; END TRANSACTION */
-                    if (!isset($seasonDic[$slugify->slugify($dirtyProduct->extend->season)])) throw new BambooOutOfBoundException('Product Season not found in Dictionary: %s', [$dirtyProduct->extend->season]);
-                    $newSeason = $seasonDic[$slugify->slugify($dirtyProduct->extend->season)];
+                    if (!isset($seasonDic[$slugify->slugify($dirtyProductExtend->season)])) throw new BambooOutOfBoundException('Product Season not found in Dictionary: %s', [$dirtyProduct->extend->season]);
+                    $newSeason = $seasonDic[$slugify->slugify($dirtyProductExtend->season)];
                     $this->fuseProduct($product, $variant, $dirtyProduct,$newSeason,$sizeConnector);
                     \Monkey::app()->repoFactory->commit();
                     continue;
@@ -727,21 +729,21 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                     $product->productVariantId = $variant->id;
                 }
 
-                if (!isset($seasonDic[$slugify->slugify($dirtyProduct->extend->season)])) throw new BambooOutOfBoundException('Product Season not found in Dictionary: %s', [$dirtyProduct->extend->season]);
-                $product->productSeasonId = $seasonDic[$slugify->slugify($dirtyProduct->extend->season)];
+                if (!isset($seasonDic[$slugify->slugify($dirtyProductExtend->season)])) throw new BambooOutOfBoundException('Product Season not found in Dictionary: %s', [$dirtyProduct->extend->season]);
+                $product->productSeasonId = $seasonDic[$slugify->slugify($dirtyProductExtend->season)];
                 $product->sortingPriorityId = 99;
                 $product->dummyPicture = "bs-dummy-16-9.png";
                 /** aggiungo il colore */
-                if (!isset($colorGroupDic[$slugify->slugify($dirtyProduct->extend->generalColor)])) throw new BambooOutOfBoundException('Product Color not found in Dictionary: %s', [$dirtyProduct->extend->generalColor]);
-                $product->productColorGroupId = $colorGroupDic[$slugify->slugify($dirtyProduct->extend->generalColor)];
+                if (!isset($colorGroupDic[$slugify->slugify($dirtyProductExtend->generalColor)])) throw new BambooOutOfBoundException('Product Color not found in Dictionary: %s', [$dirtyProduct->extend->generalColor]);
+                $product->productColorGroupId = $colorGroupDic[$slugify->slugify($dirtyProductExtend->generalColor)];
                 $product->insert();
                 $product = $productFactory->findOne($product->getIds());
 
                 /** aggiungo i tag */
                 $tags = [];
-                $tags[] = $dirtyProduct->extend->tag1;
-                $tags[] = $dirtyProduct->extend->tag2;
-                $tags[] = $dirtyProduct->extend->tag3;
+                $tags[] = $dirtyProductExtend->tag1;
+                $tags[] = $dirtyProductExtend->tag2;
+                $tags[] = $dirtyProductExtend->tag3;
                 foreach ($tags as $tag) {
                     if (empty($tag)) continue;
                     if (!isset($tagDic[$slugify->slugify($tag)])) throw new BambooOutOfBoundException('Product Tag not found in Dictionary: %s', [$tag]);
@@ -762,12 +764,12 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
                 $term = [];
                 /** aggiungo la categoria */
-                $term[] = $dirtyProduct->extend->audience;
-                $term[] = $dirtyProduct->extend->cat1;
-                $term[] = $dirtyProduct->extend->cat2;
-                $term[] = $dirtyProduct->extend->cat3;
-                $term[] = $dirtyProduct->extend->cat4;
-                $term[] = $dirtyProduct->extend->cat5;
+                $term[] = $dirtyProductExtend->audience;
+                $term[] = $dirtyProductExtend->cat1;
+                $term[] = $dirtyProductExtend->cat2;
+                $term[] = $dirtyProductExtend->cat3;
+                $term[] = $dirtyProductExtend->cat4;
+                $term[] = $dirtyProductExtend->cat5;
                 $term = implode('-', $term);
                 if (!isset($categoryDic[$slugify->slugify($term)])) throw new BambooOutOfBoundException('Product Category not found in Dictionary: %s', [$term]);
                 $this->app->dbAdapter->insert('ProductHasProductCategory', ['productId' => $product->id,
@@ -804,7 +806,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 $productDescriptionTranslation->productVariantId = $product->productVariantId;
                 $productDescriptionTranslation->langId = 1;
                 $productDescriptionTranslation->marketplaceId = 1;
-                $productDescriptionTranslation->description = is_null($dirtyProduct->extend->description) ? "" : $dirtyProduct->extend->description;
+                $productDescriptionTranslation->description = is_null($dirtyProductExtend->description) ? "" : $dirtyProductExtend->description;
                 $productDescriptionTranslation->insert();
 
                 foreach ($dirtyProduct->dirtyDetail as $detail) {
