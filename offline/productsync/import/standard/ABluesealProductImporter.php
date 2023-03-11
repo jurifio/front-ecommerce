@@ -674,7 +674,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             $this->report('createProducts', 'working for ' . $dpId['id']);
             try {
                 /** @var CDirtyProduct $dirtyProduct */
-                $dirtyProduct = $dpEm->findOneBy(['id'=>$dpId]);
+                $dirtyProduct = $dpEm->findOneBy(['id'=>$dpId['id']]);
                 $sheetPrototype->productDetailLabel->rewind();
 
                 \Monkey::app()->repoFactory->beginTransaction();
@@ -682,7 +682,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 $variant = $variantFactory->getEmptyEntity();
                 $variant->name = $dirtyProduct->var;
                 /** @var CDirtyProductExtend $dirtyProductExtend */
-                $dirtyProductExtend=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dpId]);
+                $dirtyProductExtend=\Monkey::app()->repoFactory->create('DirtyProductExtend')->findOneBy(['dirtyProductId'=>$dpId['id']]);
                 $variant->description = $dirtyProductExtend->colorDescription;
 
 
