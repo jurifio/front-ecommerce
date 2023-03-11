@@ -61,7 +61,7 @@ class CBarbagalloImporter extends ABluesealProductImporter
                 $newDirtyProduct["brand"] = $one["marchio"];
                 $newDirtyProduct["extId"] = $one["prodotto_id"];
                 $newDirtyProduct["itemno"] = $one["articolo"];
-                $newDirtyProduct["value"] = floatval(str_replace(',','.',$one["PrAcquisto"]));
+                $newDirtyProduct["value"] = floatval(str_replace(',','.',$one["PrIniziale"]));
                 $newDirtyProduct["price"] = floatval(str_replace(',','.',$one["PrListino"]));
                 $newDirtyProduct["var"] = $one["colore"];
                 $newDirtyProduct["text"] = implode(',', $newDirtyProduct);
@@ -73,8 +73,8 @@ class CBarbagalloImporter extends ABluesealProductImporter
                 $newDirtyProductExtend["season"] = $one["stagione"].' '.$one['anno'];
                 $newDirtyProductExtend["audience"] = $one["reparto"];
                 $newDirtyProductExtend["cat1"] = $one["categoria"];
-                $newDirtyProductExtend["generalColor"] = $one["supplier_color"];
-                $newDirtyProductExtend["colorDescription"] = $one["productColor"];
+                $newDirtyProductExtend["generalColor"] = $one["colore"];
+                $newDirtyProductExtend["colorDescription"] = $one["colore"];
                 $newDirtyProductExtend["description"] = $one["descrizioneEstesa"];
                 $newDirtyProductExtend["name"] = $one["Titolo"];
 
