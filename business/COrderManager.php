@@ -2,6 +2,7 @@
 
 namespace bamboo\ecommerce\business;
 
+use bamboo\core\application\AApplication;
 use bamboo\core\ecommerce\APaymentGateway;
 use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooOutOfBoundException;
@@ -33,8 +34,8 @@ class COrderManager extends AOrderManager
     /**
      * Manage the Order, used to modify  and manage orders
      *
-     * @param \bamboo\core\application\AApplication $app
-     * @throws \bamboo\core\exceptions\RedPandaConfigException
+     * @param AApplication $app
+     * @throws \bamboo\core\exceptions\RedPandaConfigException|\Throwable
      */
     public function __construct($app)
     {
