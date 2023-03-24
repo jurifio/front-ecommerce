@@ -417,11 +417,11 @@ class CInvoiceRepo extends ARepo
                                 $quantity = $productSku->stockQty;
                                 $descrizione = (($productNameTranslation) ? $productNameTranslation->name : '') . ($orderLine->warehouseShelfPosition ? ' / ' . $orderLine->warehouseShelfPosition->printPosition() : '') . ' ' . $productSku->product->productBrand->name . ' - ' . $productSku->productId . '-' . $productSku->productVariantId . " " . $productSku->getPublicSize()->name;
                                 $categoria = "";
-                                $prezzo_netto = number_format($orderLine->activePrice + $orderLine->couponCharge, 2);
-                                $prezzo_lordo = number_format($orderLine->activePrice, 2);
-                                $scontoCharge = number_format($orderLine->couponCharge, 2);
+                                $prezzo_netto = number_format($orderLine->activePrice + $orderLine->couponCharge, 2,'.');
+                                $prezzo_lordo = number_format($orderLine->activePrice, 2,'.');
+                                $scontoCharge = number_format($orderLine->couponCharge, 2,'.');
                                 $sconto = abs($scontoCharge);
-                                $sconto = number_format(100 * $sconto / $orderLine->activePrice, 2);
+                                $sconto = number_format(100 * $sconto / $orderLine->activePrice, 2,'.');
                                 $cod_iva = "0";
                                 $applica_ra_contributi = "true";
                                 $ordine = $ordinearticolo;
@@ -469,7 +469,7 @@ class CInvoiceRepo extends ARepo
                                     'magazzino' => $magazzino
                                 ];
                             }
-                            $tot = number_format($tot, 2) - number_format($scontotot, 2);
+                            $tot = number_format($tot, 2,'.') - number_format($scontotot, 2,'.');
                             $today = new \DateTime();
                             $dateInvoice = $today->format('d/m/Y');
                             $insertJson .= json_encode($articoli) . ',
@@ -1098,7 +1098,7 @@ class CInvoiceRepo extends ARepo
             $invoiceText .= '</td>';
             $invoiceText .= '<td class="text-center">';
             $tot += $orderLine->activePrice;
-            $invoiceText .= money_format('%.2n',$orderLine->activePrice) . ' &euro;' . '</td></tr>';
+            $invoiceText .= number_format($orderLine->activePrice) . ' &euro;' . '</td></tr>';
 
         }
         $invoiceText .= '</tbody><br><tr class="text-left font-montserrat small">
@@ -1113,7 +1113,7 @@ class CInvoiceRepo extends ARepo
         }
         $invoiceText .= '</strong></td>
                         <td style="border: 0px"
-                            class="text-center">' . money_format('%.2n',$tot) . ' &euro;' . '</td>
+                            class="text-center">' . number_format($tot) . ' &euro;' . '</td>
                     </tr>';
         $discount = $order->couponDiscount + $order->userDiscount;
         ($changelanguage != 1) ? $transdiscount = 'Sconto' : $transdiscount = 'Discount';
@@ -1123,16 +1123,16 @@ class CInvoiceRepo extends ARepo
                             <td style="border: 0px"></td>
                             <td style="border: 0px"></td>
                             <td style="border: 0px">' . $transdiscount . '<strong></strong></td>
-                            <td style="border: 0px" class="text-center">' . money_format('%.2n',$discount) . ' &euro; </td></tr>' : null;
+                            <td style="border: 0px" class="text-center">' . number_format($discount) . ' &euro; </td></tr>' : null;
         $invoiceText .= ((!is_null($order->paymentModifier)) && ($order->paymentModifier != 0)) ? '<tr class="text-left font-montserrat small">
                             <td style="border: 0px"></td>
                             <td style="border: 0px"></td><td style="border: 0px"><strong>' . $transmethodpayment . '</strong></td>
-                            <td style="border: 0px" class="text-center">' . money_format('%.2n',$order->paymentModifier) . ' &euro; </td></tr>' : null;
+                            <td style="border: 0px" class="text-center">' . number_format($order->paymentModifier) . ' &euro; </td></tr>' : null;
         $invoiceText .= '<tr class="text-left font-montserrat small">
                         <td style="border: 0px"></td>
                         <td style="border: 0px"></td>
                         <td class="separate"><strong>' . $transdeliveryprice . '</strong></td>
-                        <td class="separate text-center">' . money_format('%.2n',$order->shippingPrice) . ' &euro;</td>
+                        <td class="separate text-center">' . number_format($order->shippingPrice) . ' &euro;</td>
                     </tr>
                     <tr style="border: 0px" class="text-left font-montserrat small hint-text">
                         <td class="text-left" width="30%">';
@@ -1144,7 +1144,7 @@ class CInvoiceRepo extends ARepo
                 $invoiceText .= 'Net Amount<br>';
             }
             $imp = ($order->netTotal * 100) / 122;
-            $invoiceText .= money_format('%.2n',$imp) . ' &euro;';
+            $invoiceText .= number_format($imp) . ' &euro;';
         } elseif ($invoiceType == "X") {
 
             $imp = ($order->netTotal * 100) / 122;
@@ -1165,7 +1165,7 @@ class CInvoiceRepo extends ARepo
                 $invoiceText .= 'VAT 22%<br>';
             }
             $iva = $order->vat;
-            $invoiceText .= money_format('%.2n',$iva) . ' &euro;';
+            $invoiceText .= number_format($iva) . ' &euro;';
         } elseif ($invoiceTypeVat == "NewX") {
             $invoiceText .= 'non imponibile ex art 8/A  D.P.R. n. 633/72';
             $iva = "0,00";
@@ -1179,7 +1179,7 @@ class CInvoiceRepo extends ARepo
         $invoiceText .= '<br></td>';
         $invoiceText .= '<td class="semi-bold"><h4>' . $invoiceTotalDocumentText . '</h4></td>';
         $invoiceText .= '<td class="semi-bold text-center">
-                            <h2>' . money_format('%.2n',$order->netTotal) . ' &euro; </h2></td>
+                            <h2>' . number_format($order->netTotal) . ' &euro; </h2></td>
                     </tr>
 
                 </table>

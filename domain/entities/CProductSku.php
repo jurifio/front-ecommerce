@@ -107,7 +107,7 @@ class CProductSku extends AEntity
      */
     public function getPrice()
     {
-        return money_format("%.2n", $this->fields['price']);
+        return number_format($this->fields['price'],2,'.','');
     }
 
     /**
@@ -115,7 +115,7 @@ class CProductSku extends AEntity
      */
     public function getSalePrice()
     {
-        return money_format("%.2n", $this->fields['salePrice']);
+        return number_format($this->fields['salePrice'],2,'.','');
     }
 
     /**
