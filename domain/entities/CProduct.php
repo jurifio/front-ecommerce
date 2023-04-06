@@ -621,9 +621,9 @@ class CProduct extends AEntity
             foreach ($storehouses as $storehouse) {
 
                     $okView = 0;
-                    \Monkey::dump($shopHasProduct);
+                   /* \Monkey::dump($shopHasProduct);
                     \Monkey::dump($shopHasProduct->productSizeGroup);
-                    \Monkey::dump($shopHasProduct->productSizeGroup->productSizeMacroGroup);
+                    \Monkey::dump($shopHasProduct->productSizeGroup->productSizeMacroGroup);*/
                     /** @var CDirtyProduct $dirtyProduct */
                     $dirtyProduct = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['productId' => $shopHasProduct->productId,'productVariantId' => $shopHasProduct->productVariantId,'shopId' => $shopId]);
 
