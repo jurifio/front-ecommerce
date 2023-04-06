@@ -599,10 +599,10 @@ class CProduct extends AEntity
             $object['head'][2] = 'Gr.Tag';
 
 
-            /** @var CShopHasProduct $shopHasProduct */
-            $shopHasProduct = $this->shopHasProduct->findOneByKey('shopId',$shopId);
+            /** @var   CShopHasProduct $shopHasProduct  */
+            $shopHasProduct = \Monkey::app()->repoFactory->create('ShopHasProduct')->findOneBy(['shopId'=>$shopId]);
             if ($shopHasProduct) {
-                foreach($this->productSku as $productSku ) {
+                foreach($shopHasProduct->productSku as $productSku ) {
                     /** @var CProductSku $productSku */
                     if ($productSku->stockQty > 0) {
                         $object['head'][$productSku->productSizeId] = $productSku->productSize->name;
