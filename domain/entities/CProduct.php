@@ -621,37 +621,38 @@ class CProduct extends AEntity
             /** @var CStorehouse $storehouse */
             foreach ($storehouses as $storehouse) {
                 $okView = 0;
-                \Monkey::dump($shopHasProduct);
-                \Monkey::dump($shopHasProduct->productSizeGroup);
-                \Monkey::dump($shopHasProduct->productSizeGroup->productSizeMacroGroup);
+                \Monkey ::dump($shopHasProduct);
+                \Monkey ::dump($shopHasProduct -> productSizeGroup);
+                \Monkey ::dump($shopHasProduct -> productSizeGroup -> productSizeMacroGroup);
                 /** @var CDirtyProduct $dirtyProduct */
-                $dirtyProduct = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['productId' => $shopHasProduct->productId,'productVariantId' => $shopHasProduct->productVariantId,'shopId' => $shopId]);
+                $dirtyProduct = \Monkey ::app() -> repoFactory -> create('DirtyProduct') -> findOneBy(['productId' => $shopHasProduct -> productId,'productVariantId' => $shopHasProduct -> productVariantId,'shopId' => $shopId]);
+                if ($dirtyProduct) {
+                    $totQty = 0;
+                    /** @var CObjectCollection $dirtySku */
+                    $dirtySku = \Monkey ::app() -> repoFactory -> create('DirtySku') -> findBy(['dirtyProductId' => $dirtyProduct -> id,'shopId' => $storehouse -> shopId,'storeHouseId' => $storehouse -> id,'status' => 'ok']);
 
-                $totQty = 0;
-                /** @var CObjectCollection $dirtySku */
-                $dirtySku = \Monkey::app()->repoFactory->create('DirtySku')->findBy(['dirtyProductId' => $dirtyProduct->id,'shopId' => $storehouse->shopId,'storeHouseId' => $storehouse->id,'status' => 'ok']);
+                    foreach ($dirtySku as $dirtySkus) {
+                        /** @var CDirtySku $dirtySkus */
+                        if ($dirtySkus) {
 
-                foreach ($dirtySku as $dirtySkus) {
-                    /** @var CDirtySku $dirtySkus */
-                    if ($dirtySkus) {
+                            $okView = 1;
+                            /** dirtySize-1-1-15__<2,dirtySize-1-3-15__ */
+                            $object['rows'][$storehouse -> id][$dirtySkus -> productSizeId]['qty'] = $dirtySkus -> qty;
+                            $totQty += $dirtySkus -> qty;
+                            $i++;
 
-                        $okView = 1;
-                        /** dirtySize-1-1-15__<2,dirtySize-1-3-15__ */
-                        $object['rows'][$storehouse->id][$dirtySkus->productSizeId]['qty'] = $dirtySkus->qty;
-                        $totQty += $dirtySkus->qty;
-                        $i++;
+                        }
+
 
                     }
-
+                    if ($okView == 1) {
+                        $object['rows'][$storehouse -> id][0] = $storehouse -> shop -> name;
+                        $object['rows'][$storehouse -> id][1] = $storehouse -> sigla;
+                        $object['rows'][$storehouse -> id][2] = $shopHasProduct -> productSizeGroup -> locale;
+                        $object['rows'][$storehouse -> id][3] = (int)$totQty;
+                    }
 
                 }
-                if ($okView == 1) {
-                    $object['rows'][$storehouse->id][0] = $storehouse->shop->name;
-                    $object['rows'][$storehouse->id][1] = $storehouse->sigla;
-                    $object['rows'][$storehouse->id][2] = $shopHasProduct->productSizeGroup->locale;
-                    $object['rows'][$storehouse->id][3] = (int)$totQty;
-                }
-
             }
 
             return $object;
