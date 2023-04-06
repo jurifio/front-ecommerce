@@ -575,12 +575,18 @@ class CProduct extends AEntity
      * @param array $shopIds
      * @return array
      */
-    public function getStockSituationTable(array $shopIds): ?array
+    public function getStockSituationTable(array $shopIds,$findstorehouse1,$findstorehouse2,$parametersize,$season,$productFind)
     {
+
+
         $object = [];
         $object['head'][0] = 'Shop';
-        $object['head'][1] = 'Store';
+        $object['head'][1] = 'St.';
         $object['head'][2] = 'Gr.Tag';
+        $object['head'][3] = 'T.qty';
+        $productConversion=explode('-',$productFind);
+        $productId=$productConversion[0];
+        $productVariantId=$productConversion[1];
 
         $i = 3;
         /*   $psp = \Monkey::app()->repoFactory->create('ProductSizeGroupHasProductSize')->findBy(['productSizeGroupId' => $this->productSizeGroupId]);
@@ -595,49 +601,55 @@ class CProduct extends AEntity
         foreach ($shopIds as $shopId) {
             $i = 3;
             $object['head'][0] = 'Shop';
-            $object['head'][1] = 'Store';
+            $object['head'][1] = 'St';
             $object['head'][2] = 'Gr.Tag';
+            $object['head'][3] = 'T.qty';
 
 
-            /** @var   CShopHasProduct $shopHasProduct  */
-            $shopHasProduct = \Monkey::app()->repoFactory->create('ShopHasProduct')->findOneBy(['shopId'=>$shopId]);
+            /** @var CShopHasProduct $shopHasProduct */
+            $shopHasProduct = \Monkey::app()->repoFactory->create('ShopHasProduct')->findOneBy(['shopId'=>$shopId,'productId'=>$productId,'productVariantId'=>$productVariantId]);
             if ($shopHasProduct) {
-                foreach($shopHasProduct->productSku as $productSku ) {
+                foreach ($shopHasProduct->productSku as $productSku) {
                     /** @var CProductSku $productSku */
-                    if ($productSku->stockQty > 0) {
-                        $object['head'][$productSku->productSizeId] = $productSku->productSize->name;
-                    }
+
+                    $object['head'][$productSku->productSizeId] = $productSku->productSize->name;
+
                 }
             }
             $storehouses = \Monkey::app()->repoFactory->create('Storehouse')->findBy(['shopId' => $shopId]);
 
             /** @var CStorehouse $storehouse */
             foreach ($storehouses as $storehouse) {
-                $okView=0;
+                $okView = 0;
                 \Monkey::dump($shopHasProduct);
                 \Monkey::dump($shopHasProduct->productSizeGroup);
                 \Monkey::dump($shopHasProduct->productSizeGroup->productSizeMacroGroup);
                 /** @var CDirtyProduct $dirtyProduct */
                 $dirtyProduct = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['productId' => $shopHasProduct->productId,'productVariantId' => $shopHasProduct->productVariantId,'shopId' => $shopId]);
 
-
-                /** @var CDirtySku $dirtySku */
+                $totQty = 0;
+                /** @var CObjectCollection $dirtySku */
                 $dirtySku = \Monkey::app()->repoFactory->create('DirtySku')->findBy(['dirtyProductId' => $dirtyProduct->id,'shopId' => $storehouse->shopId,'storeHouseId' => $storehouse->id,'status' => 'ok']);
+
                 foreach ($dirtySku as $dirtySkus) {
+                    /** @var CDirtySku $dirtySkus */
                     if ($dirtySkus) {
-                        if($dirtySkus->qty>0){
-                            $okView=1;
-                            $object['rows'][$storehouse->id][$dirtySkus->productSizeId]['qty'] = $dirtySkus->qty;
-                            $i++;
-                        }
+
+                        $okView = 1;
+                        /** dirtySize-1-1-15__<2,dirtySize-1-3-15__ */
+                        $object['rows'][$storehouse->id][$dirtySkus->productSizeId]['qty'] = $dirtySkus->qty;
+                        $totQty += $dirtySkus->qty;
+                        $i++;
+
                     }
 
 
                 }
-                if($okView==1) {
+                if ($okView == 1) {
                     $object['rows'][$storehouse->id][0] = $storehouse->shop->name;
                     $object['rows'][$storehouse->id][1] = $storehouse->sigla;
-                    $object['rows'][$storehouse->id][2] = $shopHasProduct->productSizeGroup->locale . ' ' . $shopHasProduct->productSizeGroup->productSizeMacroGroup->name;
+                    $object['rows'][$storehouse->id][2] = $shopHasProduct->productSizeGroup->locale;
+                    $object['rows'][$storehouse->id][3] = (int)$totQty;
                 }
 
             }
