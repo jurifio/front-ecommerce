@@ -575,18 +575,14 @@ class CProduct extends AEntity
      * @param array $shopIds
      * @return array
      */
-    public function getStockSituationTable(array $shopIds,$findstorehouse1,$findstorehouse2,$parametersize,$season,$productFind)
+    public function getStockSituationTable(array $shopIds)
     {
-
-
         $object = [];
         $object['head'][0] = 'Shop';
-        $object['head'][1] = 'St.';
+        $object['head'][1] = 'Store';
         $object['head'][2] = 'Gr.Tag';
         $object['head'][3] = 'T.qty';
-        $productConversion=explode('-',$productFind);
-        $productId=$productConversion[0];
-        $productVariantId=$productConversion[1];
+
 
         $i = 3;
         /*   $psp = \Monkey::app()->repoFactory->create('ProductSizeGroupHasProductSize')->findBy(['productSizeGroupId' => $this->productSizeGroupId]);
