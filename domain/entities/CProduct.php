@@ -575,7 +575,7 @@ class CProduct extends AEntity
      * @param array $shopIds
      * @return array
      */
-    public function getStockSituationTable(array $shopIds)
+    public function getStockSituationTable(array $shopIds): ?array
     {
         $object = [];
         $object['head'][0] = 'Shop';
