@@ -620,22 +620,22 @@ class CProduct extends AEntity
             /** @var CStorehouse $storehouse */
             foreach ($storehouses as $storehouse) {
 
-                    $okView = 0;
-                   /* \Monkey::dump($shopHasProduct);
-                    \Monkey::dump($shopHasProduct->productSizeGroup);
-                    \Monkey::dump($shopHasProduct->productSizeGroup->productSizeMacroGroup);*/
-                    /** @var CDirtyProduct $dirtyProduct */
-                    $dirtyProduct = \Monkey::app()->repoFactory->create('DirtyProduct')->findOneBy(['productId' => $shopHasProduct->productId,'productVariantId' => $shopHasProduct->productVariantId,'shopId' => $shopId]);
-
+                $okView = 0;
+                /* \Monkey::dump($shopHasProduct);
+                 \Monkey::dump($shopHasProduct->productSizeGroup);
+                 \Monkey::dump($shopHasProduct->productSizeGroup->productSizeMacroGroup);*/
+                /** @var CDirtyProduct $dirtyProduct */
+                $dirtyProduct = \Monkey ::app() -> repoFactory -> create('DirtyProduct') -> findOneBy(['productId' => $productId,'productVariantId' => $productVariantId,'shopId' => $shopId]);
+                if ($dirtyProduct) {
                     $totQty = 0;
                     /** @var CDirtySku $dirtySku */
-                    $dirtySku = \Monkey::app()->repoFactory->create('DirtySku')->findBy(['dirtyProductId' => $dirtyProduct->id,'shopId' => $storehouse->shopId,'storeHouseId' => $storehouse->id,'status' => 'ok']);
+                    $dirtySku = \Monkey ::app() -> repoFactory -> create('DirtySku') -> findBy(['dirtyProductId' => $dirtyProduct -> id,'shopId' => $storehouse -> shopId,'storeHouseId' => $storehouse -> id,'status' => 'ok']);
                     foreach ($dirtySku as $dirtySkus) {
                         if ($dirtySkus) {
 
                             $okView = 1;
-                            $object['rows'][$storehouse->id][$dirtySkus->productSizeId]['qty'] = $dirtySkus->qty;
-                            $totQty += $dirtySkus->qty;
+                            $object['rows'][$storehouse -> id][$dirtySkus -> productSizeId]['qty'] = $dirtySkus -> qty;
+                            $totQty += $dirtySkus -> qty;
                             $i++;
 
                         }
@@ -643,13 +643,14 @@ class CProduct extends AEntity
 
                     }
                     if ($okView == 1) {
-                        $object['rows'][$storehouse->id][0] = $storehouse->shop->name;
-                        $object['rows'][$storehouse->id][1] = $storehouse->sigla;
-                        $object['rows'][$storehouse->id][2] = $shopHasProduct->productSizeGroup->locale;
-                        $object['rows'][$storehouse->id][3] = (int)$totQty;
+                        $object['rows'][$storehouse -> id][0] = $storehouse -> shop -> name;
+                        $object['rows'][$storehouse -> id][1] = $storehouse -> sigla;
+                        $object['rows'][$storehouse -> id][2] = $shopHasProduct -> productSizeGroup -> locale;
+                        $object['rows'][$storehouse -> id][3] = (int)$totQty;
                     }
 
 
+                }
             }
 
             return $object;
