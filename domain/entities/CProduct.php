@@ -588,9 +588,9 @@ class CProduct extends AEntity
             /** @var CShopHasProduct $shopHasProduct */
             $shopHasProduct = $this->shopHasProduct->findOneByKey('shopId', $shopId);
             if($shopHasProduct) {
-                Monkey::dump($shopHasProduct);
-                Monkey::dump($shopHasProduct->productSizeGroup);
-                Monkey::dump($shopHasProduct->productSizeGroup->productSizeMacroGroup);
+                \Monkey::dump($shopHasProduct);
+                \Monkey::dump($shopHasProduct->productSizeGroup);
+                \Monkey::dump($shopHasProduct->productSizeGroup->productSizeMacroGroup);
                 $object['rows'][$shopHasProduct->shopId][0] = $shopHasProduct->shop->name;
                 $object['rows'][$shopHasProduct->shopId][1] = $shopHasProduct->productSizeGroup->locale . ' ' . $shopHasProduct->productSizeGroup->productSizeMacroGroup->name;
                 $shops[] = $shopHasProduct->shop;
