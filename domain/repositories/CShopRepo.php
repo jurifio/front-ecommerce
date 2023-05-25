@@ -25,7 +25,7 @@ class CShopRepo extends ARepo
      * @param CUser|null $user
      * @return array
      */
-    public function getAutorizedShopsIdForUser(CUser $user = null)
+    public function getAutorizedShopsIdForUser(CUser $user = null): array
     {
         $shopIds = [];
         if (is_null($user)) $user = $this->app->getUser();

@@ -39,7 +39,7 @@ use bamboo\domain\repositories\CProductHistoryRepo;
  * @property CObjectCollection $productNameTranslation
  * @property CProductSizeGroup $productSizeGroup
  * @property CObjectCollection $tag
- *  * @property CObjectCollection $tagExclusive
+ * @property CObjectCollection $tagExclusive
  * @property CProductStatus $productStatus
  * @property CObjectCollection $shopHasProduct
  * @property CObjectCollection $productDescriptionTranslation
