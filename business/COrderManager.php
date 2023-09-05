@@ -15,9 +15,8 @@ use bamboo\domain\repositories\COrderRepo;
 use bamboo\core\exceptions\RedPandaException;
 
 /**
- * Class CCartManager
+ * Class COrderManager
  * @package bamboo\app
- * @deprecated
  */
 class COrderManager extends AOrderManager
 {
