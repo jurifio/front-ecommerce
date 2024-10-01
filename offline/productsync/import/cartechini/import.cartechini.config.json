@@ -11,12 +11,12 @@
     "files": {
         "main": {
             "location": "main.csv",
-            "columns":  27,
+            "columns":  28,
             "extKeys": ["extId","var"]
         },
         "skus": {
             "location": "skus.csv",
-            "columns":  12,
+            "columns":  13,
             "extKeys": ["extId","var"]
         }
     },
