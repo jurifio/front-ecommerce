@@ -133,7 +133,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
         //read main
         $lineCount=0;
-        while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
+        while (($values = fgetcsv($file, 0, ",", '|')) !== false) {
             $lineCount++;
             try {
                 if ($values[0][0] == '"') {
