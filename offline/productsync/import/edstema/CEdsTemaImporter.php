@@ -133,7 +133,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
         //read main
         $lineCount=0;
-        while (($values = fgetcsv($file, 10000, $separator,"|")) !== false) {
+        while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
             $lineCount++;
             try {
                 if ($values[0][0] == '"') {
@@ -169,12 +169,10 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 /** find existing product */
                 $res = $this->app->dbAdapter->select('DirtyProduct', $match)->fetchAll();
                 if (count($res) == 0) {
-                    $this->debug('readMain', 'Inserting new Product '.count($res), $product);
+                    $this->debug('readMain', 'Inserting new Product', $product);
                     /** è un nuovo prodotto lo scrivo */
                     $product['shopId'] = $this->shop->id;
                     $product['dirtyStatus'] = 'F';
-
-                    $this->report('checkFileProduct',  'productCollect'  ,var_dump($product));
                     $res = $this->app->dbAdapter->insert('DirtyProduct', $product);
                     $productExtend = $this->mapValues($values, $extendMapping);
                     $productExtend['dirtyProductId'] = $res;
@@ -212,7 +210,6 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
 
                 } else {
-                    $this->debug('readMain','insert continue',$productExtend);
                     //error
                     //log
                     continue;
@@ -249,7 +246,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
         $linecountRow=0;
         $seenSkus = [];
         fgets($file);
-        while (($values = fgetcsv($file, 10000, $separator, '|')) !== false) {
+        while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
             $this->debug('Read Sku','Cycle skus', $values);
             $linecountRow++;
             try {
@@ -257,8 +254,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     continue;
                 }
                 if (count($values) != 13) {
-
-                    $this->warning('Columns Count Skus', count($values) . ' columns find, expecting ' . $columnNumbers, $values);
+                    $this->warning('Columns Count', count($values) . ' columns find, expecting ' . $columnNumbers, $values);
                     continue;
                 }
 
@@ -270,10 +266,10 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
                 $this->debug('Read Sku','Reading Sku',$sku);
 
-                if (isset($checksums[$sku['checksum']])) {
-                    $seenSkus[] = $checksums[$sku['checksum']];
-                    continue;
-                }
+                /*  if (isset($checksums[$sku['checksum']])) {
+                      $seenSkus[] = $checksums[$sku['checksum']];
+                      continue;
+                  }*/
                 $this->debug('Read Sku','Checksum not found',$sku);
 
                 $sku['shopId'] = $this->getShop()->id;
@@ -283,10 +279,10 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
 
 
-                $sku['price'] = str_replace(',', '.', $sku['price']);
 
-                $sku['salePrice'] = str_replace('.', '.', $sku['salePrice']);
+                $sku['salePrice'] = str_replace(',', '', $sku['salePrice']);
                 $sku['value'] = str_replace(',', '.', $sku['value']);
+                $sku['price'] = str_replace(',', '.', $sku['price']);
                 $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
                 $sku['value'] = str_replace(',', '.', $sku['value']);
                 $sku['storeHouseId'] = str_replace('0','',$values[8]);
@@ -296,7 +292,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
                 $dirtyProduct = $this->app->dbAdapter->select('DirtyProduct', $match)->fetchAll();
                 if (count($dirtyProduct) != 1) {
-                    $this->warning('readSkus', 'Product not found for Sku'.' '.count($dirtyProduct), [$match,$sku]);
+                    $this->warning('readSkus', 'Product not found for Sku', [$match,$sku]);
                     continue;
                 }
 
