@@ -211,8 +211,8 @@ abstract class AEdsTemaImporter extends AProductImporter
                     $sku['value'] = str_replace('.', '', $sku['value']);
                     $sku['price'] = str_replace(',', '.', $sku['price']);
                     $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
-                    $sku['value'] = str_replace(',', '.', $sku['value']);
-                    $sku['storeHouseId'] =str_replace('0', '',  $sku['storeHouseId']);*/
+                    $sku['value'] = str_replace(',', '.', $sku['value']);*/
+                    $sku['storeHouseId'] =str_replace('0', '',  $sku['storeHouseId']);
                     $dirtyProduct = $this->app->dbAdapter->select('DirtyProduct', $match)->fetchAll();
                     if (count($dirtyProduct) != 1) {
                         //error
