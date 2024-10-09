@@ -283,10 +283,10 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
 
 
-                $sku['price'] = str_replace('.', '', $sku['price']);
-                $sku['salePrice'] = str_replace('.', '', $sku['salePrice']);
-                $sku['value'] = str_replace('.', '', $sku['value']);
                 $sku['price'] = str_replace(',', '.', $sku['price']);
+
+                $sku['salePrice'] = str_replace('.', '.', $sku['salePrice']);
+                $sku['value'] = str_replace(',', '.', $sku['value']);
                 $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
                 $sku['value'] = str_replace(',', '.', $sku['value']);
                 $sku['storeHouseId'] = str_replace('0','',$values[8]);
