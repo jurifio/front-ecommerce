@@ -916,9 +916,9 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             $shp2 = \Monkey::app()->repoFactory->create('ShopHasProduct')->findOne($shp->getIds());
             if (is_null($shp2)) {
                 //se non esiste prendo i prezzi di dirtyProduct e li inserisco i nella riga creata
-                $shp->price = $dirtyProduct->getDirtyPrice();
-                $shp->salePrice = $dirtyProduct->getDirtySalePrice();
-                $shp->value = $dirtyProduct->getDirtyValue();
+                $shp->price = number_format($dirtyProduct->getDirtyPrice(),2,'.');
+                $shp->salePrice = number_format($dirtyProduct->getDirtySalePrice(),2,'.');
+                $shp->value = number_format($dirtyProduct->getDirtyValue(),2,'.');
                 $shp->productSizeGroupId = $sizeConnector->findConnectionForProduct($product, $dirtyProduct);
                 if(!is_numeric($shp->productSizeGroupId)) $shp->productSizeGroupId = $product->productSizeGroupId;
                 $shp->insert();
