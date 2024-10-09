@@ -2,7 +2,7 @@
     "ftp": {
         "host": "fiber.office.iwes.it",
         "user": "shooting",
-        "pass": "PBYI34nbf",
+        "pass": "shoot",
         "port": "21",
         "timeout": "10",
         "mode": "2",
@@ -11,7 +11,7 @@
     "files": {
         "main": {
             "location": "main.csv",
-            "columns":  27,
+            "columns":  28,
             "extKeys": ["extId","var"]
         },
         "skus": {
@@ -34,7 +34,7 @@
             "extId": 9,
             "price": 5,
             "salePrice": 6,
-            "value" : 4,
+            "value" : 7,
             "shopId" : 8,
             "size" : 2,
             "qty" : 3,
