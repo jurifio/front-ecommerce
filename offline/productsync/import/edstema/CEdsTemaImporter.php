@@ -136,10 +136,10 @@ class CEdsTemaImporter extends ABluesealProductImporter
         while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
             $lineCount++;
             try {
-                if ($values[0][0] == '"') {
+                /*if ($values[0][0] == '"') {
                     $values[0] = substr($values[0], 1);
-                }
-                if($lineCount<2){
+                }*/
+                if($lineCount==1){
                     continue;
                 }
                 /** Count columns */
@@ -152,9 +152,6 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 $product = $this->mapValues($values, $valuesMapping);
                 $product['itemno'] = explode('_', $product['itemno'])[0];
                 $product['text'] = implode($separator, $values);
-                $tempPrice=number_format(str_replace(',','.',$values[18]),2,'.','');
-                //$tempPrice=$values[18];
-                $product['price']=$tempPrice;
                 $product['checksum'] = md5($product['text']);
                 $this->debug('readMain', 'Reading Product ', $product);
                 if (isset($checksums[$product['checksum']])) continue;
@@ -176,7 +173,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     /** è un nuovo prodotto lo scrivo */
                     $product['shopId'] = $this->shop->id;
                     $product['dirtyStatus'] = 'F';
-                    $this->debug('readMain', 'Inserting ', $product['text']);
+                    $this->debug('readMain', 'Inserting ', var_dump($product));
                     $res = $this->app->dbAdapter->insert('DirtyProduct', $product);
 
                     $productExtend = $this->mapValues($values, $extendMapping);
@@ -285,17 +282,11 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
 
 
-               /* $sku['salePrice'] = str_replace(',', '', $sku['salePrice']);
-                $sku['value'] = str_replace(',', '.', $sku['value']);
-                $sku['price'] = str_replace(',', '.', $sku['price']);
-                $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
-                $sku['value'] = str_replace(',', '.', $sku['value']);*/
-                $priceTemp = str_replace(',', '.', $sku['price']);
-                $salePriceTemp = str_replace(',', '.', $sku['salePrice']);
-                $valueTemp = str_replace(',', '.', $sku['value']);
-                $sku['price'] = number_format($priceTemp,0);
-                $sku['salePrice'] = number_format($salePriceTemp,0);
-                $sku['value'] = number_format($valueTemp,0);
+                /* $sku['salePrice'] = str_replace(',', '', $sku['salePrice']);
+                 $sku['value'] = str_replace(',', '.', $sku['value']);
+                 $sku['price'] = str_replace(',', '.', $sku['price']);
+                 $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
+                 $sku['value'] = str_replace(',', '.', $sku['value']);*/
                 $sku['storeHouseId'] = str_replace('0','',$values[8]);
                 $sku['qty'] = $values[3];
 
