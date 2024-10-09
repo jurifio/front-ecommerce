@@ -133,7 +133,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
         //read main
         $lineCount=0;
-        while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
+        while (($values = fgetcsv($file, 0, $separator, '"')) !== false) {
             $lineCount++;
             try {
                 if ($values[0][0] == '"') {
@@ -251,7 +251,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
         $linecountRow=0;
         $seenSkus = [];
         fgets($file);
-        while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
+        while (($values = fgetcsv($file, 0, $separator, '"')) !== false) {
             $this->debug('Read Sku','Cycle skus', $values);
             $linecountRow++;
             try {
@@ -290,6 +290,12 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 $sku['price'] = str_replace(',', '.', $sku['price']);
                 $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
                 $sku['value'] = str_replace(',', '.', $sku['value']);*/
+                $priceTemp = str_replace(',', '.', $sku['price']);
+                $salePriceTemp = str_replace(',', '.', $sku['salePrice']);
+                $valueTemp = str_replace(',', '.', $sku['value']);
+                $sku['price'] = number_format($priceTemp,0);
+                $sku['salePrice'] = number_format($salePriceTemp,0);
+                $sku['value'] = number_format($valueTemp,0);
                 $sku['storeHouseId'] = str_replace('0','',$values[8]);
                 $sku['qty'] = $values[3];
 
