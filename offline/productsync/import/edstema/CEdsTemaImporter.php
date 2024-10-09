@@ -169,7 +169,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 /** find existing product */
                 $res = $this->app->dbAdapter->select('DirtyProduct', $match)->fetchAll();
                 if (count($res) == 0) {
-                    $this->debug('readMain', 'Inserting new Product', $product);
+                    $this->debug('readMain', 'Inserting new Product '.count($res), $product);
                     /** è un nuovo prodotto lo scrivo */
                     $product['shopId'] = $this->shop->id;
                     $product['dirtyStatus'] = 'F';
@@ -296,7 +296,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
                 $dirtyProduct = $this->app->dbAdapter->select('DirtyProduct', $match)->fetchAll();
                 if (count($dirtyProduct) != 1) {
-                    $this->warning('readSkus', 'Product not found for Sku', [$match,$sku]);
+                    $this->warning('readSkus', 'Product not found for Sku'.' '.count($dirtyProduct), [$match,$sku]);
                     continue;
                 }
 
