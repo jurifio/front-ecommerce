@@ -924,9 +924,9 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 $shp->insert();
             } else {
                 //altrimenti se esiste li aggiorno se esiste il prodotto
-                $shp2->price = $dirtyProduct->getDirtyPrice();
-                $shp2->salePrice = $dirtyProduct->getDirtySalePrice();
-                $shp2->value = $dirtyProduct->getDirtyValue();
+                $shp2->price = number_format($dirtyProduct->getDirtyPrice(),2,'.');
+                $shp2->salePrice =  number_format($dirtyProduct->getDirtySalePrice(),2,'.');
+                $shp2->value = number_format($dirtyProduct->getDirtyValue(),2,'.');
                 $shp2->update();
             }
 // aggiorno dirtyProduct on gli id e productVariantId assegnati fondendo il prodotto
