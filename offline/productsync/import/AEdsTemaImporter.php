@@ -206,12 +206,16 @@ abstract class AEdsTemaImporter extends AProductImporter
                         $match[$key] = $sku[$key];
                     }
 
-                    /*$sku['price'] = str_replace('.', '', $sku['price']);
-                    $sku['salePrice'] = str_replace('.', '', $sku['salePrice']);
-                    $sku['value'] = str_replace('.', '', $sku['value']);
-                    $sku['price'] = str_replace(',', '.', $sku['price']);
-                    $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
-                    $sku['value'] = str_replace(',', '.', $sku['value']);*/
+
+
+
+                    $priceTemp = str_replace(',', '.', $sku['price']);
+                    $salePriceTemp = str_replace(',', '.', $sku['salePrice']);
+                    $valueTemp = str_replace(',', '.', $sku['value']);
+                    $sku['price'] = number_format($priceTemp,0);
+                    $sku['salePrice'] = number_format($salePriceTemp,0);
+                    $sku['value'] = number_format($valueTemp,0);
+
                     $sku['storeHouseId'] =str_replace('0', '',  $sku['storeHouseId']);
                     $dirtyProduct = $this->app->dbAdapter->select('DirtyProduct', $match)->fetchAll();
                     if (count($dirtyProduct) != 1) {

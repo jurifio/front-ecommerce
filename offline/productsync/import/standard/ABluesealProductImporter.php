@@ -790,9 +790,9 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 $shopHasProduct->shopId = $this->getShop()->id;
                 $shopHasProduct->extId = $dirtyProduct->extId;
                 $shopHasProduct->productSizeGroupId = $product->productSizeGroupId;
-                $shopHasProduct->price = number_format($dirtyProduct->getDirtyPrice(),'2','.');
-                $shopHasProduct->salePrice = number_format($dirtyProduct->getDirtySalePrice(),'2','.');
-                $shopHasProduct->value = number_format($dirtyProduct->getDirtyValue(),'2','.');
+                $shopHasProduct->price = $dirtyProduct->getDirtyPrice();
+                $shopHasProduct->salePrice = $dirtyProduct->getDirtySalePrice();
+                $shopHasProduct->value = $dirtyProduct->getDirtyValue();
                 $shopHasProduct->insert();
 
                 $name = $nameFactory->insertName(trim($dirtyProduct->extend->name));
@@ -916,17 +916,17 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             $shp2 = \Monkey::app()->repoFactory->create('ShopHasProduct')->findOne($shp->getIds());
             if (is_null($shp2)) {
                 //se non esiste prendo i prezzi di dirtyProduct e li inserisco i nella riga creata
-                $shp->price = number_format($dirtyProduct->getDirtyPrice(),2,'.');
-                $shp->salePrice = number_format($dirtyProduct->getDirtySalePrice(),2,'.');
-                $shp->value = number_format($dirtyProduct->getDirtyValue(),2,'.');
+                $shp->price = $dirtyProduct->getDirtyPrice();
+                $shp->salePrice = $dirtyProduct->getDirtySalePrice();
+                $shp->value = $dirtyProduct->getDirtyValue();
                 $shp->productSizeGroupId = $sizeConnector->findConnectionForProduct($product, $dirtyProduct);
                 if(!is_numeric($shp->productSizeGroupId)) $shp->productSizeGroupId = $product->productSizeGroupId;
                 $shp->insert();
             } else {
                 //altrimenti se esiste li aggiorno se esiste il prodotto
-                $shp2->price = number_format($dirtyProduct->getDirtyPrice(),2,'.');
-                $shp2->salePrice =  number_format($dirtyProduct->getDirtySalePrice(),2,'.');
-                $shp2->value = number_format($dirtyProduct->getDirtyValue(),2,'.');
+                $shp2->price = $dirtyProduct->getDirtyPrice();
+                $shp2->salePrice =  $dirtyProduct->getDirtySalePrice();
+                $shp2->value = $dirtyProduct->getDirtyValue();
                 $shp2->update();
             }
 // aggiorno dirtyProduct on gli id e productVariantId assegnati fondendo il prodotto
