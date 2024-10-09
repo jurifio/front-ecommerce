@@ -152,6 +152,9 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 $product = $this->mapValues($values, $valuesMapping);
                 $product['itemno'] = explode('_', $product['itemno'])[0];
                 $product['text'] = implode($separator, $values);
+                $tempPrice=number_format(str_replace(',','.',$values[18]),2,'.','');
+                //$tempPrice=$values[18];
+                $product['price']=$tempPrice;
                 $product['checksum'] = md5($product['text']);
                 $this->debug('readMain', 'Reading Product ', $product);
                 if (isset($checksums[$product['checksum']])) continue;
