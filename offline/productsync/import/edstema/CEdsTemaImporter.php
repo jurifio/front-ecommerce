@@ -255,8 +255,9 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 if($linecountRow==1){
                     continue;
                 }
-                if (count($values) != 12) {
-                    $this->warning('Columns Count', count($values) . ' columns find, expecting ' . $columnNumbers, $values);
+                if (count($values) != 13) {
+
+                    $this->warning('Columns Count Skus', count($values) . ' columns find, expecting ' . $columnNumbers, $values);
                     continue;
                 }
 
