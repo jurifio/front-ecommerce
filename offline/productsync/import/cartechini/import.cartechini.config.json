@@ -16,7 +16,7 @@
         },
         "skus": {
             "location": "skus.csv",
-            "columns":  11,
+            "columns":  12,
             "extKeys": ["extId","var"]
         }
     },
