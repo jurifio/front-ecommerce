@@ -1,8 +1,8 @@
 {
     "ftp": {
-        "host": "fiber.office.iwes.it",
-        "user": "shooting",
-        "pass": "shoot",
+        "host": "ftp.iwes.pro",
+        "user": "shooting@iwes.pro",
+        "pass": "Cartne01!",
         "port": "21",
         "timeout": "10",
         "mode": "2",
