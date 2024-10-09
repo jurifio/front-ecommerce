@@ -790,9 +790,9 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 $shopHasProduct->shopId = $this->getShop()->id;
                 $shopHasProduct->extId = $dirtyProduct->extId;
                 $shopHasProduct->productSizeGroupId = $product->productSizeGroupId;
-                $shopHasProduct->price = $dirtyProduct->getDirtyPrice();
-                $shopHasProduct->salePrice = $dirtyProduct->getDirtySalePrice();
-                $shopHasProduct->value = $dirtyProduct->getDirtyValue();
+                $shopHasProduct->price = number_format($dirtyProduct->getDirtyPrice(),'2','.');
+                $shopHasProduct->salePrice = number_format($dirtyProduct->getDirtySalePrice(),'2','.');
+                $shopHasProduct->value = number_format($dirtyProduct->getDirtyValue(),'2','.');
                 $shopHasProduct->insert();
 
                 $name = $nameFactory->insertName(trim($dirtyProduct->extend->name));
