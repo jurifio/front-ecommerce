@@ -245,7 +245,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
         //read SKUS ------------------
         $shopOk = 0;
         $shopKo = 0;
-$linecountRow=0;
+        $linecountRow=0;
         $seenSkus = [];
         fgets($file);
         while (($values = fgetcsv($file, 0, $separator, '"')) !== false) {
@@ -255,7 +255,7 @@ $linecountRow=0;
                 if($linecountRow==1){
                     continue;
                 }
-                if (count($values) != 13) {
+                if (count($values) != 11) {
                     $this->warning('Columns Count', count($values) . ' columns find, expecting ' . $columnNumbers, $values);
                     continue;
                 }
