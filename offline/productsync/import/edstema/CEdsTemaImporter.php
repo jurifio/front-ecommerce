@@ -248,7 +248,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
         $linecountRow=0;
         $seenSkus = [];
         fgets($file);
-        while (($values = fgetcsv($file, 0, $separator, '"')) !== false) {
+        while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
             $this->debug('Read Sku','Cycle skus', $values);
             $linecountRow++;
             try {
