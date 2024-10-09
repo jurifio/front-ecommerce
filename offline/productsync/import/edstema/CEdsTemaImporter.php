@@ -136,10 +136,10 @@ class CEdsTemaImporter extends ABluesealProductImporter
         while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
             $lineCount++;
             try {
-                /*if ($values[0][0] == '"') {
+                if ($values[0][0] == '"') {
                     $values[0] = substr($values[0], 1);
-                }*/
-                if($lineCount==1){
+                }
+                if($lineCount<2){
                     continue;
                 }
                 /** Count columns */
