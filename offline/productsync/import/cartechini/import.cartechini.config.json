@@ -31,7 +31,7 @@
         },
         "skus": {
             "var" : 10,
-            "extId": 9,
+            "extId": 12,
             "price": 5,
             "salePrice": 6,
             "value" : 7,
