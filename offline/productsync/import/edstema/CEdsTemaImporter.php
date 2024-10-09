@@ -212,6 +212,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
 
                 } else {
+                    $this->debug('readMain','insert continue',$productExtend);
                     //error
                     //log
                     continue;
@@ -269,10 +270,10 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
                 $this->debug('Read Sku','Reading Sku',$sku);
 
-                /*  if (isset($checksums[$sku['checksum']])) {
-                      $seenSkus[] = $checksums[$sku['checksum']];
-                      continue;
-                  }*/
+                if (isset($checksums[$sku['checksum']])) {
+                    $seenSkus[] = $checksums[$sku['checksum']];
+                    continue;
+                }
                 $this->debug('Read Sku','Checksum not found',$sku);
 
                 $sku['shopId'] = $this->getShop()->id;
@@ -304,8 +305,8 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 $dirtyProduct = $dirtyProduct[0];
 
                 $res = $this->app->dbAdapter->select('DirtySku', ['dirtyProductId' => $dirtyProduct['id'],
-                                                                        'size' => $sku['size'],
-                                                                        'storeHouseId'=>$sku['storeHouseId']])->fetchAll();
+                    'size' => $sku['size'],
+                    'storeHouseId'=>$sku['storeHouseId']])->fetchAll();
                 /** Update */
                 if (count($res) == 1) {
                     $sku['changed'] = 1;
