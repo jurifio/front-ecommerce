@@ -33,13 +33,13 @@
             "var" : 10,
             "extId": 12,
             "price": 5,
-            "salePrice": 6,
-            "value" : 7,
+            "salePrice": 7,
+            "value" : 6,
             "shopId" : 8,
             "size" : 2,
             "qty" : 3,
-            "storeHouseId" : 8,
-            "barcode": 11
+            "storeHouseId" : 11,
+            "barcode": 13
         }
     },
     "miscellaneous": {
