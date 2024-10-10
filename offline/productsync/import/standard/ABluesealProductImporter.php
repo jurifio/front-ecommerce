@@ -159,6 +159,8 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         $this->report('Runner', 'updateDictionaries launch');
         $this->updateDictionaries();
         $this->report('Runner', 'updateDictionaries end');
+        $this->formatPrices();
+        $this->report('Runner', 'format Prices');
 
         $this->report('Runner', 'createProducts launch');
         $this->createProducts();
@@ -618,6 +620,21 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
         return 0;
     }
 
+    public function formatPrices(){
+        try {
+            $sqlFormatPrices="UPDATE DirtyProduct SET price=FORMAT(CAST(REPLACE(price, ',', '.') AS DECIMAL(10,2)), 2),
+salePrice=FORMAT(CAST(REPLACE(salePrice, ',', '.') AS DECIMAL(10,2)), 2),
+`value`=FORMAT(CAST(REPLACE(`value`, ',', '.') AS DECIMAL(10,2)), 2);
+UPDATE DirtySku SET price=FORMAT(CAST(REPLACE(price, ',', '.') AS DECIMAL(10,2)), 2),
+salePrice=FORMAT(CAST(REPLACE(salePrice, ',', '.') AS DECIMAL(10,2)), 2),
+`value`=FORMAT(CAST(REPLACE(`value`, ',', '.') AS DECIMAL(10,2)), 2);";
+            $this->app->dbAdapter->query($sqlFormatPrices,[])->fetchAll();
+
+
+        }catch (\Throwable $e){
+            $this->warning('FormatPrices', 'Found problem: ' . $e->getMessage());
+        }
+    }
     /** create products from dirtyProduct */
     public function createProducts()
     {
@@ -916,17 +933,17 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
             $shp2 = \Monkey::app()->repoFactory->create('ShopHasProduct')->findOne($shp->getIds());
             if (is_null($shp2)) {
                 //se non esiste prendo i prezzi di dirtyProduct e li inserisco i nella riga creata
-                $shp->price = $dirtyProduct->getDirtyPrice();
-                $shp->salePrice = $dirtyProduct->getDirtySalePrice();
-                $shp->value = $dirtyProduct->getDirtyValue();
+                $shp->price = ($dirtyProduct->getDirtyPrice()=='' || is_null($dirtyProduct->getDirtyPrice()))?'0':$dirtyProduct->getDirtyPrice();
+                $shp->salePrice = ($dirtyProduct->getDirtySalePrice()=='' || is_null($dirtyProduct->getDirtySalePrice()))?'0':$dirtyProduct->getDirtySalePrice();
+                $shp->value = ($dirtyProduct->getDirtyValue()=='' || is_null($dirtyProduct->getDirtyValue()))?'0':$dirtyProduct->getDirtyValue();
                 $shp->productSizeGroupId = $sizeConnector->findConnectionForProduct($product, $dirtyProduct);
                 if(!is_numeric($shp->productSizeGroupId)) $shp->productSizeGroupId = $product->productSizeGroupId;
                 $shp->insert();
             } else {
                 //altrimenti se esiste li aggiorno se esiste il prodotto
-                $shp2->price = $dirtyProduct->getDirtyPrice();
-                $shp2->salePrice =  $dirtyProduct->getDirtySalePrice();
-                $shp2->value = $dirtyProduct->getDirtyValue();
+                $shp2->price = ($dirtyProduct->getDirtyPrice()=='' || is_null($dirtyProduct->getDirtyPrice()))?'0':$dirtyProduct->getDirtyPrice();
+                $shp2->salePrice = ($dirtyProduct->getDirtySalePrice()=='' || is_null($dirtyProduct->getDirtySalePrice()))?'0':$dirtyProduct->getDirtySalePrice();
+                $shp2->value = ($dirtyProduct->getDirtyValue()=='' || is_null($dirtyProduct->getDirtyValue()))?'0':$dirtyProduct->getDirtyValue();
                 $shp2->update();
             }
 // aggiorno dirtyProduct on gli id e productVariantId assegnati fondendo il prodotto
@@ -949,7 +966,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
                 if($productSeason->order > $product->productSeason->order) {
                     $this->warning('fuseProduct', 'Season Change, the new season is newer, CHANGE!');
                     $product->productSeasonId = $newSeasonId;
-                    $product->isOnSale = false;
+                    $product->isOnSale = 0;
                     $product->update();
                 } else {
                     $this->warning('fuseProduct', 'Season Change, the new season NOT newer no need for update');
