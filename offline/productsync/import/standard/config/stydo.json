@@ -161,8 +161,8 @@
         ]
     },
     "destFTPClient": {
-        "host": "fiber.office.iwes.it",
-        "user": "shooting",
+        "host": "fiber.iwes.it",
+        "user": "shooting@fiber.iwes.it",
         "pass": "PBYI34nbf",
         "port": "21",
         "timeout": "10",
