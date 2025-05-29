@@ -289,9 +289,9 @@ class CSyncStocks extends ACronJob
                     'shopId' => $dirtySku['shopId'],
                     'productSizeId' => $dirtySku['productSizeId']]);
 
-                $price = $dirtySku['price'];
-                $salePrice = $dirtySku['salePrice'];
-                $value = $dirtySku['value'];
+                $price = str_replace(",",".",$dirtySku['price']);
+                $salePrice =  str_replace(",",".",$dirtySku['salePrice']);
+                $value =  str_replace(",",".",$dirtySku['value']);
 
                 $price = round($this->calculatePriceModifier($dirtySku['shopId'], 'price', $price));
                 $salePrice = round($this->calculatePriceModifier($dirtySku['shopId'], 'salePrice', $salePrice));
