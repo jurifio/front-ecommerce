@@ -141,7 +141,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
             // Rimuovi il secondo apice
             $line = substr_replace($line, '', $second, 1);
             // Aggiungi un apice in fondo (prima di newline)
-            $line = rtrim($line, "\r\n") . '"' . PHP_EOL;
+            $line = rtrim($line, "\r\n") . ';"' . PHP_EOL;
         }
 
         return $line;
