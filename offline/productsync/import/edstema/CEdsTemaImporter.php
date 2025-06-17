@@ -6,7 +6,6 @@ use bamboo\core\exceptions\BambooException;
 use bamboo\core\exceptions\BambooFileException;
 use bamboo\core\exceptions\BambooOutOfBoundException;
 use bamboo\domain\entities\CDirtySkuHasStoreHouse;
-use bamboo\core\exceptions\RedPandaException;
 use bamboo\offline\productsync\import\standard\ABluesealProductImporter;
 
 /**
@@ -29,7 +28,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
     {
         /** PRODUCTS */
         $files = glob($this->app->rootPath() . $this->app->cfg()->fetch('paths', 'productSync') . '/cartechini/PRODUCTS_*.CSV');
-        if(count($files) == 0) throw new BambooException('File not found');
+        if (count($files) == 0) throw new BambooException('File not found');
         $goodOne = $files[count($files) - 1];
 
         $size = filesize($goodOne);
@@ -132,20 +131,34 @@ class CEdsTemaImporter extends ABluesealProductImporter
         $this->debug('readMain', 'Supplier Blacklist read', $supplierBlacklist);
 
         //read main
-        $lineCount=0;
+        $lineCount = 0;
+        $rows = file($file);
+        $i = 1;
+        foreach ($rows as $line) {
+            if ($i == 1) {
+                continue;
+            } else {
+                $i++;
+            }
+            preg_match('/^"(.*?)";(.*)$/', trim($line), $matches);
+            $fields[$i] = explode(';', $matches[1]); // dentro le virgolette
+            $extra[$i] = explode(';', $matches[2]);  // DO;10 ecc.
+            $allFields[$i] = array_merge($fields, $extra);
+
+        }
         while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
             $lineCount++;
             try {
                 /*if ($values[0][0] == '"') {
                     $values[0] = substr($values[0], 1);
                 }*/
-                if($lineCount==1){
+                if ($lineCount == 1) {
                     continue;
                 }
                 /** Count columns */
                 if (count($values) != $columnNumbers) {
-                    $this->error('readMain', 'Columns dosn\'t match with specifics jump Line '.$lineCount);
-                    $this->error('countValue',count($values).'-'.$columnNumbers);
+                    $this->error('readMain', 'Columns dosn\'t match with specifics jump Line ' . $lineCount);
+                    $this->error('countValue', count($values) . '-' . $columnNumbers);
                     continue;
                 }
 
@@ -179,12 +192,14 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     $productExtend = $this->mapValues($values, $extendMapping);
                     $productExtend['dirtyProductId'] = $res;
                     $productExtend['shopId'] = $this->getShop()->id;
+                    $productExtend['year']=$extras[$linecount][1];
+                    $productExtend['sizeGroup']=$extras[$linecount][0];
 
                     $res = $this->app->dbAdapter->insert('DirtyProductExtend', $productExtend);
 
 
                 } elseif (count($res) == 1) {
-                    $this->debug('readMain', 'Updating a product ', [$product,$res]);
+                    $this->debug('readMain', 'Updating a product ', [$product, $res]);
                     /** update existing product if changed */
                     //exist.. what to do? uhm... update?
                     $this->app->dbAdapter->update('DirtyProduct', array_diff($product, $match), ['id' => $res[0]['id'],
@@ -195,20 +210,19 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         ['dirtyProductId' => $res[0]['id'],
                             'shopId' => $this->getShop()->id])->fetchAll();
                     $this->debug('readMain', 'Loocked for Dirty Product Extend',
-                        [['dirtyProductId' => $res[0]['id'],'shopId' => $this->getShop()->id],
+                        [['dirtyProductId' => $res[0]['id'], 'shopId' => $this->getShop()->id],
                             $dirtyProductExtend]);
-                    if(count($dirtyProductExtend) == 0) {
+                    if (count($dirtyProductExtend) == 0) {
                         $this->app->dbAdapter->insert('DirtyProductExtend',
-                            $productExtend + [   'dirtyProductId' => $res[0]['id'],
+                            $productExtend + ['dirtyProductId' => $res[0]['id'],
                                 'shopId' => $this->getShop()->id]);
-                        $this->debug('readMain','inserting Dirty',$productExtend);
+                        $this->debug('readMain', 'inserting Dirty', $productExtend);
                     } else {
                         $this->app->dbAdapter->update('DirtyProductExtend',
                             $productExtend, ['dirtyProductId' => $res[0]['id'],
                                 'shopId' => $this->getShop()->id]);
-                        $this->debug('readMain','updating Dirty',$productExtend);
+                        $this->debug('readMain', 'updating Dirty', $productExtend);
                     }
-
 
 
                 } else {
@@ -245,14 +259,14 @@ class CEdsTemaImporter extends ABluesealProductImporter
         //read SKUS ------------------
         $shopOk = 0;
         $shopKo = 0;
-        $linecountRow=0;
+        $linecountRow = 0;
         $seenSkus = [];
         fgets($file);
         while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
-            $this->debug('Read Sku','Cycle skus', $values);
+            $this->debug('Read Sku', 'Cycle skus', $values);
             $linecountRow++;
             try {
-                if($linecountRow==1){
+                if ($linecountRow == 1) {
                     continue;
                 }
                 if (count($values) != 13) {
@@ -261,18 +275,17 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 }
 
 
-
                 $sku = $this->mapValues($values, $valuesMapping);
                 $sku['text'] = implode($separator, $values);
                 $sku['checksum'] = md5($sku['text']);
 
-                $this->debug('Read Sku','Reading Sku',$sku);
+                $this->debug('Read Sku', 'Reading Sku', $sku);
 
                 /*  if (isset($checksums[$sku['checksum']])) {
                       $seenSkus[] = $checksums[$sku['checksum']];
                       continue;
                   }*/
-                $this->debug('Read Sku','Checksum not found',$sku);
+                $this->debug('Read Sku', 'Checksum not found', $sku);
 
                 $sku['shopId'] = $this->getShop()->id;
 
@@ -280,77 +293,74 @@ class CEdsTemaImporter extends ABluesealProductImporter
                 $match['shopId'] = $this->getShop()->id;
 
 
-
-
                 /* $sku['salePrice'] = str_replace(',', '', $sku['salePrice']);
                  $sku['value'] = str_replace(',', '.', $sku['value']);
                  $sku['price'] = str_replace(',', '.', $sku['price']);
                  $sku['salePrice'] = str_replace(',', '.', $sku['salePrice']);
                  $sku['value'] = str_replace(',', '.', $sku['value']);*/
-                $sku['storeHouseId'] = str_replace('0','',$values[8]);
+                $sku['storeHouseId'] = str_replace('0', '', $values[8]);
                 $sku['qty'] = $values[3];
-
 
 
                 $dirtyProduct = $this->app->dbAdapter->select('DirtyProduct', $match)->fetchAll();
                 if (count($dirtyProduct) != 1) {
-                    $this->warning('readSkus', 'Product not found for Sku', [$match,$sku]);
+                    $this->warning('readSkus', 'Product not found for Sku', [$match, $sku]);
                     continue;
                 }
 
-                $this->debug('Read Sku','Product Found for Sku',$dirtyProduct);
+                $this->debug('Read Sku', 'Product Found for Sku', $dirtyProduct);
 
                 $dirtyProduct = $dirtyProduct[0];
 
                 $res = $this->app->dbAdapter->select('DirtySku', ['dirtyProductId' => $dirtyProduct['id'],
                     'size' => $sku['size'],
-                    'storeHouseId'=>$sku['storeHouseId']])->fetchAll();
+                    'storeHouseId' => $sku['storeHouseId']])->fetchAll();
                 /** Update */
                 if (count($res) == 1) {
                     $sku['changed'] = 1;
                     $id = $res[0]['id'];
-                    /* @var CDirtySkuHasStoreHouse $FindDirtyHasStoreHouse  **/
-                    $findDirtyHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
-                        'shopId'=> $this->getShop()->id,
-                        'size'=>$sku['size'],
-                        'dirtySkuId'=>$id,
-                        'dirtyProductId' =>$dirtyProduct['id'],
-                        'storeHouseId'=> $sku['storeHouseId']
+                    /* @var CDirtySkuHasStoreHouse $FindDirtyHasStoreHouse * */
+                    $findDirtyHasStoreHouse = \Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->findOneBy([
+                        'shopId' => $this->getShop()->id,
+                        'size' => $sku['size'],
+                        'dirtySkuId' => $id,
+                        'dirtyProductId' => $dirtyProduct['id'],
+                        'storeHouseId' => $sku['storeHouseId']
                     ]);
-                    if(!$findDirtyHasStoreHouse){
-                        /* @var CDirtySkuHasStoreHouse $insertDirtySkuHasStoreHouse  **/
-                        $insertDirtySkuHasStoreHouse=\Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
-                        $insertDirtySkuHasStoreHouse->shopId=$this->getShop()->id;
-                        $insertDirtySkuHasStoreHouse->dirtySkuId=$id;
-                        $insertDirtySkuHasStoreHouse->storeHouseId= str_replace('0','',$values[8]);
-                        $insertDirtySkuHasStoreHouse->size=$sku['size'];
-                        $insertDirtySkuHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
-                        $insertDirtySkuHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
-                        $insertDirtySkuHasStoreHouse->qty=$sku['qty'];
-                        $insertDirtySkuHasStoreHouse->productSizeId= $res[0]['productSizeId'];
+                    if (!$findDirtyHasStoreHouse) {
+                        /* @var CDirtySkuHasStoreHouse $insertDirtySkuHasStoreHouse * */
+                        $insertDirtySkuHasStoreHouse = \Monkey::app()->repoFactory->create('DirtySkuHasStoreHouse')->getEmptyEntity();
+                        $insertDirtySkuHasStoreHouse->shopId = $this->getShop()->id;
+                        $insertDirtySkuHasStoreHouse->dirtySkuId = $id;
+                        $insertDirtySkuHasStoreHouse->storeHouseId = str_replace('0', '', $values[8]);
+                        $insertDirtySkuHasStoreHouse->size = $sku['size'];
+                        $insertDirtySkuHasStoreHouse->dirtyProductId = $dirtyProduct['id'];
+                        $insertDirtySkuHasStoreHouse->productVariantId = $dirtyProduct['productVariantId'];
+                        $insertDirtySkuHasStoreHouse->qty = $sku['qty'];
+                        $insertDirtySkuHasStoreHouse->productSizeId = $res[0]['productSizeId'];
                         $insertDirtySkuHasStoreHouse->insert();
-                    }else{
-                        $findDirtyHasStoreHouse->dirtyProductId=$dirtyProduct['id'];
-                        $findDirtyHasStoreHouse->productId=$dirtyProduct['productId'];
-                        $findDirtyHasStoreHouse->productVariantId=$dirtyProduct['productVariantId'];
-                        $findDirtyHasStoreHouse->productSizeId=$res[0]['productSizeId'];
-                        $findDirtyHasStoreHouse->qty=$sku['qty'];
+                    } else {
+                        $findDirtyHasStoreHouse->dirtyProductId = $dirtyProduct['id'];
+                        $findDirtyHasStoreHouse->productId = $dirtyProduct['productId'];
+                        $findDirtyHasStoreHouse->productVariantId = $dirtyProduct['productVariantId'];
+                        $findDirtyHasStoreHouse->productSizeId = $res[0]['productSizeId'];
+                        $findDirtyHasStoreHouse->qty = $sku['qty'];
                         $findDirtyHasStoreHouse->update();
                     }
 
-                    $this->debug('Read Sku','Updating Sku',$sku);
-                    $dirtySkuUpdate=\Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id'=>$id]);
-                    $dirtySkuUpdate->value=$sku['value'];
-                    $dirtySkuUpdate->salePrice=$sku['salePrice'];
-                    $dirtySkuUpdate->price=$sku['price'];
-                    $dirtySkuUpdate->storeHouseId=$sku['storeHouseId'];
-                    $dirtySkuUpdate->qty=$sku['qty'];
-                    $dirtySkuUpdate->text=$sku['text'];
-                    $dirtySkuUpdate->checksum=$sku['checksum'];
+                    $this->debug('Read Sku', 'Updating Sku', $sku);
+                    $dirtySkuUpdate = \Monkey::app()->repoFactory->create('DirtySku')->findOneBy(['id' => $id]);
+                    $dirtySkuUpdate->value = $sku['value'];
+                    $dirtySkuUpdate->salePrice = $sku['salePrice'];
+                    $dirtySkuUpdate->price = $sku['price'];
+                    $dirtySkuUpdate->storeHouseId = $sku['storeHouseId'];
+                    $dirtySkuUpdate->qty = $sku['qty'];
+                    $dirtySkuUpdate->text = $sku['text'];
+                    $dirtySkuUpdate->checksum = $sku['checksum'];
                     $dirtySkuUpdate->update();
                     /*$sku['dirtyProductId'] = $dirtyProduct['id'];
                     $sku['storeHouseId'] = str_replace('0','',$values[8]);*/
-                    $this->debug('Read Sku','Updating Sku',$sku);
+                    $this->debug('Read Sku', 'Updating Sku', $sku);
                     /*$res = $this->app->dbAdapter->update('DirtySku', array_diff($sku, $match), ["id" => $id]);*/
                     $seenSkus[] = $id;
                     //check ok
@@ -360,7 +370,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     unset($sku['var']);
                     $sku['dirtyProductId'] = $dirtyProduct['id'];
                     $sku['shopId'] = $this->shop->id;
-                    $sku['storeHouseId'] = str_replace('0','',$values[8]);
+                    $sku['storeHouseId'] = str_replace('0', '', $values[8]);
                     $sku['changed'] = 1;
                     $new = $this->app->dbAdapter->insert('DirtySku', $sku);
                     $seenSkus[] = $new;
