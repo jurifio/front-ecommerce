@@ -158,20 +158,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
         //read main
         $lineCount = 0;
 
-        $rows = file($file);
-        $i = 1;
-        foreach ($rows as $line) {
-            if ($i == 1) {
-                continue;
-            } else {
-                $i++;
-            }
-            preg_match('/^"(.*?)";(.*)$/', trim($line), $matches);
-            $fields = explode(';', $matches[1]); // dentro le virgolette
-            $extra = explode(';', $matches[2]);  // DO;10 ecc.
-            $allFields = array_merge($fields, $extra);
 
-        }
         while (($values = fgetcsv($allFields, 0, $separator, '|')) !== false) {
             $lineCount++;
             try {
