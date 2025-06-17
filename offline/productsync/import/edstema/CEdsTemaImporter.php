@@ -107,7 +107,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                             $file1 = "/media/sf_sites/iwespro/core/offline/output.csv";
                         }else{
                             $file1 = "/home/iwespro/public_html/core/offline/output.csv";
-                            $unlink("/home/iwespro/public_html/client/public/media/productsync/cartechini/import/".$baseName);
+                            unlink("/home/iwespro/public_html/client/public/media/productsync/cartechini/import/".$baseName);
                             copy($file1,"/home/iwespro/public_html/client/public/media/productsync/cartechini/import/".$baseName);
                             $file3="/home/iwespro/public_html/client/public/media/productsync/cartechini/import/".$baseName;
                         }
