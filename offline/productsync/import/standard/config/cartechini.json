@@ -39,8 +39,7 @@
             "cat2" : 8,
             "name" : 8,
             "generalColor" : 13,
-            "colorDescription" : 12,
-
+            "colorDescription" : 12
         },
         "skus": {
             "var" : 10,
