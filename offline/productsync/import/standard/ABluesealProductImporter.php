@@ -512,6 +512,8 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
         $i = $this->updateSeasonDictionary();
         $this->report('updateDictionaries', 'Season terms inserted: ' . $i);
+        $i = $this->updateGroupSizeDictionary();
+        $this->report('updateDictionaries', 'groupSize terms inserted: ' . $i);
 
         $i = $this->updateCategoryDictionary();
         $this->report('updateDictionaries', 'Category terms inserted: ' . $i);
@@ -545,7 +547,16 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
     protected function updateSeasonDictionary()
     {
         $this->app->dbAdapter->query("INSERT IGNORE INTO DictionarySeason (shopId, term) 
-                                        SELECT DISTINCT dpe.shopId, dpe.season 
+                                        SELECT DISTINCT dpe.shopId, concat (dpe.season,' ',`dpe`.`year`) 
+                                        FROM DirtyProductExtend  dpe, DirtyProduct dp 
+                                        WHERE dpe.dirtyProductId = dp.id AND dpe.shopId = ? AND dp.dirtyStatus != 'C'", [$this->getShop()->id]);
+
+        return $this->app->dbAdapter->countAffectedRows();
+    }
+    protected function updateGroupSizeDictionary()
+    {
+        $this->app->dbAdapter->query("INSERT IGNORE INTO DictionaryGroupSize (shopId, term) 
+                                        SELECT DISTINCT dpe.shopId, dpe.sizeGroup 
                                         FROM DirtyProductExtend  dpe, DirtyProduct dp 
                                         WHERE dpe.dirtyProductId = dp.id AND dpe.shopId = ? AND dp.dirtyStatus != 'C'", [$this->getShop()->id]);
 
