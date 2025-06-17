@@ -133,12 +133,11 @@ class CEdsTemaImporter extends ABluesealProductImporter
         //read main
         $lineCount = 0;
         $rows = file_get_contents($file);
-        $i = 1;
+        $i = 0;
         foreach ($rows as $line) {
+            $i++;
             if ($i == 1) {
                 continue;
-            } else {
-                $i++;
             }
             preg_match('/^"(.*?)";(.*)$/', trim($line), $matches);
             $fields[$i] = explode(';', $matches[1]); // dentro le virgolette
