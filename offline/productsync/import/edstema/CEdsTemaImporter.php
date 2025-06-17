@@ -100,8 +100,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                             $modificata = $this->spostaSecondoApice($line);
                             fwrite($out, $modificata);
                         }
-                        fclose($in);
-                        fclose($out);
+
                         $file = "output.csv";
                     }
                     $return = $this->readMain($file);
