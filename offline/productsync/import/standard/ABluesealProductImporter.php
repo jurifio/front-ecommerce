@@ -547,7 +547,7 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
     protected function updateSeasonDictionary()
     {
         $this->app->dbAdapter->query("INSERT IGNORE INTO DictionarySeason (shopId, term) 
-                                        SELECT DISTINCT dpe.shopId, concat (dpe.season,' ',`dpe`.`year`) 
+                                        SELECT DISTINCT dpe.shopId, concat(dpe.season,' ',`dpe`.`year`) 
                                         FROM DirtyProductExtend  dpe, DirtyProduct dp 
                                         WHERE dpe.dirtyProductId = dp.id AND dpe.shopId = ? AND dp.dirtyStatus != 'C'", [$this->getShop()->id]);
 

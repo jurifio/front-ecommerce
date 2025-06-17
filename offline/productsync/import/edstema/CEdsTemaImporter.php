@@ -92,6 +92,18 @@ class CEdsTemaImporter extends ABluesealProductImporter
             switch (explode('_', $fileName)[0]) {
                 case 'PRODUCTS':
                     $this->report('processFile', 'going to readProduct on ' . $baseName);
+                    $in=$file;
+                    $outputFile = 'output.csv';
+                    $out = fopen($outputFile, 'w');
+                    if ($in && $out) {
+                        while (($line = fgets($in)) !== false) {
+                            $modificata = spostaSecondoApice($line);
+                            fwrite($out, $modificata);
+                        }
+                        fclose($in);
+                        fclose($out);
+                        $file = "output.csv";
+                    }
                     $return = $this->readMain($file);
                     break;
                 case 'SKUS':
@@ -113,6 +125,19 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
         return $return;
     }
+    function spostaSecondoApice($line) {
+        $first = strpos($line, '"');
+        $second = strpos($line, '"', $first + 1);
+
+        if ($second !== false) {
+            // Rimuovi il secondo apice
+            $line = substr_replace($line, '', $second, 1);
+            // Aggiungi un apice in fondo (prima di newline)
+            $line = rtrim($line, "\r\n") . '"' . PHP_EOL;
+        }
+
+        return $line;
+    }
 
     public function readMain($file)
     {
@@ -132,6 +157,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
         //read main
         $lineCount = 0;
+
         $rows = file($file);
         $i = 1;
         foreach ($rows as $line) {
@@ -142,11 +168,11 @@ class CEdsTemaImporter extends ABluesealProductImporter
             }
             preg_match('/^"(.*?)";(.*)$/', trim($line), $matches);
             $fields = explode(';', $matches[1]); // dentro le virgolette
-            $extra[$i] = explode(';', $matches[2]);  // DO;10 ecc.
+            $extra = explode(';', $matches[2]);  // DO;10 ecc.
             $allFields = array_merge($fields, $extra);
 
         }
-        while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
+        while (($values = fgetcsv($allFields, 0, $separator, '|')) !== false) {
             $lineCount++;
             try {
                 /*if ($values[0][0] == '"') {
