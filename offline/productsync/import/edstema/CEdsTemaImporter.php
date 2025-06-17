@@ -133,7 +133,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
         //read main
         $lineCount = 0;
         $this->Error('readMainProduct', 'read a product ', $file);
-        $rows = file_get_contents($file);
+        $rows =  glob($this->app->rootPath() . $this->app->cfg()->fetch('paths', 'productSync') . '/cartechini/PRODUCTS_*.CSV');
         $i = 0;
         foreach ($rows as $line) {
             $i++;
