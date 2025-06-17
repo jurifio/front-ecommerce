@@ -97,7 +97,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     $out = fopen($outputFile, 'w');
                     if ($in && $out) {
                         while (($line = fgets($in)) !== false) {
-                            $modificata = spostaSecondoApice($line);
+                            $modificata = $this->spostaSecondoApice($line);
                             fwrite($out, $modificata);
                         }
                         fclose($in);
@@ -125,7 +125,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
         return $return;
     }
-    function spostaSecondoApice($line) {
+   public function spostaSecondoApice($line) {
         $first = strpos($line, '"');
         $second = strpos($line, '"', $first + 1);
 
