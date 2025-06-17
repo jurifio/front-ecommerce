@@ -87,11 +87,24 @@ class CEdsTemaImporter extends ABluesealProductImporter
         }
 
         $fileName = pathinfo($file, PATHINFO_FILENAME);
+        $this->report('info','initialfile',$fileName);
         if (is_readable($file)) $file = fopen($file, 'r');
+        $this->report('info','openfile',$file);
         try {
             switch (explode('_', $fileName)[0]) {
                 case 'PRODUCTS':
                     $this->report('processFile', 'going to readProduct on ' . $baseName);
+                    $in=$file;
+                    $outputFile = 'output.csv';
+                    $out = fopen($outputFile, 'w');
+                    if ($in && $out) {
+                        while (($line = fgets($in)) !== false) {
+                            $modificata = $this->spostaSecondoApice($line);
+                            fwrite($out, $modificata);
+                        }
+
+                        $file = "output.csv";
+                    }
                     $return = $this->readMain($file);
                     break;
                 case 'SKUS':
@@ -113,7 +126,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
         return $return;
     }
-   public function spostaSecondoApice($line) {
+    public function spostaSecondoApice($line) {
         $first = strpos($line, '"');
         $second = strpos($line, '"', $first + 1);
 
@@ -147,7 +160,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
         $lineCount = 0;
 
 
-        while (($values = fgetcsv($allFields, 0, $separator, '|')) !== false) {
+        while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
             $lineCount++;
             try {
                 /*if ($values[0][0] == '"') {
@@ -193,8 +206,8 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     $productExtend = $this->mapValues($values, $extendMapping);
                     $productExtend['dirtyProductId'] = $res;
                     $productExtend['shopId'] = $this->getShop()->id;
-                   /* $productExtend['year']=$extras[$linecount][1];
-                    $productExtend['groupSize']=$extras[$lineCount][0];*/
+                    /* $productExtend['year']=$extras[$linecount][1];
+                     $productExtend['groupSize']=$extras[$lineCount][0];*/
 
                     $res = $this->app->dbAdapter->insert('DirtyProductExtend', $productExtend);
 
