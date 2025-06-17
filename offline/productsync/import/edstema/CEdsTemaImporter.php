@@ -108,11 +108,12 @@ class CEdsTemaImporter extends ABluesealProductImporter
                         }else{
                             $file1 = "/home/iwespro/public_html/core/offline/output.csv";
                             unlink("/home/iwespro/public_html/client/public/media/productsync/cartechini/import/".$baseName);
+                            sleep(1);
                             copy($file1,"/home/iwespro/public_html/client/public/media/productsync/cartechini/import/".$baseName);
-                            $file3="/home/iwespro/public_html/client/public/media/productsync/cartechini/import/".$baseName;
+                            $file="/home/iwespro/public_html/client/public/media/productsync/cartechini/import/".$baseName;
                         }
                     }
-                    $return = $this->readMain($file3);
+                    $return = $this->readMain($file);
                     break;
                 case 'SKUS':
                     $this->report('processFile', 'going to readListini on ' . $baseName);
