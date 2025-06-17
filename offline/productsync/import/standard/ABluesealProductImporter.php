@@ -512,8 +512,8 @@ abstract class ABluesealProductImporter extends ACronJob implements IBluesealPro
 
         $i = $this->updateSeasonDictionary();
         $this->report('updateDictionaries', 'Season terms inserted: ' . $i);
-        $i = $this->updateGroupSizeDictionary();
-        $this->report('updateDictionaries', 'groupSize terms inserted: ' . $i);
+      /*  $i = $this->updateGroupSizeDictionary();
+        $this->report('updateDictionaries', 'groupSize terms inserted: ' . $i);*/
 
         $i = $this->updateCategoryDictionary();
         $this->report('updateDictionaries', 'Category terms inserted: ' . $i);
