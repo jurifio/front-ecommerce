@@ -132,7 +132,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
         //read main
         $lineCount = 0;
-        $rows = file($file);
+        $rows = file_get_contents($file);
         $i = 1;
         foreach ($rows as $line) {
             if ($i == 1) {
