@@ -132,18 +132,18 @@ class CEdsTemaImporter extends ABluesealProductImporter
 
         //read main
         $lineCount = 0;
-
-        $rows =  file($this->app->rootPath() . $this->app->cfg()->fetch('paths', 'productSync') . '/cartechini/PRODUCTS_*.CSV');
-        $i = 0;
+        $rows = file($file);
+        $i = 1;
         foreach ($rows as $line) {
-            $i++;
             if ($i == 1) {
                 continue;
+            } else {
+                $i++;
             }
             preg_match('/^"(.*?)";(.*)$/', trim($line), $matches);
-            $fields[$i] = explode(';', $matches[1]); // dentro le virgolette
+            $fields = explode(';', $matches[1]); // dentro le virgolette
             $extra[$i] = explode(';', $matches[2]);  // DO;10 ecc.
-            $allFields[$i] = array_merge($fields, $extra);
+            $allFields = array_merge($fields, $extra);
 
         }
         while (($values = fgetcsv($file, 0, $separator, '|')) !== false) {
@@ -193,7 +193,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     $productExtend['dirtyProductId'] = $res;
                     $productExtend['shopId'] = $this->getShop()->id;
                     $productExtend['year']=$extras[$linecount][1];
-                    $productExtend['sizeGroup']=$extras[$linecount][0];
+                    $productExtend['groupSize']=$extras[$lineCount][0];
 
                     $res = $this->app->dbAdapter->insert('DirtyProductExtend', $productExtend);
 
