@@ -14,7 +14,7 @@
     "files": {
         "main": {
             "location": "local",
-            "columns":  29,
+            "columns":  30,
             "extKeys": ["extId","var"]
         },
         "skus": {

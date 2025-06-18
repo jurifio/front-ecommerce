@@ -125,9 +125,9 @@ abstract class AEdsTemaImporter extends AProductImporter
 
 
         while (($values = fgetcsv($main, 0, $this->config->fetch('miscellaneous', 'separator'), '|')) !== false) {
-            if ($values[0][0] == '"') {
+            /*if ($values[0][0] == '"') {
                 $values[0] = substr($values[0], 1);
-            }
+            }*/
 
             $line = implode($this->config->fetch('miscellaneous', 'separator'), $values);
 
