@@ -14,7 +14,7 @@
     "files": {
         "main": {
             "location": "local",
-            "columns":  28,
+            "columns":  29,
             "extKeys": ["extId","var"]
         },
         "skus": {
@@ -39,7 +39,9 @@
             "cat2" : 8,
             "name" : 8,
             "generalColor" : 13,
-            "colorDescription" : 12
+            "colorDescription" : 12,
+            "year": 29,
+            "sizeGroup": 28
         },
         "skus": {
             "var" : 10,
