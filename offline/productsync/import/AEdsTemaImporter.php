@@ -17,6 +17,9 @@ abstract class AEdsTemaImporter extends AProductImporter
     protected $skusF;
     protected $main;
     protected $mainF;
+    protected $input;
+    protected $output;
+    protected $outputF;
     protected $err = false;
     protected $seenSkus = [];
     /**
@@ -89,8 +92,38 @@ abstract class AEdsTemaImporter extends AProductImporter
     public function readMain()
     {
         //read main
-        $main = $this->mainF;
+        $mainTrans = $this->mainF;
+        $inputFile =fgets($mainTrans);
+        $outputFile=fgets($this->mainF);
+        $input = fopen($inputFile, 'r');
+        $output = fopen($outputFile, 'w');
+
+        while (($line = fgets($input)) !== false) {
+            // Conta le posizioni dei doppi apici
+            $quotePositions = [];
+            $offset = 0;
+            while (($pos = strpos($line, '"', $offset)) !== false) {
+                $quotePositions[] = $pos;
+                $offset = $pos + 1;
+            }
+
+            // Se ci sono almeno 2 doppi apici, rimuovi il secondo
+            if (count($quotePositions) >= 2) {
+                $secondQuotePos = $quotePositions[1];
+                $line = substr_replace($line, '', $secondQuotePos, 1); // Rimuove il secondo doppio apice
+                $line = rtrim($line, "\r\n") . ';"' . PHP_EOL; // Aggiunge un doppio apice alla fine
+            }
+
+            fwrite($output, $line);
+        }
+
+        fclose($input);
+        fclose($output);
+        $this->outputF = fopen($this->output, 'r');
+        $main=$this->outputF;
         fgets($main);
+
+
         while (($values = fgetcsv($main, 0, $this->config->fetch('miscellaneous', 'separator'), '|')) !== false) {
             if ($values[0][0] == '"') {
                 $values[0] = substr($values[0], 1);
