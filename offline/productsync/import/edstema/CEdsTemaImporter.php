@@ -94,7 +94,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
             switch (explode('_', $fileName)[0]) {
                 case 'PRODUCTS':
                     $this->report('processFile', 'going to readProduct on ' . $baseName);
-                    $in=$file;
+                   /* $in=$file;
                     $outputFile = 'output.csv';
                     $out = fopen($outputFile, 'w');
                     if ($in && $out) {
@@ -112,7 +112,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                             copy($file1,"/home/iwespro/public_html/client/public/media/productsync/cartechini/import/".$baseName);
                             $file="/home/iwespro/public_html/client/public/media/productsync/cartechini/import/".$baseName;
                         }
-                    }
+                    }*/
                     $return = $this->readMain($file);
                     break;
                 case 'SKUS':
