@@ -214,8 +214,7 @@ class CEdsTemaImporter extends ABluesealProductImporter
                     $productExtend = $this->mapValues($values, $extendMapping);
                     $productExtend['dirtyProductId'] = $res;
                     $productExtend['shopId'] = $this->getShop()->id;
-                    /* $productExtend['year']=$extras[$linecount][1];
-                     $productExtend['groupSize']=$extras[$lineCount][0];*/
+
 
                     $res = $this->app->dbAdapter->insert('DirtyProductExtend', $productExtend);
 
