@@ -79,9 +79,10 @@ class CSyncStocks extends ACronJob
         $min = 0;
 
         // trovo tutti i prodoti da matchare
-        $res = $this->app->dbAdapter->query("SELECT DISTINCT dp.* 
+        $res = $this->app->dbAdapter->query("SELECT DISTINCT dp.* ,dpe.sizegroupId as sizeGroupId
                                               FROM DirtyProduct dp
                                                  JOIN DirtySku ds ON ds.dirtyProductId = dp.id AND ds.shopId = dp.shopId
+                                                  join DirtyProductExtend dpe on dp.id=dpe.dirtyProductId
                                                  JOIN ShopHasProduct shp ON dp.productId = shp.productId AND dp.productVariantId = shp.productVariantId AND dp.shopId = shp.shopId  
                                                  JOIN Product p ON  shp.productId = p.id AND shp.productVariantId = p.productVariantId 
                                                  JOIN Shop s ON shp.shopId = s.id
