@@ -76,6 +76,15 @@ class CProduct extends AEntity
         if ($photo) return $this->productBrand->slug . '/' . $photo->name;
         return "";
     }
+    public function getPhotoLocal($number, $size)
+    {
+        if (!$this->hasData()) {
+            return "no data";
+        }
+        $photo = \Monkey::app()->repoFactory->create('ProductPhoto')->getPhotoForProductSizeOrder($this, $size, $number);
+        if ($photo) return 'product' . '/' . $photo->name;
+        return "";
+    }
 
     /**
      * @param CMarketplaceAccount $marketplaceAccount
