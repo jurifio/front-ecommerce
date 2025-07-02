@@ -82,7 +82,7 @@ class CProduct extends AEntity
             return "no data";
         }
         $photo = \Monkey::app()->repoFactory->create('ProductPhoto')->getPhotoForProductSizeOrder($this, $size, $number);
-        if ($photo) return 'product' . '/' . $photo->name;
+        if ($photo) return '/product' . '/' . $photo->name;
         return "";
     }
 
